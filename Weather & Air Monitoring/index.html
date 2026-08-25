@@ -12,6 +12,7 @@
     <title>Weather & Air Monitoring</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -32,7 +33,11 @@
             padding: 55px 20px;
             text-align: center;
             color: white;
-            background: linear-gradient(135deg, #0284c7, #075985);
+            background: linear-gradient(
+                135deg,
+                #0284c7,
+                #075985
+            );
         }
 
         header h1 {
@@ -61,7 +66,9 @@
             object-fit: contain;
             background: white;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.2);
         }
 
         nav {
@@ -71,12 +78,15 @@
 
             display: flex;
             justify-content: center;
-            gap: 24px;
+            gap: 20px;
             flex-wrap: wrap;
 
             padding: 15px;
             background: white;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+
+            box-shadow:
+                0 3px 12px
+                rgba(0, 0, 0, 0.1);
         }
 
         nav a {
@@ -99,17 +109,26 @@
         .section {
             margin-bottom: 30px;
             padding: 28px;
+
             background: white;
             border-radius: 14px;
-            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
-            animation: fadeUp 0.8s ease;
+
+            box-shadow:
+                0 5px 18px
+                rgba(15, 23, 42, 0.08);
+
+            animation:
+                fadeUp 0.8s ease;
         }
 
         .section h2 {
             margin-top: 0;
             padding-bottom: 10px;
+
             color: #075985;
-            border-bottom: 2px solid #e0f2fe;
+
+            border-bottom:
+                2px solid #e0f2fe;
         }
 
         .section h3 {
@@ -117,10 +136,19 @@
             color: #0369a1;
         }
 
+        .section h4 {
+            margin-top: 20px;
+            color: #075985;
+        }
+
         .project-info {
             padding: 18px;
+
             background: #f0f9ff;
-            border-left: 5px solid #0284c7;
+
+            border-left:
+                5px solid #0284c7;
+
             border-radius: 8px;
         }
 
@@ -130,7 +158,10 @@
 
         .requirements-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
             gap: 16px;
             margin-top: 20px;
         }
@@ -139,26 +170,43 @@
             padding: 16px;
             text-align: center;
             overflow: hidden;
+
             background: #f8fafc;
-            border: 1px solid #cbd5e1;
+
+            border:
+                1px solid #cbd5e1;
+
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+            box-shadow:
+                0 4px 12px
+                rgba(15, 23, 42, 0.08);
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
         }
 
         .requirement-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 22px rgba(2, 132, 199, 0.18);
+            transform:
+                translateY(-6px);
+
+            box-shadow:
+                0 10px 22px
+                rgba(2, 132, 199, 0.18);
         }
 
         .requirement-card span {
             width: 100%;
             height: 170px;
+
             display: flex;
             justify-content: center;
             align-items: center;
+
             margin-bottom: 14px;
             padding: 10px;
+
             background: white;
             border-radius: 10px;
         }
@@ -166,11 +214,20 @@
         .requirement-card span img {
             width: 100%;
             height: 100%;
+
             object-fit: contain;
+
+            transition:
+                transform 0.3s ease;
+        }
+
+        .requirement-card:hover span img {
+            transform: scale(1.08);
         }
 
         .requirement-card strong {
             display: block;
+
             color: #075985;
             font-size: 18px;
         }
@@ -196,7 +253,9 @@
         table {
             width: 100%;
             min-width: 600px;
+
             margin-top: 15px;
+
             border-collapse: collapse;
         }
 
@@ -204,7 +263,9 @@
         td {
             padding: 13px;
             text-align: left;
-            border: 1px solid #cbd5e1;
+
+            border:
+                1px solid #cbd5e1;
         }
 
         th {
@@ -219,70 +280,153 @@
         .circuit-image-card {
             margin-top: 22px;
             padding: 15px;
+
             text-align: center;
+
             background: #f8fafc;
-            border: 1px solid #cbd5e1;
+
+            border:
+                1px solid #cbd5e1;
+
             border-radius: 12px;
         }
 
         .circuit-image-card img {
             width: 100%;
             max-height: 650px;
+
             object-fit: contain;
+
             background: white;
             border-radius: 8px;
         }
 
         .sensor-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
             gap: 18px;
             margin-top: 20px;
         }
 
         .sensor-card {
             padding: 18px;
+
             background: #f8fafc;
-            border: 1px solid #cbd5e1;
+
+            border:
+                1px solid #cbd5e1;
+
             border-radius: 10px;
         }
 
         .sensor-card strong {
             display: block;
             margin-bottom: 7px;
+
             color: #075985;
             font-size: 18px;
         }
 
+        .blynk-step {
+            margin-top: 20px;
+            padding: 20px;
+
+            background: #f8fafc;
+
+            border:
+                1px solid #bae6fd;
+
+            border-radius: 12px;
+        }
+
+        .blynk-step h3 {
+            margin-top: 0;
+        }
+
+        .blynk-summary {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .blynk-summary-card {
+            padding: 17px;
+            text-align: center;
+
+            background: #f0f9ff;
+
+            border:
+                1px solid #7dd3fc;
+
+            border-radius: 10px;
+        }
+
+        .blynk-summary-card strong {
+            display: block;
+            margin-bottom: 5px;
+
+            color: #075985;
+            font-size: 17px;
+        }
+
         .code-header {
             display: flex;
-            justify-content: space-between;
+
+            justify-content:
+                space-between;
+
             align-items: center;
             gap: 15px;
+
             padding: 12px 16px;
+
             color: white;
             background: #1e293b;
-            border-radius: 10px 10px 0 0;
+
+            border-radius:
+                10px 10px 0 0;
         }
 
         .copy-button {
             padding: 8px 14px;
+
             color: white;
             background: #0284c7;
+
             border: none;
             border-radius: 6px;
+
             cursor: pointer;
             font-weight: bold;
+        }
+
+        .copy-button:hover {
+            background: #0369a1;
         }
 
         pre {
             margin: 0 0 15px;
             padding: 22px;
+
             overflow-x: auto;
+
             color: #e2e8f0;
             background: #0f172a;
-            border-radius: 0 0 10px 10px;
-            font-family: Consolas, monospace;
+
+            border-radius:
+                0 0 10px 10px;
+
+            font-family:
+                Consolas,
+                monospace;
+
             font-size: 14px;
             line-height: 1.6;
         }
@@ -290,72 +434,108 @@
         .note {
             margin-top: 20px;
             padding: 15px;
+
             color: #854d0e;
             background: #fef9c3;
-            border: 1px solid #fde047;
+
+            border:
+                1px solid #fde047;
+
             border-radius: 8px;
         }
 
         .success-note {
             margin-top: 20px;
             padding: 15px;
+
             color: #166534;
             background: #dcfce7;
-            border: 1px solid #86efac;
+
+            border:
+                1px solid #86efac;
+
             border-radius: 8px;
         }
 
         .warning {
             margin-top: 20px;
             padding: 15px;
+
             color: #991b1b;
             background: #fee2e2;
-            border: 1px solid #fca5a5;
+
+            border:
+                1px solid #fca5a5;
+
             border-radius: 8px;
         }
 
         .back-button {
             display: inline-block;
+
             padding: 11px 20px;
+
             color: white;
             background: #0284c7;
+
             text-decoration: none;
+
             border-radius: 7px;
+
             font-weight: bold;
+        }
+
+        .back-button:hover {
+            background: #075985;
         }
 
         footer {
             padding: 22px;
             text-align: center;
+
             color: #cbd5e1;
             background: #0f172a;
         }
 
         @keyframes fadeUp {
+
             from {
                 opacity: 0;
-                transform: translateY(25px);
+                transform:
+                    translateY(25px);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform:
+                    translateY(0);
             }
+
         }
 
         @media (max-width: 800px) {
+
             .requirements-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .blynk-summary {
+                grid-template-columns:
+                    repeat(2, 1fr);
             }
 
             header h1 {
                 font-size: 32px;
             }
+
         }
 
         @media (max-width: 600px) {
+
             .requirements-grid,
-            .sensor-grid {
+            .sensor-grid,
+            .blynk-summary {
                 grid-template-columns: 1fr;
             }
 
@@ -366,272 +546,788 @@
             header h1 {
                 font-size: 27px;
             }
+
+            nav {
+                gap: 12px;
+                font-size: 14px;
+            }
+
         }
+
     </style>
 </head>
 
+
 <body>
+
 
 <header>
 
     <div class="logo">
+
         <img
             src="Simusoft logo.jpeg"
             alt="Simusoft Technology Logo"
         >
+
     </div>
 
-    <h1>Weather & Air Monitoring</h1>
+
+    <h1>
+        Weather & Air Monitoring
+    </h1>
+
 
     <p>
-        IoT based environmental monitoring system using DHT11,
-        multiple gas sensors, Arduino UNO R4 WiFi and Blynk.
+        IoT based environmental monitoring system
+        using Arduino UNO R4 WiFi, DHT11,
+        MQ gas sensors and Blynk IoT.
     </p>
 
 </header>
 
 
+
 <nav>
-    <a href="#details">Project Details</a>
-    <a href="#requirements">Components</a>
-    <a href="#connections">Connections</a>
-    <a href="#circuit">Circuit</a>
-    <a href="#working">Working</a>
-    <a href="#blynk">Blynk</a>
-    <a href="#libraries">Libraries</a>
-    <a href="#code">Arduino Code</a>
-    <a href="#steps">Operating Steps</a>
+
+    <a href="#details">
+        Project Details
+    </a>
+
+    <a href="#requirements">
+        Components
+    </a>
+
+    <a href="#connections">
+        Connections
+    </a>
+
+    <a href="#circuit">
+        Circuit
+    </a>
+
+    <a href="#working">
+        Working
+    </a>
+
+    <a href="#libraries">
+        Libraries
+    </a>
+
+    <a href="#blynksetup">
+        Blynk Setup
+    </a>
+
+    <a href="#code">
+        Arduino Code
+    </a>
+
+    <a href="#steps">
+        Operating Steps
+    </a>
+
 </nav>
+
 
 
 <main class="container">
 
-    <section class="section" id="details">
 
-        <h2>Project Details</h2>
+<!-- Project Details -->
 
-        <div class="project-info">
+<section
+    class="section"
+    id="details"
+>
 
-            <p>
-                <strong>Project Name:</strong>
-                Weather & Air Monitoring
-            </p>
+    <h2>
+        Project Details
+    </h2>
 
-            <p>
-                <strong>Controller:</strong>
+
+    <div class="project-info">
+
+        <p>
+            <strong>Project Name:</strong>
+            Weather & Air Monitoring
+        </p>
+
+        <p>
+            <strong>Controller:</strong>
+            Arduino UNO R4 WiFi
+        </p>
+
+        <p>
+            <strong>IoT Platform:</strong>
+            Blynk IoT
+        </p>
+
+        <p>
+            <strong>
+                Temperature & Humidity Sensor:
+            </strong>
+            DHT11
+        </p>
+
+        <p>
+            <strong>Gas Sensors:</strong>
+            MQ135, MQ2 and MQ9
+        </p>
+
+        <p>
+            <strong>Communication:</strong>
+            Wi-Fi
+        </p>
+
+        <p>
+            <strong>Update Interval:</strong>
+            2 Seconds
+        </p>
+
+        <p>
+            <strong>Programming Language:</strong>
+            Arduino C/C++
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- Components -->
+
+<section
+    class="section"
+    id="requirements"
+>
+
+    <h2>
+        Required Components
+    </h2>
+
+
+    <div class="requirements-grid">
+
+
+        <div class="requirement-card">
+
+            <span>
+                <img
+                    src="Arduino r4.png"
+                    alt="Arduino UNO R4 WiFi"
+                >
+            </span>
+
+            <strong>
                 Arduino UNO R4 WiFi
-            </p>
+            </strong>
 
             <p>
-                <strong>IoT Platform:</strong>
-                Blynk
-            </p>
-
-            <p>
-                <strong>Temperature Sensor:</strong>
-                DHT11
-            </p>
-
-            <p>
-                <strong>Air Monitoring:</strong>
-                Three Analog Gas Sensors
-            </p>
-
-            <p>
-                <strong>Gas Sensor Inputs:</strong>
-                A1, A2 and A3
-            </p>
-
-            <p>
-                <strong>Communication:</strong>
-                Wi-Fi
-            </p>
-
-            <p>
-                <strong>Update Interval:</strong>
-                2 Seconds
+                Main controller with built-in Wi-Fi.
             </p>
 
         </div>
 
-    </section>
 
+        <div class="requirement-card">
 
-    <section class="section" id="requirements">
+            <span>
+                <img
+                    src="Breadborad.png"
+                    alt="Breadboard"
+                >
+            </span>
 
-        <h2>Required Components</h2>
+            <strong>
+               Breadboard
+            </strong>
 
-        <div class="requirements-grid">
-
-            <div class="requirement-card">
-
-                <span>
-                    <img
-                        src="Arduino r4.png"
-                        alt="Arduino UNO R4 WiFi"
-                    >
-                </span>
-
-                <strong>Arduino UNO R4 WiFi</strong>
-
-                <p>
-                    Main controller with Wi-Fi connectivity.
-                </p>
-
-            </div>
-
-            <div class="requirement-card">
-
-                <span>
-                    <img
-                        src="DHT11.png"
-                        alt="DHT11"
-                    >
-                </span>
-
-                <strong>DHT11</strong>
-
-                <p>
-                    Measures temperature and humidity.
-                </p>
-
-            </div>
-
-            <div class="requirement-card">
-
-                <span>
-                    <img
-                        src="MQ9 sensor.png"
-                        alt="MQ9 Gas Sensor"
-                    >
-                </span>
-
-                <strong>Gas Sensor 1</strong>
-
-                <p>
-                    Analog air-quality sensing input.
-                </p>
-
-            </div>
-
-            <div class="requirement-card">
-
-                <span>
-                    <img
-                        src="MQ2 sensor.png"
-                        alt="MQ2 Gas Sensor"
-                    >
-                </span>
-
-                <strong>Gas Sensor 2</strong>
-
-                <p>
-                    Second analog gas monitoring sensor.
-                </p>
-
-            </div>
-
-            <div class="requirement-card">
-
-                <span>
-                    <img
-                        src="MQ135 sensor.png"
-                        alt="MQ135 Gas Sensor"
-                    >
-                </span>
-
-                <strong>Gas Sensor 3</strong>
-
-                <p>
-                    Third analog gas monitoring sensor.
-                </p>
-
-            </div>
-
-            <div class="requirement-card">
-
-                <span>
-                    <img
-                        src="Jumper Wires.png"
-                        alt="Jumper Wires"
-                    >
-                </span>
-
-                <strong>Jumper Wires</strong>
-
-                <p>
-                    Used for sensor connections.
-                </p>
-
-            </div>
-
-            <div class="requirement-card">
-
-                <span>
-                    <img
-                        src="5V Power supply.png"
-                        alt="Power Supply"
-                    >
-                </span>
-
-                <strong>Power Supply</strong>
-
-                <p>
-                    Supplies power to the project.
-                </p>
-
-            </div>
+            <p>
+                Main controller with built-in Wi-Fi.
+            </p>
 
         </div>
 
-    </section>
+
+        <div class="requirement-card">
+
+            <span>
+                <img
+                    src="DHT11.png"
+                    alt="DHT11 Sensor"
+                >
+            </span>
+
+            <strong>
+                DHT11 Sensor
+            </strong>
+
+            <p>
+                Measures temperature and humidity.
+            </p>
+
+        </div>
 
 
-    <section class="section" id="connections">
 
-        <h2>Circuit Connections</h2>
+        <div class="requirement-card">
+
+            <span>
+                <img
+                    src="MQ135 sensor.png"
+                    alt="MQ135 Sensor"
+                >
+            </span>
+
+            <strong>
+                MQ135 Sensor
+            </strong>
+
+            <p>
+                Used for air quality monitoring.
+            </p>
+
+        </div>
+
+
+
+        <div class="requirement-card">
+
+            <span>
+                <img
+                    src="MQ2 sensor.png"
+                    alt="MQ2 Sensor"
+                >
+            </span>
+
+            <strong>
+                MQ2 Sensor
+            </strong>
+
+            <p>
+                Used for gas monitoring.
+            </p>
+
+        </div>
+
+
+
+        <div class="requirement-card">
+
+            <span>
+                <img
+                    src="MQ9 sensor.png"
+                    alt="MQ9 Sensor"
+                >
+            </span>
+
+            <strong>
+                MQ9 Sensor
+            </strong>
+
+            <p>
+                Used for carbon monoxide monitoring.
+            </p>
+
+        </div>
+
+
+
+        <div class="requirement-card">
+
+            <span>
+                <img
+                    src="Jumper Wires.png"
+                    alt="Jumper Wires"
+                >
+            </span>
+
+            <strong>
+                Jumper Wires
+            </strong>
+
+            <p>
+                Used for circuit connections.
+            </p>
+
+        </div>
+
+
+
+        <div class="requirement-card">
+
+            <span>
+                <img
+                    src="5V Power supply.png"
+                    alt="Power Supply"
+                >
+            </span>
+
+            <strong>
+                5V Power Supply
+            </strong>
+
+            <p>
+                Supplies power to the Arduino.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- Connections -->
+
+<section
+    class="section"
+    id="connections"
+>
+
+    <h2>
+        Circuit Connections
+    </h2>
+
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Component</th>
+                    <th>Pin Name</th>
+                    <th>Connection</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+                    <td>DHT11 Sensor</td>
+                    <td>VCC</td>
+                    <td>5V</td>
+                </tr>
+
+                <tr>
+                    <td>DHT11 Sensor</td>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>DHT11 Sensor</td>
+                    <td>DATA</td>
+                    <td>D4</td>
+                </tr>
+
+                <tr>
+                    <td>MQ Sensors</td>
+                    <td>VCC</td>
+                    <td>5V</td>
+                </tr>
+
+                <tr>
+                    <td>MQ Sensors</td>
+                    <td>GND</td>
+                    <td>GND</td>
+                </tr>
+
+                <tr>
+                    <td>MQ135 Sensor</td>
+                    <td>AO</td>
+                    <td>A0</td>
+                </tr>
+
+                <tr>
+                    <td>MQ2 Sensor</td>
+                    <td>AO</td>
+                    <td>A2</td>
+                </tr>
+
+                <tr>
+                    <td>MQ9 Sensor</td>
+                    <td>AO</td>
+                    <td>A3</td>
+                </tr>
+
+                <tr>
+                    <td>Arduino UNO R4</td>
+                    <td>WiFi</td>
+                    <td>Built-in</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- Circuit -->
+
+<section
+    class="section"
+    id="circuit"
+>
+
+    <h2>
+        Circuit Diagram
+    </h2>
+
+
+    <div class="circuit-image-card">
+
+        <img
+            src="Weather Air Monitoring.png"
+            alt="Weather and Air Monitoring Circuit Diagram"
+        >
+
+
+        <h3>
+            Weather & Air Monitoring Circuit
+        </h3>
+
+
+        <p>
+            Arduino UNO R4 WiFi connected with
+            DHT11, MQ135, MQ2 and MQ9 sensors.
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- Working -->
+
+<section
+    class="section"
+    id="working"
+>
+
+    <h2>
+        Working Principle
+    </h2>
+
+
+    <div class="sensor-grid">
+
+
+        <div class="sensor-card">
+
+            <strong>
+                Temperature & Humidity
+            </strong>
+
+            <p>
+                DHT11 measures the temperature
+                and humidity of the surrounding environment.
+            </p>
+
+        </div>
+
+
+
+        <div class="sensor-card">
+
+            <strong>
+                MQ135 Air Quality
+            </strong>
+
+            <p>
+                MQ135 provides an analog reading
+                used for air quality monitoring.
+            </p>
+
+        </div>
+
+
+
+        <div class="sensor-card">
+
+            <strong>
+                MQ2 Gas Monitoring
+            </strong>
+
+            <p>
+                MQ2 provides another analog gas
+                sensor reading to the Arduino.
+            </p>
+
+        </div>
+
+
+
+        <div class="sensor-card">
+
+            <strong>
+                MQ9 Carbon Monoxide Monitoring
+            </strong>
+
+            <p>
+                MQ9 provides an analog reading
+                used for carbon monoxide monitoring.
+            </p>
+
+        </div>
+
+
+
+        <div class="sensor-card">
+
+            <strong>
+                Wi-Fi Communication
+            </strong>
+
+            <p>
+                Arduino UNO R4 WiFi connects to
+                the wireless network using WiFiS3.
+            </p>
+
+        </div>
+
+
+
+        <div class="sensor-card">
+
+            <strong>
+                Blynk Monitoring
+            </strong>
+
+            <p>
+                All sensor values are uploaded
+                to Blynk every 2 seconds.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="success-note">
+
+        The system continuously monitors
+        weather and air-quality parameters
+        and sends the readings to Blynk IoT.
+
+    </div>
+
+</section>
+
+
+
+<!-- Libraries -->
+
+<section
+    class="section"
+    id="libraries"
+>
+
+    <h2>
+        Required Libraries
+    </h2>
+
+
+    <h3>
+        Arduino Board Package
+    </h3>
+
+
+    <ol>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Open
+            <strong>
+                Boards Manager
+            </strong>.
+        </li>
+
+        <li>
+            Search for
+            <strong>
+                Arduino UNO R4 Boards
+            </strong>.
+        </li>
+
+        <li>
+            Install the board package.
+        </li>
+
+    </ol>
+
+
+    <h3>
+        Required Libraries
+    </h3>
+
+
+    <ul>
+
+        <li>
+            Adafruit Unified Sensor
+        </li>
+
+        <li>
+            DHT Sensor Library
+        </li>
+
+        <li>
+            Blynk Library
+        </li>
+
+        <li>
+            WiFiS3
+        </li>
+
+    </ul>
+
+
+    <div class="note">
+
+        Install the libraries using:
+
+        <strong>
+            Arduino IDE → Library Manager
+        </strong>.
+
+    </div>
+
+</section>
+
+
+
+<!-- Blynk Setup -->
+
+<section
+    class="section"
+    id="blynksetup"
+>
+
+    <h2>
+        Blynk IoT Setup – Weather & Air Monitoring
+    </h2>
+
+
+    <p>
+        Follow the steps below to create
+        the Blynk IoT dashboard for the
+        Weather & Air Monitoring System.
+    </p>
+
+
+
+    <!-- Step 1 -->
+
+    <div class="blynk-step">
+
+        <h3>
+            Step 1: Open Blynk IoT
+        </h3>
+
+
+        <ol>
+
+            <li>
+                Open your web browser.
+            </li>
+
+            <li>
+                Open
+                <strong>
+                    Blynk IoT
+                </strong>.
+            </li>
+
+            <li>
+                Sign in to your Blynk account.
+            </li>
+
+        </ol>
+
+    </div>
+
+
+
+    <!-- Step 2 -->
+
+    <div class="blynk-step">
+
+        <h3>
+            Step 2: Create a New Template
+        </h3>
+
+
+        <ol>
+
+            <li>
+                Go to
+                <strong>
+                    Templates
+                </strong>.
+            </li>
+
+            <li>
+                Click
+                <strong>
+                    New Template
+                </strong>.
+            </li>
+
+        </ol>
+
 
         <div class="table-wrapper">
 
             <table>
 
                 <thead>
+
                     <tr>
-                        <th>Component</th>
-                        <th>Pin</th>
-                        <th>Arduino Pin</th>
-                        <th>Purpose</th>
+                        <th>Setting</th>
+                        <th>Value</th>
                     </tr>
+
                 </thead>
+
 
                 <tbody>
 
                     <tr>
-                        <td>DHT11</td>
-                        <td>Data</td>
-                        <td>Digital Pin 4</td>
-                        <td>Temperature and humidity</td>
+                        <td>Template Name</td>
+                        <td>
+                            Weather & Air Monitoring
+                        </td>
                     </tr>
 
                     <tr>
-                        <td>Gas Sensor 1</td>
-                        <td>Analog Output</td>
-                        <td>A1</td>
-                        <td>CO2 value</td>
+                        <td>Hardware</td>
+                        <td>
+                            Arduino UNO R4 WiFi
+                        </td>
                     </tr>
 
                     <tr>
-                        <td>Gas Sensor 2</td>
-                        <td>Analog Output</td>
-                        <td>A2</td>
-                        <td>CH4 value</td>
-                    </tr>
-
-                    <tr>
-                        <td>Gas Sensor 3</td>
-                        <td>Analog Output</td>
-                        <td>A3</td>
-                        <td>S2 value</td>
+                        <td>Connection Type</td>
+                        <td>
+                            WiFi
+                        </td>
                     </tr>
 
                 </tbody>
@@ -640,127 +1336,98 @@
 
         </div>
 
-    </section>
 
+        <div class="note">
 
-    <section class="section" id="circuit">
-
-        <h2>Circuit Diagram</h2>
-
-        <div class="circuit-image-card">
-
-            <img
-                src="Weather Air Monitoring.png"
-                alt="Weather and Air Monitoring Circuit Diagram"
-            >
-
-            <h3>Weather & Air Monitoring Circuit</h3>
-
-            <p>
-                Arduino UNO R4 WiFi with DHT11 and three analog
-                gas sensors.
-            </p>
+            Save the template after
+            entering the above details.
 
         </div>
 
-    </section>
+    </div>
 
 
-    <section class="section" id="working">
 
-        <h2>Working Principle</h2>
+    <!-- Step 3 -->
 
-        <div class="sensor-grid">
+    <div class="blynk-step">
 
-            <div class="sensor-card">
-
-                <strong>Temperature & Humidity</strong>
-
-                <p>
-                    DHT11 measures temperature and humidity and sends
-                    both readings to the Arduino.
-                </p>
-
-            </div>
-
-            <div class="sensor-card">
-
-                <strong>Air Monitoring</strong>
-
-                <p>
-                    Three analog sensors are read through A1, A2 and A3.
-                    Their analog values are mapped to a 0–100 range.
-                </p>
-
-            </div>
-
-            <div class="sensor-card">
-
-                <strong>Wi-Fi Communication</strong>
-
-                <p>
-                    Arduino UNO R4 WiFi connects to the wireless network
-                    using the WiFiS3 library.
-                </p>
-
-            </div>
-
-            <div class="sensor-card">
-
-                <strong>Blynk Monitoring</strong>
-
-                <p>
-                    Temperature, humidity and gas values are uploaded
-                    to Blynk every 2 seconds.
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
+        <h3>
+            Step 3: Create Datastreams
+        </h3>
 
 
-    <section class="section" id="blynk">
+        <p>
+            Open the template and select
+            <strong>
+                Datastreams
+            </strong>.
+        </p>
 
-        <h2>Blynk Virtual Pins</h2>
+
+        <p>
+            Create the following
+            Virtual Pin datastreams.
+        </p>
+
 
         <div class="table-wrapper">
 
             <table>
 
                 <thead>
+
                     <tr>
                         <th>Virtual Pin</th>
-                        <th>Reading</th>
+                        <th>Name</th>
+                        <th>Data Type</th>
+                        <th>Range</th>
+                        <th>Units</th>
                     </tr>
+
                 </thead>
+
 
                 <tbody>
 
                     <tr>
                         <td>V0</td>
                         <td>Temperature</td>
+                        <td>Double</td>
+                        <td>0 – 100</td>
+                        <td>°C</td>
                     </tr>
 
                     <tr>
                         <td>V1</td>
                         <td>Humidity</td>
+                        <td>Double</td>
+                        <td>0 – 100</td>
+                        <td>%</td>
                     </tr>
 
                     <tr>
                         <td>V2</td>
-                        <td>CO2</td>
+                        <td>MQ135</td>
+                        <td>Double</td>
+                        <td>0 – 100</td>
+                        <td>%</td>
                     </tr>
 
                     <tr>
                         <td>V3</td>
-                        <td>CH4</td>
+                        <td>MQ2</td>
+                        <td>Double</td>
+                        <td>0 – 100</td>
+                        <td>%</td>
                     </tr>
 
                     <tr>
                         <td>V4</td>
-                        <td>S2</td>
+                        <td>MQ9</td>
+                        <td>Double</td>
+                        <td>0 – 100</td>
+                        <td>%</td>
                     </tr>
 
                 </tbody>
@@ -769,47 +1436,548 @@
 
         </div>
 
-    </section>
+    </div>
 
 
-    <section class="section" id="libraries">
 
-        <h2>Required Libraries</h2>
+    <!-- Step 4 -->
 
-        <ul>
-            <li>Adafruit Unified Sensor</li>
-            <li>DHT Sensor Library</li>
-            <li>Blynk Library</li>
-            <li>WiFiS3</li>
-        </ul>
+    <div class="blynk-step">
 
-        <div class="note">
-            Install all required libraries from the Arduino IDE
-            Library Manager before uploading the program.
+        <h3>
+            Step 4: Create Temperature Gauge
+        </h3>
+
+
+        <ol>
+
+            <li>
+                Open the Blynk Dashboard.
+            </li>
+
+            <li>
+                Add a
+                <strong>
+                    Gauge
+                </strong>
+                widget.
+            </li>
+
+            <li>
+                Name it
+                <strong>
+                    Temperature
+                </strong>.
+            </li>
+
+            <li>
+                Select Datastream
+                <strong>
+                    V0 – Temperature
+                </strong>.
+            </li>
+
+            <li>
+                Set the range to
+                <strong>
+                    0 – 100 °C
+                </strong>.
+            </li>
+
+        </ol>
+
+    </div>
+
+
+
+    <!-- Step 5 -->
+
+    <div class="blynk-step">
+
+        <h3>
+            Step 5: Create Humidity Gauge
+        </h3>
+
+
+        <ol>
+
+            <li>
+                Add another Gauge widget.
+            </li>
+
+            <li>
+                Name it
+                <strong>
+                    Humidity
+                </strong>.
+            </li>
+
+            <li>
+                Select Datastream
+                <strong>
+                    V1 – Humidity
+                </strong>.
+            </li>
+
+            <li>
+                Set the range to
+                <strong>
+                    0 – 100 %
+                </strong>.
+            </li>
+
+        </ol>
+
+    </div>
+
+
+
+    <!-- Step 6 -->
+
+    <div class="blynk-step">
+
+        <h3>
+            Step 6: Create MQ135 Air Quality Gauge
+        </h3>
+
+
+        <ol>
+
+            <li>
+                Add another Gauge widget.
+            </li>
+
+            <li>
+                Name it
+                <strong>
+                    MQ135 Air Quality
+                </strong>.
+            </li>
+
+            <li>
+                Select Datastream
+                <strong>
+                    V2 – MQ135
+                </strong>.
+            </li>
+
+            <li>
+                Set the range to
+                <strong>
+                    0 – 100 %
+                </strong>.
+            </li>
+
+        </ol>
+
+    </div>
+
+
+
+    <!-- Step 7 -->
+
+    <div class="blynk-step">
+
+        <h3>
+            Step 7: Create MQ2 Gas Sensor Gauge
+        </h3>
+
+
+        <ol>
+
+            <li>
+                Add another Gauge widget.
+            </li>
+
+            <li>
+                Name it
+                <strong>
+                    MQ2 Gas Sensor
+                </strong>.
+            </li>
+
+            <li>
+                Select Datastream
+                <strong>
+                    V3 – MQ2
+                </strong>.
+            </li>
+
+            <li>
+                Set the range to
+                <strong>
+                    0 – 100 %
+                </strong>.
+            </li>
+
+        </ol>
+
+    </div>
+
+
+
+    <!-- Step 8 -->
+
+    <div class="blynk-step">
+
+        <h3>
+            Step 8: Create MQ9 Carbon Monoxide Gauge
+        </h3>
+
+
+        <ol>
+
+            <li>
+                Add another Gauge widget.
+            </li>
+
+            <li>
+                Name it
+                <strong>
+                    MQ9 Carbon Monoxide
+                </strong>.
+            </li>
+
+            <li>
+                Select Datastream
+                <strong>
+                    V4 – MQ9
+                </strong>.
+            </li>
+
+            <li>
+                Set the range to
+                <strong>
+                    0 – 100 %
+                </strong>.
+            </li>
+
+        </ol>
+
+    </div>
+
+
+
+    <!-- Step 9 -->
+
+    <div class="blynk-step">
+
+        <h3>
+            Step 9: Create Blynk Device
+        </h3>
+
+
+        <ol>
+
+            <li>
+                Go to
+                <strong>
+                    Devices
+                </strong>.
+            </li>
+
+            <li>
+                Click
+                <strong>
+                    New Device
+                </strong>.
+            </li>
+
+            <li>
+                Select
+                <strong>
+                    From Template
+                </strong>.
+            </li>
+
+            <li>
+                Select
+                <strong>
+                    Weather & Air Monitoring
+                </strong>.
+            </li>
+
+            <li>
+                Enter the Device Name.
+            </li>
+
+            <li>
+                Create the device.
+            </li>
+
+        </ol>
+
+    </div>
+
+
+
+    <!-- Step 10 -->
+
+    <div class="blynk-step">
+
+        <h3>
+            Step 10: Copy Blynk Credentials
+        </h3>
+
+
+        <p>
+            After creating the device,
+            note the following information.
+        </p>
+
+
+        <div class="blynk-summary">
+
+
+            <div class="blynk-summary-card">
+
+                <strong>
+                    Template ID
+                </strong>
+
+                Copy from the
+                Blynk Template.
+
+            </div>
+
+
+
+            <div class="blynk-summary-card">
+
+                <strong>
+                    Template Name
+                </strong>
+
+                Weather & Air Monitoring
+
+            </div>
+
+
+
+            <div class="blynk-summary-card">
+
+                <strong>
+                    Auth Token
+                </strong>
+
+                Copy from the
+                Blynk Device.
+
+            </div>
+
+
         </div>
 
-    </section>
 
 
-    <section class="section" id="code">
+        <h4>
+            Add the Blynk details to Arduino Code:
+        </h4>
 
-        <h2>Arduino Code</h2>
 
         <div class="code-header">
 
-            <span>weather_air_monitoring.ino</span>
+            <span>
+                Blynk Credentials
+            </span>
+
 
             <button
                 type="button"
                 class="copy-button"
-                onclick="copyCode('arduinoCode', this)"
+                onclick="
+                    copyCode(
+                        'blynkCredentials',
+                        this
+                    )
+                "
             >
-                Copy Code
+                Copy
             </button>
 
         </div>
 
-        <pre><code id="arduinoCode">#define BLYNK_PRINT Serial
+
+        <pre><code id="blynkCredentials">#define BLYNK_TEMPLATE_ID "YOUR_TEMPLATE_ID"
+#define BLYNK_TEMPLATE_NAME "Weather &amp; Air Monitoring"
+#define BLYNK_AUTH_TOKEN "YOUR_BLYNK_AUTH_TOKEN"</code></pre>
+
+    </div>
+
+
+
+    <!-- Step 11 -->
+
+    <div class="blynk-step">
+
+        <h3>
+            Step 11: Enter Wi-Fi Details
+        </h3>
+
+
+        <p>
+            Enter the Wi-Fi network
+            used by the Arduino UNO R4 WiFi.
+        </p>
+
+
+        <div class="code-header">
+
+            <span>
+                Wi-Fi Credentials
+            </span>
+
+
+            <button
+                type="button"
+                class="copy-button"
+                onclick="
+                    copyCode(
+                        'wifiCredentials',
+                        this
+                    )
+                "
+            >
+                Copy
+            </button>
+
+        </div>
+
+
+        <pre><code id="wifiCredentials">char ssid[] = "YOUR_WIFI_NAME";
+char pass[] = "YOUR_WIFI_PASSWORD";</code></pre>
+
+    </div>
+
+
+
+    <!-- Step 12 -->
+
+    <div class="blynk-step">
+
+        <h3>
+            Step 12: Final Blynk Dashboard
+        </h3>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Virtual Pin</th>
+                        <th>Widget</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr>
+                        <td>Temperature</td>
+                        <td>V0</td>
+                        <td>Gauge</td>
+                    </tr>
+
+                    <tr>
+                        <td>Humidity</td>
+                        <td>V1</td>
+                        <td>Gauge</td>
+                    </tr>
+
+                    <tr>
+                        <td>MQ135 Air Quality</td>
+                        <td>V2</td>
+                        <td>Gauge</td>
+                    </tr>
+
+                    <tr>
+                        <td>MQ2 Gas Sensor</td>
+                        <td>V3</td>
+                        <td>Gauge</td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            MQ9 Carbon Monoxide
+                        </td>
+                        <td>V4</td>
+                        <td>Gauge</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="success-note">
+
+            <strong>
+                Blynk Setup Complete.
+            </strong>
+
+            <br><br>
+
+            The Blynk dashboard can now display:
+
+            <br><br>
+
+            Temperature,
+            Humidity,
+            MQ135 Air Quality,
+            MQ2 Gas Sensor
+            and MQ9 Carbon Monoxide readings.
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- Arduino Code -->
+
+<section
+    class="section"
+    id="code"
+>
+
+    <h2>
+        Arduino Code
+    </h2>
+
+
+    <div class="code-header">
+
+        <span>
+            weather_air_monitoring.ino
+        </span>
+
+
+        <button
+            type="button"
+            class="copy-button"
+            onclick="
+                copyCode(
+                    'arduinoCode',
+                    this
+                )
+            "
+        >
+            Copy Code
+        </button>
+
+    </div>
+
+
+    <pre><code id="arduinoCode">#define BLYNK_PRINT Serial
 
 #define BLYNK_TEMPLATE_ID "YOUR_TEMPLATE_ID"
 #define BLYNK_TEMPLATE_NAME "Weather &amp; Air Monitoring"
@@ -837,8 +2005,10 @@ const int mq3 = A3;
 
 BlynkTimer timer;
 
+
 void sendSensorData()
 {
+
     float co2 =
         analogRead(mq1);
 
@@ -848,6 +2018,7 @@ void sendSensorData()
     float s2 =
         analogRead(mq3);
 
+
     co2 = map(
         co2,
         0,
@@ -855,6 +2026,7 @@ void sendSensorData()
         0,
         100
     );
+
 
     ch4 = map(
         ch4,
@@ -864,6 +2036,7 @@ void sendSensorData()
         100
     );
 
+
     s2 = map(
         s2,
         0,
@@ -872,74 +2045,93 @@ void sendSensorData()
         100
     );
 
+
     float temp =
         dht.readTemperature();
 
+
     float humidity =
         dht.readHumidity();
+
 
     if (
         isnan(temp) ||
         isnan(humidity)
     )
     {
+
         Serial.println(
             "DHT read failed"
         );
 
         return;
+
     }
+
 
     Blynk.virtualWrite(
         V0,
         temp
     );
 
+
     Blynk.virtualWrite(
         V1,
         humidity
     );
+
 
     Blynk.virtualWrite(
         V2,
         co2
     );
 
+
     Blynk.virtualWrite(
         V3,
         ch4
     );
+
 
     Blynk.virtualWrite(
         V4,
         s2
     );
 
+
     Serial.println(
         "Data sent to Blynk"
     );
+
 }
+
 
 void setup()
 {
+
     Serial.begin(9600);
+
 
     pinMode(
         mq1,
         INPUT
     );
 
+
     pinMode(
         mq2,
         INPUT
     );
+
 
     pinMode(
         mq3,
         INPUT
     );
 
+
     dht.begin();
+
 
     Blynk.begin(
         BLYNK_AUTH_TOKEN,
@@ -947,191 +2139,478 @@ void setup()
         pass
     );
 
+
     timer.setInterval(
         2000L,
         sendSensorData
     );
+
 }
+
 
 void loop()
 {
+
     Blynk.run();
+
     timer.run();
+
 }</code></pre>
 
-        <div class="warning">
-            Replace YOUR_TEMPLATE_ID, YOUR_BLYNK_AUTH_TOKEN,
-            YOUR_WIFI_NAME and YOUR_WIFI_PASSWORD before uploading.
-        </div>
 
-    </section>
+    <div class="warning">
 
+        <strong>
+            Before uploading:
+        </strong>
 
-    <section class="section" id="steps">
+        replace
 
-        <h2>Steps to Operate the Project</h2>
+        <strong>
+            YOUR_TEMPLATE_ID,
+            YOUR_BLYNK_AUTH_TOKEN,
+            YOUR_WIFI_NAME
+        </strong>
 
-        <ol>
+        and
 
-            <li>
-                Connect the DHT11 data pin to digital pin 4.
-            </li>
+        <strong>
+            YOUR_WIFI_PASSWORD
+        </strong>
 
-            <li>
-                Connect the three gas sensor analog outputs to
-                A1, A2 and A3.
-            </li>
+        with your own Blynk
+        and Wi-Fi details.
 
-            <li>
-                Connect all VCC and GND connections properly.
-            </li>
+    </div>
 
-            <li>
-                Open Arduino IDE.
-            </li>
-
-            <li>
-                Select the Arduino UNO R4 WiFi board.
-            </li>
-
-            <li>
-                Install all required libraries.
-            </li>
-
-            <li>
-                Enter your Wi-Fi and Blynk credentials.
-            </li>
-
-            <li>
-                Upload the program.
-            </li>
-
-            <li>
-                Open Serial Monitor at 9600 baud.
-            </li>
-
-            <li>
-                Open the Blynk dashboard.
-            </li>
-
-            <li>
-                Monitor temperature, humidity and air sensor readings.
-            </li>
-
-        </ol>
-
-        <div class="success-note">
-            The Arduino automatically sends updated environmental
-            readings to Blynk every 2 seconds.
-        </div>
-
-    </section>
+</section>
 
 
-    <section class="section" id="troubleshooting">
 
-        <h2>Common Problems and Solutions</h2>
+<!-- Operating Steps -->
 
-        <div class="table-wrapper">
+<section
+    class="section"
+    id="steps"
+>
 
-            <table>
-
-                <thead>
-                    <tr>
-                        <th>Problem</th>
-                        <th>Possible Cause</th>
-                        <th>Solution</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    <tr>
-                        <td>Blynk does not connect</td>
-                        <td>Incorrect Wi-Fi or Blynk details</td>
-                        <td>Check SSID, password and authentication token.</td>
-                    </tr>
-
-                    <tr>
-                        <td>DHT read failed</td>
-                        <td>DHT11 wiring problem</td>
-                        <td>Check the DHT11 data connection to digital pin 4.</td>
-                    </tr>
-
-                    <tr>
-                        <td>Gas sensor remains at zero</td>
-                        <td>Incorrect analog wiring</td>
-                        <td>Verify sensors are connected to A1, A2 and A3.</td>
-                    </tr>
-
-                    <tr>
-                        <td>Values not appearing in Blynk</td>
-                        <td>Incorrect virtual pins</td>
-                        <td>Check Blynk widgets V0 to V4.</td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </section>
+    <h2>
+        Steps to Operate the Project
+    </h2>
 
 
-    <a
-        href="../index.html"
-        class="back-button"
-    >
-        ← Back to Home
-    </a>
+    <ol>
+
+        <li>
+            Connect the DHT11 sensor
+            according to the circuit diagram.
+        </li>
+
+        <li>
+            Connect the MQ135,
+            MQ2 and MQ9 sensors.
+        </li>
+
+        <li>
+            Connect all VCC pins to 5V.
+        </li>
+
+        <li>
+            Connect all GND pins to GND.
+        </li>
+
+        <li>
+            Open Arduino IDE.
+        </li>
+
+        <li>
+            Install
+            <strong>
+                Arduino UNO R4 Boards
+            </strong>.
+        </li>
+
+        <li>
+            Install all required libraries.
+        </li>
+
+        <li>
+            Complete the
+            <strong>
+                Blynk IoT Setup
+            </strong>.
+        </li>
+
+        <li>
+            Copy your
+            Template ID
+            and Authentication Token
+            from Blynk.
+        </li>
+
+        <li>
+            Enter your Wi-Fi name
+            and Wi-Fi password.
+        </li>
+
+        <li>
+            Select
+            <strong>
+                Arduino UNO R4 WiFi
+            </strong>
+            as the board.
+        </li>
+
+        <li>
+            Select the correct COM port.
+        </li>
+
+        <li>
+            Upload the Arduino program.
+        </li>
+
+        <li>
+            Open Serial Monitor at
+            <strong>
+                9600 baud
+            </strong>.
+        </li>
+
+        <li>
+            Open the Blynk dashboard.
+        </li>
+
+        <li>
+            Monitor Temperature,
+            Humidity,
+            MQ135,
+            MQ2
+            and MQ9 readings.
+        </li>
+
+    </ol>
+
+
+    <div class="success-note">
+
+        The Arduino sends updated
+        environmental sensor readings
+        to Blynk every
+        <strong>
+            2 seconds
+        </strong>.
+
+    </div>
+
+</section>
+
+
+
+<!-- Troubleshooting -->
+
+<section
+    class="section"
+    id="troubleshooting"
+>
+
+    <h2>
+        Common Problems and Solutions
+    </h2>
+
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Problem</th>
+                    <th>Possible Cause</th>
+                    <th>Solution</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+
+                    <td>
+                        Blynk does not connect
+                    </td>
+
+                    <td>
+                        Incorrect Wi-Fi
+                        or Blynk credentials
+                    </td>
+
+                    <td>
+                        Check Wi-Fi name,
+                        password,
+                        Template ID
+                        and Auth Token.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Blynk Device shows Offline
+                    </td>
+
+                    <td>
+                        Arduino is not connected
+                        to the Internet
+                    </td>
+
+                    <td>
+                        Verify Wi-Fi connection
+                        and credentials.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        DHT read failed
+                    </td>
+
+                    <td>
+                        DHT11 wiring problem
+                    </td>
+
+                    <td>
+                        Check DHT11 VCC,
+                        GND and D4 connections.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        MQ readings do not change
+                    </td>
+
+                    <td>
+                        Incorrect analog connection
+                    </td>
+
+                    <td>
+                        Check the MQ sensor
+                        analog outputs.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Values do not appear
+                        on Blynk
+                    </td>
+
+                    <td>
+                        Incorrect Virtual Pins
+                    </td>
+
+                    <td>
+                        Verify Datastreams
+                        V0 to V4.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Temperature gauge
+                        does not update
+                    </td>
+
+                    <td>
+                        Wrong Blynk Datastream
+                    </td>
+
+                    <td>
+                        Set Temperature
+                        Gauge to V0.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Humidity gauge
+                        does not update
+                    </td>
+
+                    <td>
+                        Wrong Blynk Datastream
+                    </td>
+
+                    <td>
+                        Set Humidity
+                        Gauge to V1.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        MQ135 gauge
+                        does not update
+                    </td>
+
+                    <td>
+                        Wrong Blynk Datastream
+                    </td>
+
+                    <td>
+                        Set MQ135
+                        Gauge to V2.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        MQ2 gauge
+                        does not update
+                    </td>
+
+                    <td>
+                        Wrong Blynk Datastream
+                    </td>
+
+                    <td>
+                        Set MQ2
+                        Gauge to V3.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        MQ9 gauge
+                        does not update
+                    </td>
+
+                    <td>
+                        Wrong Blynk Datastream
+                    </td>
+
+                    <td>
+                        Set MQ9
+                        Gauge to V4.
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<a
+    href="../index.html"
+    class="back-button"
+>
+    ← Back to Home
+</a>
+
 
 </main>
 
 
+
 <footer>
+
     Weather & Air Monitoring Project
+
 </footer>
+
 
 
 <script>
 
-    function copyCode(codeId, button)
+    function copyCode(
+        codeId,
+        button
+    )
     {
+
         const code =
-            document.getElementById(
+            document
+            .getElementById(
                 codeId
-            ).innerText;
+            )
+            .innerText;
+
 
         navigator.clipboard
             .writeText(code)
+
             .then(function ()
             {
+
                 const originalText =
                     button.textContent;
+
 
                 button.textContent =
                     "Copied!";
 
+
                 setTimeout(
                     function ()
                     {
+
                         button.textContent =
                             originalText;
+
                     },
                     2000
                 );
+
             })
+
 
             .catch(function ()
             {
+
                 alert(
                     "Code could not be copied."
                 );
+
             });
+
     }
 
 </script>
+
 
 </body>
 
