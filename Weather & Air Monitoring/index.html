@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Weather & Air Monitoring</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #1e293b;
+            background: #f1f5f9;
+            line-height: 1.6;
+        }
+
+        header {
+            padding: 55px 20px;
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #0284c7, #075985);
+        }
+
+        header h1 {
+            margin: 0 0 12px;
+            font-size: 40px;
+        }
+
+        header p {
+            max-width: 760px;
+            margin: auto;
+            color: #e0f2fe;
+            font-size: 17px;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 160px;
+            height: auto;
+            padding: 8px;
+            object-fit: contain;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+
+            padding: 15px;
+            background: white;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: #075985;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #0284c7;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 0;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 28px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
+            animation: fadeUp 0.8s ease;
+        }
+
+        .section h2 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            color: #075985;
+            border-bottom: 2px solid #e0f2fe;
+        }
+
+        .section h3 {
+            margin-top: 25px;
+            color: #0369a1;
+        }
+
+        .project-info {
+            padding: 18px;
+            background: #f0f9ff;
+            border-left: 5px solid #0284c7;
+            border-radius: 8px;
+        }
+
+        .project-info p {
+            margin: 7px 0;
+        }
+
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .requirement-card {
+            padding: 16px;
+            text-align: center;
+            overflow: hidden;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .requirement-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 22px rgba(2, 132, 199, 0.18);
+        }
+
+        .requirement-card span {
+            width: 100%;
+            height: 170px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 14px;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .requirement-card span img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .requirement-card strong {
+            display: block;
+            color: #075985;
+            font-size: 18px;
+        }
+
+        .requirement-card p {
+            color: #475569;
+            font-size: 14px;
+        }
+
+        ul,
+        ol {
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 9px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 600px;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            text-align: left;
+            border: 1px solid #cbd5e1;
+        }
+
+        th {
+            color: white;
+            background: #075985;
+        }
+
+        tr:nth-child(even) {
+            background: #f0f9ff;
+        }
+
+        .circuit-image-card {
+            margin-top: 22px;
+            padding: 15px;
+            text-align: center;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+        }
+
+        .circuit-image-card img {
+            width: 100%;
+            max-height: 650px;
+            object-fit: contain;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .sensor-card {
+            padding: 18px;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .sensor-card strong {
+            display: block;
+            margin-bottom: 7px;
+            color: #075985;
+            font-size: 18px;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 16px;
+            color: white;
+            background: #1e293b;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .copy-button {
+            padding: 8px 14px;
+            color: white;
+            background: #0284c7;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        pre {
+            margin: 0 0 15px;
+            padding: 22px;
+            overflow-x: auto;
+            color: #e2e8f0;
+            background: #0f172a;
+            border-radius: 0 0 10px 10px;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .note {
+            margin-top: 20px;
+            padding: 15px;
+            color: #854d0e;
+            background: #fef9c3;
+            border: 1px solid #fde047;
+            border-radius: 8px;
+        }
+
+        .success-note {
+            margin-top: 20px;
+            padding: 15px;
+            color: #166534;
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            border-radius: 8px;
+        }
+
+        .warning {
+            margin-top: 20px;
+            padding: 15px;
+            color: #991b1b;
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 11px 20px;
+            color: white;
+            background: #0284c7;
+            text-decoration: none;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        footer {
+            padding: 22px;
+            text-align: center;
+            color: #cbd5e1;
+            background: #0f172a;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .requirements-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            header h1 {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .requirements-grid,
+            .sensor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 27px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        <img
+            src="Simusoft logo.jpeg"
+            alt="Simusoft Technology Logo"
+        >
+    </div>
+
+    <h1>Weather & Air Monitoring</h1>
+
+    <p>
+        IoT based environmental monitoring system using DHT11,
+        multiple gas sensors, Arduino UNO R4 WiFi and Blynk.
+    </p>
+
+</header>
+
+
+<nav>
+    <a href="#details">Project Details</a>
+    <a href="#requirements">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#blynk">Blynk</a>
+    <a href="#libraries">Libraries</a>
+    <a href="#code">Arduino Code</a>
+    <a href="#steps">Operating Steps</a>
+</nav>
+
+
+<main class="container">
+
+    <section class="section" id="details">
+
+        <h2>Project Details</h2>
+
+        <div class="project-info">
+
+            <p>
+                <strong>Project Name:</strong>
+                Weather & Air Monitoring
+            </p>
+
+            <p>
+                <strong>Controller:</strong>
+                Arduino UNO R4 WiFi
+            </p>
+
+            <p>
+                <strong>IoT Platform:</strong>
+                Blynk
+            </p>
+
+            <p>
+                <strong>Temperature Sensor:</strong>
+                DHT11
+            </p>
+
+            <p>
+                <strong>Air Monitoring:</strong>
+                Three Analog Gas Sensors
+            </p>
+
+            <p>
+                <strong>Gas Sensor Inputs:</strong>
+                A1, A2 and A3
+            </p>
+
+            <p>
+                <strong>Communication:</strong>
+                Wi-Fi
+            </p>
+
+            <p>
+                <strong>Update Interval:</strong>
+                2 Seconds
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="section" id="requirements">
+
+        <h2>Required Components</h2>
+
+        <div class="requirements-grid">
+
+            <div class="requirement-card">
+
+                <span>
+                    <img
+                        src="Arduino UNO R4 WiFi.png"
+                        alt="Arduino UNO R4 WiFi"
+                    >
+                </span>
+
+                <strong>Arduino UNO R4 WiFi</strong>
+
+                <p>
+                    Main controller with Wi-Fi connectivity.
+                </p>
+
+            </div>
+
+            <div class="requirement-card">
+
+                <span>
+                    <img
+                        src="DHT11.png"
+                        alt="DHT11"
+                    >
+                </span>
+
+                <strong>DHT11</strong>
+
+                <p>
+                    Measures temperature and humidity.
+                </p>
+
+            </div>
+
+            <div class="requirement-card">
+
+                <span>
+                    <img
+                        src="MQ Gas Sensor.png"
+                        alt="MQ Gas Sensor"
+                    >
+                </span>
+
+                <strong>Gas Sensor 1</strong>
+
+                <p>
+                    Analog air-quality sensing input.
+                </p>
+
+            </div>
+
+            <div class="requirement-card">
+
+                <span>
+                    <img
+                        src="MQ Gas Sensor.png"
+                        alt="MQ Gas Sensor"
+                    >
+                </span>
+
+                <strong>Gas Sensor 2</strong>
+
+                <p>
+                    Second analog gas monitoring sensor.
+                </p>
+
+            </div>
+
+            <div class="requirement-card">
+
+                <span>
+                    <img
+                        src="MQ Gas Sensor.png"
+                        alt="MQ Gas Sensor"
+                    >
+                </span>
+
+                <strong>Gas Sensor 3</strong>
+
+                <p>
+                    Third analog gas monitoring sensor.
+                </p>
+
+            </div>
+
+            <div class="requirement-card">
+
+                <span>
+                    <img
+                        src="Jumper Wires.png"
+                        alt="Jumper Wires"
+                    >
+                </span>
+
+                <strong>Jumper Wires</strong>
+
+                <p>
+                    Used for sensor connections.
+                </p>
+
+            </div>
+
+            <div class="requirement-card">
+
+                <span>
+                    <img
+                        src="Power supply.png"
+                        alt="Power Supply"
+                    >
+                </span>
+
+                <strong>Power Supply</strong>
+
+                <p>
+                    Supplies power to the project.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="section" id="connections">
+
+        <h2>Circuit Connections</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Pin</th>
+                        <th>Arduino Pin</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>DHT11</td>
+                        <td>Data</td>
+                        <td>Digital Pin 4</td>
+                        <td>Temperature and humidity</td>
+                    </tr>
+
+                    <tr>
+                        <td>Gas Sensor 1</td>
+                        <td>Analog Output</td>
+                        <td>A1</td>
+                        <td>CO2 value</td>
+                    </tr>
+
+                    <tr>
+                        <td>Gas Sensor 2</td>
+                        <td>Analog Output</td>
+                        <td>A2</td>
+                        <td>CH4 value</td>
+                    </tr>
+
+                    <tr>
+                        <td>Gas Sensor 3</td>
+                        <td>Analog Output</td>
+                        <td>A3</td>
+                        <td>S2 value</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <section class="section" id="circuit">
+
+        <h2>Circuit Diagram</h2>
+
+        <div class="circuit-image-card">
+
+            <img
+                src="Weather Air Monitoring.png"
+                alt="Weather and Air Monitoring Circuit Diagram"
+            >
+
+            <h3>Weather & Air Monitoring Circuit</h3>
+
+            <p>
+                Arduino UNO R4 WiFi with DHT11 and three analog
+                gas sensors.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="section" id="working">
+
+        <h2>Working Principle</h2>
+
+        <div class="sensor-grid">
+
+            <div class="sensor-card">
+
+                <strong>Temperature & Humidity</strong>
+
+                <p>
+                    DHT11 measures temperature and humidity and sends
+                    both readings to the Arduino.
+                </p>
+
+            </div>
+
+            <div class="sensor-card">
+
+                <strong>Air Monitoring</strong>
+
+                <p>
+                    Three analog sensors are read through A1, A2 and A3.
+                    Their analog values are mapped to a 0–100 range.
+                </p>
+
+            </div>
+
+            <div class="sensor-card">
+
+                <strong>Wi-Fi Communication</strong>
+
+                <p>
+                    Arduino UNO R4 WiFi connects to the wireless network
+                    using the WiFiS3 library.
+                </p>
+
+            </div>
+
+            <div class="sensor-card">
+
+                <strong>Blynk Monitoring</strong>
+
+                <p>
+                    Temperature, humidity and gas values are uploaded
+                    to Blynk every 2 seconds.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="section" id="blynk">
+
+        <h2>Blynk Virtual Pins</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Virtual Pin</th>
+                        <th>Reading</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>V0</td>
+                        <td>Temperature</td>
+                    </tr>
+
+                    <tr>
+                        <td>V1</td>
+                        <td>Humidity</td>
+                    </tr>
+
+                    <tr>
+                        <td>V2</td>
+                        <td>CO2</td>
+                    </tr>
+
+                    <tr>
+                        <td>V3</td>
+                        <td>CH4</td>
+                    </tr>
+
+                    <tr>
+                        <td>V4</td>
+                        <td>S2</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <section class="section" id="libraries">
+
+        <h2>Required Libraries</h2>
+
+        <ul>
+            <li>Adafruit Unified Sensor</li>
+            <li>DHT Sensor Library</li>
+            <li>Blynk Library</li>
+            <li>WiFiS3</li>
+        </ul>
+
+        <div class="note">
+            Install all required libraries from the Arduino IDE
+            Library Manager before uploading the program.
+        </div>
+
+    </section>
+
+
+    <section class="section" id="code">
+
+        <h2>Arduino Code</h2>
+
+        <div class="code-header">
+
+            <span>weather_air_monitoring.ino</span>
+
+            <button
+                type="button"
+                class="copy-button"
+                onclick="copyCode('arduinoCode', this)"
+            >
+                Copy Code
+            </button>
+
+        </div>
+
+        <pre><code id="arduinoCode">#define BLYNK_PRINT Serial
+
+#define BLYNK_TEMPLATE_ID "YOUR_TEMPLATE_ID"
+#define BLYNK_TEMPLATE_NAME "Weather &amp; Air Monitoring"
+#define BLYNK_AUTH_TOKEN "YOUR_BLYNK_AUTH_TOKEN"
+
+#include &lt;SPI.h&gt;
+#include &lt;WiFiS3.h&gt;
+#include &lt;BlynkSimpleWifi.h&gt;
+#include &lt;DHT.h&gt;
+
+char ssid[] = "YOUR_WIFI_NAME";
+char pass[] = "YOUR_WIFI_PASSWORD";
+
+#define DHTPIN 4
+#define DHTTYPE DHT11
+
+DHT dht(
+    DHTPIN,
+    DHTTYPE
+);
+
+const int mq1 = A1;
+const int mq2 = A2;
+const int mq3 = A3;
+
+BlynkTimer timer;
+
+void sendSensorData()
+{
+    float co2 =
+        analogRead(mq1);
+
+    float ch4 =
+        analogRead(mq2);
+
+    float s2 =
+        analogRead(mq3);
+
+    co2 = map(
+        co2,
+        0,
+        1023,
+        0,
+        100
+    );
+
+    ch4 = map(
+        ch4,
+        0,
+        1023,
+        0,
+        100
+    );
+
+    s2 = map(
+        s2,
+        0,
+        1023,
+        0,
+        100
+    );
+
+    float temp =
+        dht.readTemperature();
+
+    float humidity =
+        dht.readHumidity();
+
+    if (
+        isnan(temp) ||
+        isnan(humidity)
+    )
+    {
+        Serial.println(
+            "DHT read failed"
+        );
+
+        return;
+    }
+
+    Blynk.virtualWrite(
+        V0,
+        temp
+    );
+
+    Blynk.virtualWrite(
+        V1,
+        humidity
+    );
+
+    Blynk.virtualWrite(
+        V2,
+        co2
+    );
+
+    Blynk.virtualWrite(
+        V3,
+        ch4
+    );
+
+    Blynk.virtualWrite(
+        V4,
+        s2
+    );
+
+    Serial.println(
+        "Data sent to Blynk"
+    );
+}
+
+void setup()
+{
+    Serial.begin(9600);
+
+    pinMode(
+        mq1,
+        INPUT
+    );
+
+    pinMode(
+        mq2,
+        INPUT
+    );
+
+    pinMode(
+        mq3,
+        INPUT
+    );
+
+    dht.begin();
+
+    Blynk.begin(
+        BLYNK_AUTH_TOKEN,
+        ssid,
+        pass
+    );
+
+    timer.setInterval(
+        2000L,
+        sendSensorData
+    );
+}
+
+void loop()
+{
+    Blynk.run();
+    timer.run();
+}</code></pre>
+
+        <div class="warning">
+            Replace YOUR_TEMPLATE_ID, YOUR_BLYNK_AUTH_TOKEN,
+            YOUR_WIFI_NAME and YOUR_WIFI_PASSWORD before uploading.
+        </div>
+
+    </section>
+
+
+    <section class="section" id="steps">
+
+        <h2>Steps to Operate the Project</h2>
+
+        <ol>
+
+            <li>
+                Connect the DHT11 data pin to digital pin 4.
+            </li>
+
+            <li>
+                Connect the three gas sensor analog outputs to
+                A1, A2 and A3.
+            </li>
+
+            <li>
+                Connect all VCC and GND connections properly.
+            </li>
+
+            <li>
+                Open Arduino IDE.
+            </li>
+
+            <li>
+                Select the Arduino UNO R4 WiFi board.
+            </li>
+
+            <li>
+                Install all required libraries.
+            </li>
+
+            <li>
+                Enter your Wi-Fi and Blynk credentials.
+            </li>
+
+            <li>
+                Upload the program.
+            </li>
+
+            <li>
+                Open Serial Monitor at 9600 baud.
+            </li>
+
+            <li>
+                Open the Blynk dashboard.
+            </li>
+
+            <li>
+                Monitor temperature, humidity and air sensor readings.
+            </li>
+
+        </ol>
+
+        <div class="success-note">
+            The Arduino automatically sends updated environmental
+            readings to Blynk every 2 seconds.
+        </div>
+
+    </section>
+
+
+    <section class="section" id="troubleshooting">
+
+        <h2>Common Problems and Solutions</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Problem</th>
+                        <th>Possible Cause</th>
+                        <th>Solution</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Blynk does not connect</td>
+                        <td>Incorrect Wi-Fi or Blynk details</td>
+                        <td>Check SSID, password and authentication token.</td>
+                    </tr>
+
+                    <tr>
+                        <td>DHT read failed</td>
+                        <td>DHT11 wiring problem</td>
+                        <td>Check the DHT11 data connection to digital pin 4.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Gas sensor remains at zero</td>
+                        <td>Incorrect analog wiring</td>
+                        <td>Verify sensors are connected to A1, A2 and A3.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Values not appearing in Blynk</td>
+                        <td>Incorrect virtual pins</td>
+                        <td>Check Blynk widgets V0 to V4.</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <a
+        href="../index.html"
+        class="back-button"
+    >
+        ← Back to Home
+    </a>
+
+</main>
+
+
+<footer>
+    Weather & Air Monitoring Project
+</footer>
+
+
+<script>
+
+    function copyCode(codeId, button)
+    {
+        const code =
+            document.getElementById(
+                codeId
+            ).innerText;
+
+        navigator.clipboard
+            .writeText(code)
+            .then(function ()
+            {
+                const originalText =
+                    button.textContent;
+
+                button.textContent =
+                    "Copied!";
+
+                setTimeout(
+                    function ()
+                    {
+                        button.textContent =
+                            originalText;
+                    },
+                    2000
+                );
+            })
+
+            .catch(function ()
+            {
+                alert(
+                    "Code could not be copied."
+                );
+            });
+    }
+
+</script>
+
+</body>
+
+</html>
