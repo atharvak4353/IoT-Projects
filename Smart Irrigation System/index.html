@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Smart Irrigation System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #1e293b;
+            background: #f1f5f9;
+            line-height: 1.6;
+        }
+
+        header {
+            padding: 55px 20px;
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #16a34a, #14532d);
+        }
+
+        header h1 {
+            margin: 0 0 12px;
+            font-size: 40px;
+        }
+
+        header p {
+            max-width: 760px;
+            margin: auto;
+            color: #dcfce7;
+            font-size: 17px;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 160px;
+            height: auto;
+            display: block;
+            padding: 8px;
+            object-fit: contain;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+
+            padding: 15px;
+            background: white;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: #166534;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #22c55e;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 0;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 28px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
+            animation: fadeUp 0.8s ease;
+        }
+
+        .section h2 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            color: #166534;
+            border-bottom: 2px solid #dcfce7;
+        }
+
+        .section h3 {
+            margin-top: 25px;
+            color: #15803d;
+        }
+
+        .project-info {
+            padding: 18px;
+            background: #f0fdf4;
+            border-left: 5px solid #22c55e;
+            border-radius: 8px;
+        }
+
+        .project-info p {
+            margin: 7px 0;
+        }
+
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .requirement-card {
+            padding: 16px;
+            text-align: center;
+            overflow: hidden;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .requirement-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 22px rgba(34, 197, 94, 0.18);
+        }
+
+        .requirement-card span {
+            width: 100%;
+            height: 170px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 14px;
+            padding: 10px;
+            overflow: hidden;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .requirement-card span img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+            object-position: center;
+            transition: transform 0.3s ease;
+        }
+
+        .requirement-card:hover span img {
+            transform: scale(1.08);
+        }
+
+        .requirement-card strong {
+            display: block;
+            margin-top: 5px;
+            color: #166534;
+            font-size: 18px;
+        }
+
+        .requirement-card p {
+            margin: 7px 0 0;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        ul,
+        ol {
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 9px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 600px;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            text-align: left;
+            border: 1px solid #cbd5e1;
+        }
+
+        th {
+            color: white;
+            background: #166534;
+        }
+
+        tr:nth-child(even) {
+            background: #f0fdf4;
+        }
+
+        .circuit-image-card {
+            margin-top: 22px;
+            padding: 15px;
+            text-align: center;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+        }
+
+        .circuit-image-card img {
+            width: 100%;
+            max-height: 650px;
+            object-fit: contain;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .mode-card {
+            padding: 18px;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .mode-card strong {
+            display: block;
+            margin-bottom: 7px;
+            color: #166534;
+            font-size: 18px;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 12px 16px;
+            color: white;
+            background: #1e293b;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .copy-button {
+            padding: 8px 14px;
+            color: white;
+            background: #16a34a;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .copy-button:hover {
+            background: #15803d;
+        }
+
+        pre {
+            margin: 0 0 15px;
+            padding: 22px;
+            overflow-x: auto;
+            color: #e2e8f0;
+            background: #0f172a;
+            border-radius: 0 0 10px 10px;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .note {
+            margin-top: 20px;
+            padding: 15px;
+            color: #854d0e;
+            background: #fef9c3;
+            border: 1px solid #fde047;
+            border-radius: 8px;
+        }
+
+        .warning {
+            margin-top: 20px;
+            padding: 15px;
+            color: #991b1b;
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+        }
+
+        .success-note {
+            margin-top: 20px;
+            padding: 15px;
+            color: #166534;
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            border-radius: 8px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin: 5px;
+            padding: 11px 20px;
+            color: white;
+            background: #16a34a;
+            text-decoration: none;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        .back-button:hover {
+            background: #166534;
+        }
+
+        footer {
+            padding: 22px;
+            text-align: center;
+            color: #cbd5e1;
+            background: #0f172a;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .requirements-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            header h1 {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .requirements-grid,
+            .mode-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 27px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        <img
+            src="Simusoft logo.jpeg"
+            alt="Simusoft Technology Logo"
+        >
+    </div>
+
+    <h1>Smart Irrigation System</h1>
+
+    <p>
+        IoT based automatic irrigation system using Arduino UNO R4,
+        soil moisture sensor, rain sensor, DHT11, water pump and Blynk.
+    </p>
+
+</header>
+
+<nav>
+    <a href="#details">Project Details</a>
+    <a href="#requirements">Components</a>
+    <a href="#connections">Connections</a>
+    <a href="#circuit">Circuit</a>
+    <a href="#working">Working</a>
+    <a href="#blynk">Blynk</a>
+    <a href="#libraries">Libraries</a>
+    <a href="#code">Arduino Code</a>
+    <a href="#steps">Operating Steps</a>
+</nav>
+
+<main class="container">
+
+    <section class="section" id="details">
+
+        <h2>Project Details</h2>
+
+        <div class="project-info">
+
+            <p>
+                <strong>Project Name:</strong>
+                Smart Irrigation System
+            </p>
+
+            <p>
+                <strong>Controller:</strong>
+                Arduino UNO R4 WiFi
+            </p>
+
+            <p>
+                <strong>IoT Platform:</strong>
+                Blynk
+            </p>
+
+            <p>
+                <strong>Soil Sensor:</strong>
+                Soil Moisture Sensor
+            </p>
+
+            <p>
+                <strong>Rain Sensor:</strong>
+                Analog Rain Sensor
+            </p>
+
+            <p>
+                <strong>Temperature Sensor:</strong>
+                DHT11
+            </p>
+
+            <p>
+                <strong>Output:</strong>
+                Water Pump through Relay
+            </p>
+
+            <p>
+                <strong>Control Modes:</strong>
+                Automatic and Manual
+            </p>
+
+            <p>
+                <strong>Programming:</strong>
+                Arduino C/C++
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="section" id="requirements">
+
+        <h2>Required Components</h2>
+
+        <div class="requirements-grid">
+
+            <div class="requirement-card">
+                <span>
+                    <img src="Arduino UNO R4 WiFi.png" alt="Arduino UNO R4 WiFi">
+                </span>
+                <strong>Arduino UNO R4 WiFi</strong>
+                <p>Main controller with built-in Wi-Fi.</p>
+            </div>
+
+            <div class="requirement-card">
+                <span>
+                    <img src="Soil Moisture Sensor.png" alt="Soil Moisture Sensor">
+                </span>
+                <strong>Soil Moisture Sensor</strong>
+                <p>Measures soil moisture level.</p>
+            </div>
+
+            <div class="requirement-card">
+                <span>
+                    <img src="Rain Sensor.png" alt="Rain Sensor">
+                </span>
+                <strong>Rain Sensor</strong>
+                <p>Detects rain intensity.</p>
+            </div>
+
+            <div class="requirement-card">
+                <span>
+                    <img src="DHT11.png" alt="DHT11">
+                </span>
+                <strong>DHT11</strong>
+                <p>Measures temperature and humidity.</p>
+            </div>
+
+            <div class="requirement-card">
+                <span>
+                    <img src="Relay Module.png" alt="Relay Module">
+                </span>
+                <strong>Relay Module</strong>
+                <p>Controls the water pump.</p>
+            </div>
+
+            <div class="requirement-card">
+                <span>
+                    <img src="Water Pump.png" alt="Water Pump">
+                </span>
+                <strong>Water Pump</strong>
+                <p>Supplies water to the plants.</p>
+            </div>
+
+            <div class="requirement-card">
+                <span>
+                    <img src="Jumper Wires.png" alt="Jumper Wires">
+                </span>
+                <strong>Jumper Wires</strong>
+                <p>Used for electrical connections.</p>
+            </div>
+
+            <div class="requirement-card">
+                <span>
+                    <img src="Power supply.png" alt="Power Supply">
+                </span>
+                <strong>Power Supply</strong>
+                <p>Provides power to the system.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="section" id="connections">
+
+        <h2>Circuit Connections</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Pin</th>
+                        <th>Arduino Connection</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Soil Moisture Sensor</td>
+                        <td>Analog Output</td>
+                        <td>A0</td>
+                        <td>Soil moisture measurement</td>
+                    </tr>
+
+                    <tr>
+                        <td>Rain Sensor</td>
+                        <td>Analog Output</td>
+                        <td>A1</td>
+                        <td>Rain measurement</td>
+                    </tr>
+
+                    <tr>
+                        <td>DHT11</td>
+                        <td>Data</td>
+                        <td>Digital Pin 2</td>
+                        <td>Temperature and humidity</td>
+                    </tr>
+
+                    <tr>
+                        <td>Relay Module</td>
+                        <td>IN</td>
+                        <td>Digital Pin 7</td>
+                        <td>Water pump control</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="note">
+            The relay control logic in the supplied program is active LOW.
+            LOW turns the pump ON and HIGH turns the pump OFF.
+        </div>
+
+    </section>
+
+
+    <section class="section" id="circuit">
+
+        <h2>Circuit Diagram</h2>
+
+        <div class="circuit-image-card">
+
+            <img
+                src="Smart Irrigation System.png"
+                alt="Smart Irrigation System Circuit Diagram"
+            >
+
+            <h3>Smart Irrigation System Circuit</h3>
+
+            <p>
+                Arduino UNO R4 WiFi connected with soil moisture sensor,
+                rain sensor, DHT11, relay and water pump.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="section" id="working">
+
+        <h2>Working Principle</h2>
+
+        <div class="mode-grid">
+
+            <div class="mode-card">
+
+                <strong>Automatic Mode</strong>
+
+                <p>
+                    The Arduino continuously reads the soil moisture value.
+                    If soil moisture becomes lower than 20%, the relay is
+                    activated and the water pump turns ON.
+                </p>
+
+                <p>
+                    When soil moisture becomes 20% or higher, the pump
+                    turns OFF.
+                </p>
+
+            </div>
+
+            <div class="mode-card">
+
+                <strong>Manual Mode</strong>
+
+                <p>
+                    In manual mode, the water pump can be controlled
+                    directly from the Blynk application.
+                </p>
+
+                <p>
+                    Blynk Virtual Pin V4 is used for manual pump control.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="success-note">
+            Sensor readings are sent to Blynk every 2 seconds.
+        </div>
+
+    </section>
+
+
+    <section class="section" id="blynk">
+
+        <h2>Blynk Virtual Pins</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Virtual Pin</th>
+                        <th>Parameter</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>V0</td>
+                        <td>Soil Moisture</td>
+                    </tr>
+
+                    <tr>
+                        <td>V1</td>
+                        <td>Temperature</td>
+                    </tr>
+
+                    <tr>
+                        <td>V2</td>
+                        <td>Humidity</td>
+                    </tr>
+
+                    <tr>
+                        <td>V3</td>
+                        <td>Rain Level</td>
+                    </tr>
+
+                    <tr>
+                        <td>V4</td>
+                        <td>Pump Control</td>
+                    </tr>
+
+                    <tr>
+                        <td>V5</td>
+                        <td>Automatic / Manual Mode</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <section class="section" id="libraries">
+
+        <h2>Required Libraries</h2>
+
+        <ul>
+            <li>Blynk Library</li>
+            <li>DHT Sensor Library</li>
+            <li>Adafruit Unified Sensor</li>
+            <li>Arduino UNO R4 Board Package</li>
+        </ul>
+
+        <div class="note">
+            Install these libraries from the Arduino IDE Library Manager
+            before compiling the project.
+        </div>
+
+    </section>
+
+
+    <section class="section" id="code">
+
+        <h2>Arduino Code</h2>
+
+        <div class="code-header">
+
+            <span>smart_irrigation.ino</span>
+
+            <button
+                type="button"
+                class="copy-button"
+                onclick="copyCode('arduinoCode', this)"
+            >
+                Copy Code
+            </button>
+
+        </div>
+
+        <pre><code id="arduinoCode">#define BLYNK_TEMPLATE_ID "YOUR_TEMPLATE_ID"
+#define BLYNK_TEMPLATE_NAME "Smart Irrigation System"
+#define BLYNK_AUTH_TOKEN "YOUR_BLYNK_AUTH_TOKEN"
+
+#include &lt;WiFiS3.h&gt;
+#include &lt;BlynkSimpleWifi.h&gt;
+#include &lt;DHT.h&gt;
+
+char ssid[] = "YOUR_WIFI_NAME";
+char pass[] = "YOUR_WIFI_PASSWORD";
+
+#define SOIL_PIN A0
+#define RAIN_PIN A1
+#define RELAY_PIN 7
+
+#define DHTPIN 2
+#define DHTTYPE DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
+
+BlynkTimer timer;
+
+#define VPIN_SOIL V0
+#define VPIN_TEMP V1
+#define VPIN_HUM V2
+#define VPIN_RAIN V3
+#define VPIN_PUMP V4
+#define VPIN_MODE V5
+
+bool autoMode = true;
+bool manualPump = false;
+
+void sendSensorData();
+
+BLYNK_WRITE(VPIN_MODE)
+{
+    autoMode = param.asInt();
+}
+
+BLYNK_WRITE(VPIN_PUMP)
+{
+    manualPump = param.asInt();
+}
+
+void sendSensorData()
+{
+    int soilRaw = analogRead(SOIL_PIN);
+    int rainRaw = analogRead(RAIN_PIN);
+
+    float temperature = dht.readTemperature();
+    float humidity = dht.readHumidity();
+
+    int soilPercent = map(
+        soilRaw,
+        1023,
+        0,
+        0,
+        100
+    );
+
+    int rainPercent = map(
+        rainRaw,
+        1023,
+        0,
+        0,
+        100
+    );
+
+    Serial.print("Soil: ");
+    Serial.print(soilPercent);
+
+    Serial.print("% Rain: ");
+    Serial.print(rainPercent);
+
+    Serial.print("% Temp: ");
+    Serial.print(temperature);
+
+    Serial.print(" Hum: ");
+    Serial.println(humidity);
+
+    Blynk.virtualWrite(
+        VPIN_SOIL,
+        soilPercent
+    );
+
+    Blynk.virtualWrite(
+        VPIN_RAIN,
+        rainPercent
+    );
+
+    Blynk.virtualWrite(
+        VPIN_TEMP,
+        temperature
+    );
+
+    Blynk.virtualWrite(
+        VPIN_HUM,
+        humidity
+    );
+
+    if (autoMode)
+    {
+        if (soilPercent &lt; 20)
+        {
+            digitalWrite(
+                RELAY_PIN,
+                LOW
+            );
+
+            Blynk.virtualWrite(
+                VPIN_PUMP,
+                1
+            );
+        }
+
+        else
+        {
+            digitalWrite(
+                RELAY_PIN,
+                HIGH
+            );
+
+            Blynk.virtualWrite(
+                VPIN_PUMP,
+                0
+            );
+        }
+    }
+
+    else
+    {
+        digitalWrite(
+            RELAY_PIN,
+            manualPump ? LOW : HIGH
+        );
+    }
+}
+
+void setup()
+{
+    Serial.begin(9600);
+
+    pinMode(
+        RELAY_PIN,
+        OUTPUT
+    );
+
+    digitalWrite(
+        RELAY_PIN,
+        HIGH
+    );
+
+    dht.begin();
+
+    Blynk.begin(
+        BLYNK_AUTH_TOKEN,
+        ssid,
+        pass
+    );
+
+    timer.setInterval(
+        2000L,
+        sendSensorData
+    );
+}
+
+void loop()
+{
+    Blynk.run();
+    timer.run();
+}</code></pre>
+
+        <div class="warning">
+            Replace YOUR_TEMPLATE_ID, YOUR_BLYNK_AUTH_TOKEN,
+            YOUR_WIFI_NAME and YOUR_WIFI_PASSWORD with your own details.
+        </div>
+
+    </section>
+
+
+    <section class="section" id="steps">
+
+        <h2>Steps to Operate the Project</h2>
+
+        <ol>
+            <li>Connect all sensors according to the connection table.</li>
+            <li>Connect the relay module to digital pin 7.</li>
+            <li>Connect the water pump through the relay.</li>
+            <li>Open Arduino IDE.</li>
+            <li>Select the Arduino UNO R4 board.</li>
+            <li>Install all required libraries.</li>
+            <li>Enter your Wi-Fi and Blynk details in the code.</li>
+            <li>Upload the program to the Arduino.</li>
+            <li>Open the Serial Monitor at 9600 baud.</li>
+            <li>Open the Blynk application.</li>
+            <li>Check soil moisture, rain, temperature and humidity.</li>
+            <li>Select automatic or manual pump control.</li>
+        </ol>
+
+    </section>
+
+
+    <section class="section" id="troubleshooting">
+
+        <h2>Common Problems and Solutions</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Problem</th>
+                        <th>Possible Cause</th>
+                        <th>Solution</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Blynk is not connecting</td>
+                        <td>Incorrect Wi-Fi or authentication details</td>
+                        <td>Check Wi-Fi credentials and Blynk token.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Pump does not start</td>
+                        <td>Relay wiring problem</td>
+                        <td>Check relay pin 7 and pump wiring.</td>
+                    </tr>
+
+                    <tr>
+                        <td>DHT value is incorrect</td>
+                        <td>DHT11 wiring issue</td>
+                        <td>Verify the DHT11 data connection to pin 2.</td>
+                    </tr>
+
+                    <tr>
+                        <td>Soil value does not change</td>
+                        <td>Sensor connection problem</td>
+                        <td>Verify the sensor analog output is connected to A0.</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <a href="../index.html" class="back-button">
+        ← Back to Home
+    </a>
+
+</main>
+
+
+<footer>
+    Smart Irrigation System Project
+</footer>
+
+
+<script>
+
+    function copyCode(codeId, button) {
+
+        const code =
+            document.getElementById(codeId).innerText;
+
+        navigator.clipboard
+            .writeText(code)
+            .then(function () {
+
+                const originalText =
+                    button.textContent;
+
+                button.textContent =
+                    "Copied!";
+
+                setTimeout(function () {
+                    button.textContent =
+                        originalText;
+                }, 2000);
+
+            })
+            .catch(function () {
+                alert(
+                    "Code could not be copied."
+                );
+            });
+    }
+
+</script>
+
+</body>
+
+</html>
