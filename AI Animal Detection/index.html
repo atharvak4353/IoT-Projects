@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>AI Animal Detection</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #1e293b;
+            background: #f1f5f9;
+            line-height: 1.6;
+        }
+
+        header {
+            padding: 55px 20px;
+            text-align: center;
+            color: white;
+            background: linear-gradient(135deg, #16a34a, #14532d);
+        }
+
+        header h1 {
+            margin: 0 0 12px;
+            font-size: 40px;
+        }
+
+        header p {
+            max-width: 750px;
+            margin: auto;
+            color: #dcfce7;
+            font-size: 17px;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            width: 160px;
+            height: auto;
+            display: block;
+            padding: 8px;
+            object-fit: contain;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+
+            padding: 15px;
+            background: white;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: #166534;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #22c55e;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 0;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 28px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
+            animation: fadeUp 0.8s ease;
+        }
+
+        .section h2 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            color: #166534;
+            border-bottom: 2px solid #dcfce7;
+        }
+
+        .section h3 {
+            margin-top: 25px;
+            color: #15803d;
+        }
+
+        .project-info {
+            padding: 18px;
+            background: #f0fdf4;
+            border-left: 5px solid #22c55e;
+            border-radius: 8px;
+        }
+
+        .project-info p {
+            margin: 7px 0;
+        }
+
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .requirement-card {
+            padding: 16px;
+            text-align: center;
+            overflow: hidden;
+
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+        .requirement-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 22px rgba(34, 197, 94, 0.18);
+        }
+
+        .requirement-card span {
+            width: 100%;
+            height: 170px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            margin-bottom: 14px;
+            padding: 10px;
+            overflow: hidden;
+
+            background: white;
+            border-radius: 10px;
+        }
+
+        .requirement-card span img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+            object-position: center;
+            transition: transform 0.3s ease;
+        }
+
+        .requirement-card:hover span img {
+            transform: scale(1.08);
+        }
+
+        .requirement-card strong {
+            display: block;
+            margin-top: 5px;
+            color: #166534;
+            font-size: 18px;
+        }
+
+        .requirement-card p {
+            margin: 7px 0 0;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        ul,
+        ol {
+            padding-left: 24px;
+        }
+
+        li {
+            margin-bottom: 9px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 600px;
+            margin-top: 15px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px;
+            text-align: left;
+            border: 1px solid #cbd5e1;
+        }
+
+        th {
+            color: white;
+            background: #166534;
+        }
+
+        tr:nth-child(even) {
+            background: #f0fdf4;
+        }
+
+        .circuit-image-card {
+            margin-top: 22px;
+            padding: 15px;
+            text-align: center;
+
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+        }
+
+        .circuit-image-card img {
+            width: 100%;
+            max-height: 650px;
+            object-fit: contain;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .animal-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .animal-card {
+            padding: 18px;
+            text-align: center;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            transition: 0.3s ease;
+        }
+
+        .animal-card:hover {
+            transform: translateY(-5px);
+            border-color: #22c55e;
+            box-shadow: 0 8px 20px rgba(34, 197, 94, 0.15);
+        }
+
+        .animal-card strong {
+            display: block;
+            color: #166534;
+            font-size: 19px;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+
+            padding: 12px 16px;
+
+            color: white;
+            background: #1e293b;
+
+            border-radius: 10px 10px 0 0;
+        }
+
+        .copy-button {
+            padding: 8px 14px;
+
+            color: white;
+            background: #16a34a;
+
+            border: none;
+            border-radius: 6px;
+
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .copy-button:hover {
+            background: #15803d;
+        }
+
+        pre {
+            margin: 0 0 15px;
+            padding: 22px;
+            overflow-x: auto;
+
+            color: #e2e8f0;
+            background: #0f172a;
+
+            border-radius: 0 0 10px 10px;
+
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .note {
+            margin-top: 20px;
+            padding: 15px;
+
+            color: #854d0e;
+            background: #fef9c3;
+
+            border: 1px solid #fde047;
+            border-radius: 8px;
+        }
+
+        .warning {
+            margin-top: 20px;
+            padding: 15px;
+
+            color: #991b1b;
+            background: #fee2e2;
+
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+        }
+
+        .success-note {
+            margin-top: 20px;
+            padding: 15px;
+
+            color: #166534;
+            background: #dcfce7;
+
+            border: 1px solid #86efac;
+            border-radius: 8px;
+        }
+
+        .back-button,
+        .download-button {
+            display: inline-block;
+            margin: 5px 5px 5px 0;
+            padding: 11px 20px;
+
+            color: white;
+            background: #16a34a;
+
+            text-decoration: none;
+            border-radius: 7px;
+            font-weight: bold;
+
+            transition:
+                background 0.3s ease,
+                transform 0.3s ease;
+        }
+
+        .back-button:hover,
+        .download-button:hover {
+            background: #166534;
+            transform: translateY(-2px);
+        }
+
+        footer {
+            padding: 22px;
+            text-align: center;
+            color: #cbd5e1;
+            background: #0f172a;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .requirements-grid,
+            .animal-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            header h1 {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .requirements-grid,
+            .animal-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .requirement-card span {
+                height: 190px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 27px;
+            }
+
+            nav {
+                gap: 13px;
+                font-size: 14px;
+            }
+
+            .copy-button {
+                padding: 7px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+
+        <div class="logo">
+
+            <img
+                src="Simusoft logo.jpeg"
+                alt="Simusoft Technology Logo"
+            >
+
+        </div>
+
+        <h1>AI Animal Detection</h1>
+
+        <p>
+            Raspberry Pi based Artificial Intelligence animal detection
+            system using Pi Camera, OpenCV, MobileNet SSD and a buzzer alert.
+        </p>
+
+    </header>
+
+    <nav>
+        <a href="#details">Project Details</a>
+        <a href="#requirements">Components</a>
+        <a href="#connections">Connections</a>
+        <a href="#circuit">Circuit</a>
+        <a href="#animals">Animals</a>
+        <a href="#installation">Installation</a>
+        <a href="#code">Python Code</a>
+        <a href="#steps">Operating Steps</a>
+    </nav>
+
+    <main class="container">
+
+        <!-- Project Details -->
+
+        <section class="section" id="details">
+
+            <h2>Project Details</h2>
+
+            <div class="project-info">
+
+                <p>
+                    <strong>Project Name:</strong>
+                    AI Animal Detection
+                </p>
+
+                <p>
+                    <strong>Controller:</strong>
+                    Raspberry Pi
+                </p>
+
+                <p>
+                    <strong>Input Device:</strong>
+                    Raspberry Pi Camera
+                </p>
+
+                <p>
+                    <strong>AI Model:</strong>
+                    MobileNet SSD
+                </p>
+
+                <p>
+                    <strong>Computer Vision Library:</strong>
+                    OpenCV
+                </p>
+
+                <p>
+                    <strong>Camera Library:</strong>
+                    Picamera2
+                </p>
+
+                <p>
+                    <strong>Output Device:</strong>
+                    Buzzer
+                </p>
+
+                <p>
+                    <strong>Buzzer GPIO:</strong>
+                    GPIO 18
+                </p>
+
+                <p>
+                    <strong>Programming Language:</strong>
+                    Python
+                </p>
+
+                <p>
+                    <strong>Purpose:</strong>
+                    To detect animals and birds using artificial intelligence
+                    and automatically activate a buzzer when an animal is
+                    detected by the camera.
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- Requirements -->
+
+        <section class="section" id="requirements">
+
+            <h2>Required Components</h2>
+
+            <div class="requirements-grid">
+
+                <div class="requirement-card">
+
+                    <span>
+                        <img
+                            src="Raspberry PI.png"
+                            alt="Raspberry Pi"
+                        >
+                    </span>
+
+                    <strong>Raspberry Pi</strong>
+
+                    <p>
+                        Main controller used to run the AI animal
+                        detection program.
+                    </p>
+
+                </div>
+
+                <div class="requirement-card">
+
+                    <span>
+                        <img
+                            src="Pi Camera.png"
+                            alt="Pi Camera"
+                        >
+                    </span>
+
+                    <strong>Pi Camera</strong>
+
+                    <p>
+                        Captures live video for animal detection.
+                    </p>
+
+                </div>
+
+                <div class="requirement-card">
+
+                    <span>
+                        <img
+                            src="Buzzer.png"
+                            alt="Buzzer"
+                        >
+                    </span>
+
+                    <strong>Buzzer</strong>
+
+                    <p>
+                        Produces an alert when an animal is detected.
+                    </p>
+
+                </div>
+
+                <div class="requirement-card">
+
+                    <span>
+                        <img
+                            src="Jumper Wires.png"
+                            alt="Jumper Wires"
+                        >
+                    </span>
+
+                    <strong>Jumper Wires</strong>
+
+                    <p>
+                        Used to connect the buzzer with the Raspberry Pi.
+                    </p>
+
+                </div>
+
+                <div class="requirement-card">
+
+                    <span>
+                        <img
+                            src="Power supply.png"
+                            alt="Raspberry Pi Power Supply"
+                        >
+                    </span>
+
+                    <strong>R-Pi Power Supply</strong>
+
+                    <p>
+                        Provides stable power to the Raspberry Pi.
+                    </p>
+
+                </div>
+
+                <div class="requirement-card">
+
+                    <span>
+                        <img
+                            src="Micro SD Card.png"
+                            alt="Micro SD Card"
+                        >
+                    </span>
+
+                    <strong>Micro SD Card</strong>
+
+                    <p>
+                        Stores the Raspberry Pi OS, AI model and program.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Connections -->
+
+        <section class="section" id="connections">
+
+            <h2>Circuit Connections</h2>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Pin</th>
+                            <th>Raspberry Pi Connection</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>Buzzer</td>
+                            <td>Positive (+)</td>
+                            <td>GPIO 18</td>
+                            <td>Animal detection alert</td>
+                        </tr>
+
+                        <tr>
+                            <td>Buzzer</td>
+                            <td>Negative (-)</td>
+                            <td>GND</td>
+                            <td>Ground connection</td>
+                        </tr>
+
+                        <tr>
+                            <td>Pi Camera</td>
+                            <td>Camera Ribbon Cable</td>
+                            <td>Raspberry Pi Camera Connector</td>
+                            <td>Live image capture</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="note">
+                The Python program uses BCM GPIO numbering.
+                Therefore, GPIO 18 refers to BCM GPIO 18.
+            </div>
+
+            <div class="warning">
+                <strong>Important:</strong>
+                Always switch OFF the Raspberry Pi before connecting or
+                disconnecting the Pi Camera ribbon cable.
+            </div>
+
+        </section>
+
+        <!-- Circuit Diagram -->
+
+        <section class="section" id="circuit">
+
+            <h2>Circuit Diagram</h2>
+
+            <p>
+                The Raspberry Pi Camera captures the live video feed.
+                The Raspberry Pi processes each camera frame using the
+                MobileNet SSD AI model. When a supported animal is detected,
+                the buzzer connected to GPIO 18 produces an alert.
+            </p>
+
+            <div class="circuit-image-card">
+
+                <img
+                    src="AI Animal Detection.png"
+                    alt="AI Animal Detection Circuit Diagram"
+                >
+
+                <h3>AI Animal Detection Circuit</h3>
+
+                <p>
+                    Raspberry Pi with Pi Camera and buzzer connected to
+                    GPIO 18.
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- Supported Animals -->
+
+        <section class="section" id="animals">
+
+            <h2>Animals Detected by the System</h2>
+
+            <p>
+                The program is configured to detect the following animals
+                and birds using the MobileNet SSD model.
+            </p>
+
+            <div class="animal-grid">
+
+                <div class="animal-card">
+                    <strong>Dog</strong>
+                    <p>AI detection class: dog</p>
+                </div>
+
+                <div class="animal-card">
+                    <strong>Cat</strong>
+                    <p>AI detection class: cat</p>
+                </div>
+
+                <div class="animal-card">
+                    <strong>Horse</strong>
+                    <p>AI detection class: horse</p>
+                </div>
+
+                <div class="animal-card">
+                    <strong>Sheep</strong>
+                    <p>AI detection class: sheep</p>
+                </div>
+
+                <div class="animal-card">
+                    <strong>Cow</strong>
+                    <p>AI detection class: cow</p>
+                </div>
+
+                <div class="animal-card">
+                    <strong>Bird</strong>
+                    <p>AI detection class: bird</p>
+                </div>
+
+            </div>
+
+            <div class="success-note">
+                When one of these animals is detected with more than
+                50% confidence, the animal name is displayed on the
+                camera screen and the buzzer produces an alert.
+            </div>
+
+        </section>
+
+        <!-- Working Principle -->
+
+        <section class="section" id="working">
+
+            <h2>Working Principle</h2>
+
+            <ol>
+
+                <li>
+                    The Raspberry Pi Camera continuously captures live video.
+                </li>
+
+                <li>
+                    Each camera frame is sent to OpenCV.
+                </li>
+
+                <li>
+                    The frame is resized and converted into a blob of
+                    300 × 300 pixels for the MobileNet SSD model.
+                </li>
+
+                <li>
+                    MobileNet SSD analyzes the image and identifies objects.
+                </li>
+
+                <li>
+                    The program checks whether the detected object is
+                    Dog, Cat, Horse, Sheep, Cow or Bird.
+                </li>
+
+                <li>
+                    Only detections having confidence greater than
+                    0.5 are accepted.
+                </li>
+
+                <li>
+                    A green bounding box is drawn around the animal.
+                </li>
+
+                <li>
+                    The animal name is displayed above the bounding box.
+                </li>
+
+                <li>
+                    The detected animal name is printed in the terminal.
+                </li>
+
+                <li>
+                    The buzzer turns ON for approximately 0.3 seconds.
+                </li>
+
+                <li>
+                    Press the Q key to stop the animal detection program.
+                </li>
+
+            </ol>
+
+        </section>
+
+        <!-- Installation -->
+
+        <section class="section" id="installation">
+
+            <h2>Required Libraries and Dependencies</h2>
+
+            <div class="note">
+                <strong>Important:</strong>
+                Install the following libraries and dependencies before
+                running the AI Animal Detection program.
+            </div>
+
+            <!-- Step 1 -->
+
+            <h3>Step 1: Update Raspberry Pi</h3>
+
+            <div class="code-header">
+                <span>Terminal Command 01</span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode('step1', this)"
+                >
+                    Copy
+                </button>
+            </div>
+
+            <pre><code id="step1">sudo apt update</code></pre>
+
+            <!-- Step 2 -->
+
+            <h3>Step 2: Install OpenCV</h3>
+
+            <div class="code-header">
+                <span>Terminal Command 02</span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode('step2', this)"
+                >
+                    Copy
+                </button>
+            </div>
+
+            <pre><code id="step2">sudo apt install python3-opencv</code></pre>
+
+            <!-- Step 3 -->
+
+            <h3>Step 3: Download MobileNet SSD Prototxt File</h3>
+
+            <div class="code-header">
+                <span>Terminal Command 03</span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode('step3', this)"
+                >
+                    Copy
+                </button>
+            </div>
+
+            <pre><code id="step3">wget https://raw.githubusercontent.com/chuanqi305/MobileNet-SSD/master/deploy.prototxt</code></pre>
+
+            <!-- Step 4 -->
+
+            <h3>Step 4: Download MobileNet SSD Model</h3>
+
+            <div class="code-header">
+                <span>Terminal Command 04</span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode('step4', this)"
+                >
+                    Copy
+                </button>
+            </div>
+
+            <pre><code id="step4">wget https://raw.githubusercontent.com/chuanqi305/MobileNet-SSD/master/mobilenet_iter_73000.caffemodel</code></pre>
+
+            <!-- Step 5 -->
+
+            <h3>Step 5: Update Raspberry Pi Again</h3>
+
+            <div class="code-header">
+                <span>Terminal Command 05</span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode('step5', this)"
+                >
+                    Copy
+                </button>
+            </div>
+
+            <pre><code id="step5">sudo apt update</code></pre>
+
+            <!-- Step 6 -->
+
+            <h3>Step 6: Install Camera Libraries</h3>
+
+            <div class="code-header">
+                <span>Terminal Command 06</span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode('step6', this)"
+                >
+                    Copy
+                </button>
+            </div>
+
+            <pre><code id="step6">sudo apt install -y libcamera-apps python3-libcamera python3-picamera2</code></pre>
+
+            <!-- Step 7 -->
+
+            <h3>Step 7: Install FFmpeg</h3>
+
+            <div class="code-header">
+                <span>Terminal Command 07</span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode('step7', this)"
+                >
+                    Copy
+                </button>
+            </div>
+
+            <pre><code id="step7">sudo apt install ffmpeg</code></pre>
+
+            <!-- Step 8 -->
+
+            <h3>Step 8: Install GPIO Zero</h3>
+
+            <div class="code-header">
+                <span>Terminal Command 08</span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode('step8', this)"
+                >
+                    Copy
+                </button>
+            </div>
+
+            <pre><code id="step8">sudo apt install python3-gpiozero</code></pre>
+
+            <!-- Step 9 -->
+
+            <h3>Step 9: Reboot Raspberry Pi</h3>
+
+            <div class="code-header">
+                <span>Terminal Command 09</span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode('step9', this)"
+                >
+                    Copy
+                </button>
+            </div>
+
+            <pre><code id="step9">reboot</code></pre>
+
+            <div class="success-note">
+                After rebooting, verify that the Pi Camera is connected
+                correctly before running the Python program.
+            </div>
+
+        </section>
+
+        <!-- Python Code -->
+
+        <section class="section" id="code">
+
+            <h2>Raspberry Pi Python Code</h2>
+
+            <div class="code-header">
+
+                <span>animal_detection.py</span>
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyCode('pythonCode', this)"
+                >
+                    Copy Code
+                </button>
+
+            </div>
+
+            <pre><code id="pythonCode">import cv2
+from picamera2 import Picamera2
+import time
+from gpiozero import Buzzer
+
+# ---------------- BUZZER SETUP ----------------
+
+buzzer = Buzzer(18)
+
+# ------------------------------------------------
+
+# Load MobileNet SSD model
+
+net = cv2.dnn.readNetFromCaffe(
+    "deploy.prototxt",
+    "mobilenet_iter_73000.caffemodel"
+)
+
+# Animals and birds we want to detect
+
+animal_classes = [
+    "dog",
+    "cat",
+    "horse",
+    "sheep",
+    "cow",
+    "bird"
+]
+
+# MobileNet SSD classes
+
+CLASSES = [
+    "background",
+    "aeroplane",
+    "bicycle",
+    "bird",
+    "boat",
+    "bottle",
+    "bus",
+    "car",
+    "cat",
+    "chair",
+    "cow",
+    "diningtable",
+    "dog",
+    "horse",
+    "motorbike",
+    "person",
+    "pottedplant",
+    "sheep",
+    "sofa",
+    "train",
+    "tvmonitor"
+]
+
+# Initialize Pi Camera
+
+picam = Picamera2()
+
+picam.configure(
+    picam.create_preview_configuration(
+        main={"size": (640, 480)}
+    )
+)
+
+picam.start()
+
+time.sleep(2)
+
+print("Starting Animal Detection... Press 'q' to quit")
+
+# Store previously detected animals
+# to avoid repeated terminal messages
+
+last_detected = set()
+
+while True:
+
+    frame = picam.capture_array()
+
+    # Convert BGRA to BGR if required
+
+    if frame.shape[2] == 4:
+        frame = cv2.cvtColor(
+            frame,
+            cv2.COLOR_BGRA2BGR
+        )
+
+    # Prepare image for AI detection
+
+    blob = cv2.dnn.blobFromImage(
+        frame,
+        0.007843,
+        (300, 300),
+        127.5
+    )
+
+    net.setInput(blob)
+
+    detections = net.forward()
+
+    detected_animals = []
+
+    # Detection loop
+
+    for i in range(detections.shape[2]):
+
+        confidence = detections[0, 0, i, 2]
+
+        if confidence &gt; 0.5:
+
+            class_id = int(
+                detections[0, 0, i, 1]
+            )
+
+            label = CLASSES[class_id]
+
+            if label in animal_classes:
+
+                detected_animals.append(label)
+
+                # Bounding box coordinates
+
+                box = detections[0, 0, i, 3:7] * [
+                    frame.shape[1],
+                    frame.shape[0],
+                    frame.shape[1],
+                    frame.shape[0]
+                ]
+
+                (x1, y1, x2, y2) = box.astype("int")
+
+                # Draw rectangle
+
+                cv2.rectangle(
+                    frame,
+                    (x1, y1),
+                    (x2, y2),
+                    (0, 255, 0),
+                    2
+                )
+
+                # Display animal label
+
+                cv2.putText(
+                    frame,
+                    label.upper(),
+                    (x1, y1 - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    (0, 0, 255),
+                    3
+                )
+
+    # Buzzer and terminal output
+
+    if detected_animals:
+
+        unique_animals = set(
+            detected_animals
+        )
+
+        # Print only when a new animal appears
+
+        if unique_animals != last_detected:
+
+            print(
+                "Animal Detected:",
+                ", ".join(unique_animals)
+            )
+
+            last_detected = unique_animals
+
+            # Buzzer alert
+
+            buzzer.on()
+
+            time.sleep(0.3)
+
+            buzzer.off()
+
+    else:
+
+        last_detected = set()
+
+        buzzer.off()
+
+    # Show live camera window
+
+    cv2.imshow(
+        "Animal Detection",
+        frame
+    )
+
+    # Press Q to exit
+
+    if cv2.waitKey(1) &amp; 0xFF == ord("q"):
+        break
+
+# Cleanup
+
+buzzer.off()
+
+cv2.destroyAllWindows()</code></pre>
+
+            <a
+                href="animal_detection.py"
+                class="download-button"
+                download
+            >
+                Download Python Code
+            </a>
+
+            <div class="note">
+                Run the program using:
+                <strong>python3 animal_detection.py</strong>
+            </div>
+
+        </section>
+
+        <!-- Operating Steps -->
+
+        <section class="section" id="steps">
+
+            <h2>Steps to Operate the Project</h2>
+
+            <ol>
+
+                <li>
+                    Switch OFF the Raspberry Pi before making connections.
+                </li>
+
+                <li>
+                    Connect the Pi Camera to the Raspberry Pi camera
+                    connector.
+                </li>
+
+                <li>
+                    Connect the positive terminal of the buzzer to
+                    <strong>GPIO 18</strong>.
+                </li>
+
+                <li>
+                    Connect the negative terminal of the buzzer to
+                    <strong>GND</strong>.
+                </li>
+
+                <li>
+                    Switch ON the Raspberry Pi.
+                </li>
+
+                <li>
+                    Install all the required libraries and dependencies.
+                </li>
+
+                <li>
+                    Download
+                    <strong>deploy.prototxt</strong>
+                    and
+                    <strong>mobilenet_iter_73000.caffemodel</strong>.
+                </li>
+
+                <li>
+                    Keep both MobileNet SSD files in the same folder
+                    as the Python program.
+                </li>
+
+                <li>
+                    Save the Python program as
+                    <strong>animal_detection.py</strong>.
+                </li>
+
+                <li>
+                    Open the terminal in the project folder.
+                </li>
+
+                <li>
+                    Run the program using:
+                    <strong>python3 animal_detection.py</strong>
+                </li>
+
+                <li>
+                    The Pi Camera will start capturing live video.
+                </li>
+
+                <li>
+                    Place an animal or animal image in front of the camera.
+                </li>
+
+                <li>
+                    When an animal is detected, a bounding box and animal
+                    name will appear on the camera window.
+                </li>
+
+                <li>
+                    The buzzer will beep when the animal is detected.
+                </li>
+
+                <li>
+                    Press the <strong>Q</strong> key to stop the program.
+                </li>
+
+            </ol>
+
+            <div class="success-note">
+                The project successfully identifies supported animals using
+                MobileNet SSD and produces a buzzer alert whenever an animal
+                is detected.
+            </div>
+
+        </section>
+
+        <!-- Troubleshooting -->
+
+        <section class="section" id="troubleshooting">
+
+            <h2>Common Problems and Solutions</h2>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Problem</th>
+                            <th>Possible Cause</th>
+                            <th>Solution</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>Camera is not opening</td>
+
+                            <td>
+                                Pi Camera is not connected correctly
+                            </td>
+
+                            <td>
+                                Switch OFF the Raspberry Pi and check the
+                                camera ribbon cable connection.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                No module named picamera2
+                            </td>
+
+                            <td>
+                                Picamera2 library is not installed
+                            </td>
+
+                            <td>
+                                Run:
+                                sudo apt install python3-picamera2
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                OpenCV module not found
+                            </td>
+
+                            <td>
+                                OpenCV is not installed
+                            </td>
+
+                            <td>
+                                Run:
+                                sudo apt install python3-opencv
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                deploy.prototxt file not found
+                            </td>
+
+                            <td>
+                                AI model configuration file is missing
+                            </td>
+
+                            <td>
+                                Download deploy.prototxt and keep it
+                                in the same folder as the Python program.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                caffemodel file not found
+                            </td>
+
+                            <td>
+                                MobileNet SSD model file is missing
+                            </td>
+
+                            <td>
+                                Download mobilenet_iter_73000.caffemodel
+                                and keep it in the project folder.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Animal is not detected
+                            </td>
+
+                            <td>
+                                Poor lighting, unclear image or low confidence
+                            </td>
+
+                            <td>
+                                Improve lighting and keep the animal clearly
+                                visible in front of the camera.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Buzzer is not working
+                            </td>
+
+                            <td>
+                                Incorrect GPIO connection
+                            </td>
+
+                            <td>
+                                Check that the buzzer signal is connected
+                                to GPIO 18 and the other terminal to GND.
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Detection window does not close
+                            </td>
+
+                            <td>
+                                Q key was not detected
+                            </td>
+
+                            <td>
+                                Click on the OpenCV camera window and
+                                press the Q key.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        <a
+            href="../index.html"
+            class="back-button"
+        >
+            ← Back to Home
+        </a>
+
+    </main>
+
+    <footer>
+        AI Animal Detection Project
+    </footer>
+
+    <script>
+
+        function copyCode(codeId, button) {
+
+            const code =
+                document.getElementById(codeId).innerText;
+
+            navigator.clipboard
+                .writeText(code)
+                .then(function () {
+
+                    const originalText =
+                        button.textContent;
+
+                    button.textContent = "Copied!";
+
+                    setTimeout(function () {
+                        button.textContent = originalText;
+                    }, 2000);
+
+                })
+                .catch(function () {
+
+                    alert("Code could not be copied.");
+
+                });
+        }
+
+    </script>
+
+</body>
+
+</html>
