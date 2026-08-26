@@ -1,9 +1,8 @@
-Home page
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -11,410 +10,2624 @@ Home page
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>IoT Experiments</title>
+    <meta
+        name="description"
+        content="Personal engineering portfolio featuring IoT, Embedded Systems, Robotics, Computer Vision and Automation projects."
+    >
+
+    <title>
+        Engineering Projects | IoT • Robotics • Automation
+    </title>
+
 
     <style>
-        * {
-            box-sizing: border-box;
+
+        /* =========================================================
+           ROOT VARIABLES
+        ========================================================= */
+
+        :root {
+
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+
+            --blue: #2563eb;
+            --blue-dark: #1d4ed8;
+            --cyan: #06b6d4;
+
+            --green: #16a34a;
+            --green-light: #22c55e;
+
+            --orange: #f59e0b;
+            --purple: #7c3aed;
+
+            --background: #f8fafc;
+            --surface: #ffffff;
+
+            --text: #1e293b;
+            --muted: #64748b;
+
+            --border: #e2e8f0;
+
+            --shadow:
+                0 10px 30px
+                rgba(15, 23, 42, 0.07);
+
+            --shadow-hover:
+                0 20px 45px
+                rgba(15, 23, 42, 0.13);
+
         }
+
+
+
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+
+        * {
+
+            margin: 0;
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
 
         html {
+
             scroll-behavior: smooth;
+
         }
+
 
         body {
+
             min-height: 100vh;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 40px 20px;
+
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            color: var(--text);
+
+            background:
+                #f8fafc;
+
             overflow-x: hidden;
 
-            background: linear-gradient(
-                -45deg,
-                #e0f2fe,
-                #f2f7fb,
-                #dbeafe,
-                #ecfeff
-            );
-
-            background-size: 400% 400%;
-            animation: backgroundAnimation 12s ease infinite;
         }
 
-        .container {
-            width: 100%;
-            max-width: 750px;
-            margin: 0 auto;
+
+        a {
+
+            color: inherit;
+
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 35px;
-            animation: fadeDown 1s ease;
+
+
+        /* =========================================================
+           BACKGROUND EFFECTS
+        ========================================================= */
+
+        .background-circle {
+
+            position: fixed;
+
+            z-index: -1;
+
+            border-radius: 50%;
+
+            filter: blur(2px);
+
+            pointer-events: none;
+
         }
 
-        h1 {
-            color: #075985;
-            font-size: 38px;
-            margin-bottom: 10px;
+
+        .circle-one {
+
+            width: 420px;
+            height: 420px;
+
+            top: -160px;
+            left: -170px;
+
+            background:
+                rgba(37, 99, 235, 0.07);
+
         }
 
-        .subtitle {
-            color: #475569;
-            font-size: 17px;
-            margin: 0;
+
+        .circle-two {
+
+            width: 500px;
+            height: 500px;
+
+            right: -220px;
+            top: 35%;
+
+            background:
+                rgba(6, 182, 212, 0.06);
+
         }
 
-        .card {
-            position: relative;
-            max-width: 650px;
-            margin: 20px auto;
-            padding: 28px;
-            overflow: hidden;
 
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(2, 132, 199, 0.15);
-            border-radius: 16px;
+        .circle-three {
 
-            box-shadow: 0 8px 25px rgba(7, 89, 133, 0.12);
+            width: 350px;
+            height: 350px;
 
-            animation: fadeUp 1s ease;
-            transition:
-                transform 0.35s ease,
-                box-shadow 0.35s ease;
+            left: 10%;
+            bottom: -180px;
+
+            background:
+                rgba(34, 197, 94, 0.05);
+
         }
 
-        .card::before {
-            content: "";
-            position: absolute;
+
+
+        /* =========================================================
+           NAVBAR
+        ========================================================= */
+
+        .navbar {
+
+            position: sticky;
+
             top: 0;
-            left: 0;
-            width: 6px;
-            height: 100%;
-            background: linear-gradient(
-                to bottom,
-                #0284c7,
-                #06b6d4
-            );
-        }
 
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(7, 89, 133, 0.2);
-        }
+            z-index: 1000;
 
-        .experiment-number {
-            display: inline-block;
-            padding: 6px 12px;
-            margin-bottom: 12px;
+            display: flex;
 
-            color: #0369a1;
-            background: #e0f2fe;
-
-            font-size: 14px;
-            font-weight: bold;
-
-            border-radius: 20px;
-        }
-
-        .card h2 {
-            color: #0f172a;
-            font-size: 26px;
-            margin: 5px 0 10px;
-        }
-
-        .card p {
-            color: #475569;
-            font-size: 17px;
-            line-height: 1.6;
-            margin-bottom: 22px;
-        }
-
-        .open-button {
-            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
+            justify-content: space-between;
 
-            padding: 12px 20px;
+            width: 100%;
 
-            color: white;
-            background: linear-gradient(
-                135deg,
-                #0284c7,
-                #0369a1
-            );
+            padding:
+                15px 7%;
+
+            background:
+                rgba(255, 255, 255, 0.92);
+
+            backdrop-filter:
+                blur(14px);
+
+            border-bottom:
+                1px solid
+                rgba(226, 232, 240, 0.8);
+
+            box-shadow:
+                0 5px 20px
+                rgba(15, 23, 42, 0.04);
+
+        }
+
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            color: var(--primary);
 
             text-decoration: none;
+
+            font-weight: 800;
+
+            font-size: 18px;
+
+        }
+
+
+        .brand-icon {
+
+            width: 39px;
+            height: 39px;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 11px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #06b6d4
+                );
+
+            font-size: 17px;
+
+            box-shadow:
+                0 6px 15px
+                rgba(37, 99, 235, 0.25);
+
+        }
+
+
+        .nav-links {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 28px;
+
+        }
+
+
+        .nav-links a {
+
+            color: #475569;
+
+            text-decoration: none;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            transition:
+                color 0.2s ease;
+
+        }
+
+
+        .nav-links a:hover {
+
+            color: var(--blue);
+
+        }
+
+
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+
+            position: relative;
+
+            min-height: 610px;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            padding:
+                95px 25px 75px;
+
+            overflow: hidden;
+
+            color: white;
+
+            text-align: center;
+
+            background:
+
+                radial-gradient(
+                    circle at 80% 20%,
+                    rgba(37, 99, 235, 0.22),
+                    transparent 30%
+                ),
+
+                radial-gradient(
+                    circle at 15% 80%,
+                    rgba(6, 182, 212, 0.15),
+                    transparent 30%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #020617,
+                    #0f172a 55%,
+                    #172554
+                );
+
+        }
+
+
+        .hero-content {
+
+            position: relative;
+
+            z-index: 2;
+
+            width: 100%;
+
+            max-width: 950px;
+
+        }
+
+
+        .hero-label {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            margin-bottom: 24px;
+
+            padding:
+                8px 15px;
+
+            color: #bfdbfe;
+
+            background:
+                rgba(37, 99, 235, 0.12);
+
+            border:
+                1px solid
+                rgba(147, 197, 253, 0.25);
+
+            border-radius: 999px;
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+
+        }
+
+
+        .hero-label-dot {
+
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #22c55e;
+
+            box-shadow:
+                0 0 12px
+                rgba(34, 197, 94, 0.9);
+
+        }
+
+
+        .hero h1 {
+
+            max-width: 900px;
+
+            margin: auto;
+
+            font-size:
+                clamp(
+                    43px,
+                    7vw,
+                    76px
+                );
+
+            line-height: 1.05;
+
+            letter-spacing: -3px;
+
+        }
+
+
+        .gradient-text {
+
+            color: #7dd3fc;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #60a5fa,
+                    #22d3ee
+                );
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color:
+                transparent;
+
+            background-clip: text;
+
+        }
+
+
+        .hero-description {
+
+            max-width: 760px;
+
+            margin:
+                25px auto 0;
+
+            color: #cbd5e1;
+
+            font-size: 18px;
+
+            line-height: 1.8;
+
+        }
+
+
+
+        /* =========================================================
+           HERO TECHNOLOGIES
+        ========================================================= */
+
+        .hero-tech {
+
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-top: 31px;
+
+        }
+
+
+        .tech-badge {
+
+            padding:
+                7px 13px;
+
+            color: #e2e8f0;
+
+            background:
+                rgba(255, 255, 255, 0.06);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.12);
+
+            border-radius: 999px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+        }
+
+
+
+        /* =========================================================
+           HERO BUTTON
+        ========================================================= */
+
+        .hero-actions {
+
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 14px;
+
+            margin-top: 34px;
+
+        }
+
+
+        .hero-button {
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 9px;
+
+            padding:
+                12px 23px;
+
+            border-radius: 9px;
+
+            text-decoration: none;
+
+            font-weight: 700;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+
+        }
+
+
+        .hero-button.primary {
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #0284c7
+                );
+
+            box-shadow:
+                0 8px 22px
+                rgba(37, 99, 235, 0.25);
+
+        }
+
+
+        .hero-button.secondary {
+
+            color: white;
+
+            background:
+                rgba(255, 255, 255, 0.07);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.16);
+
+        }
+
+
+        .hero-button:hover {
+
+            transform:
+                translateY(-3px);
+
+        }
+
+
+
+        /* =========================================================
+           STATS
+        ========================================================= */
+
+        .stats-wrapper {
+
+            position: relative;
+
+            z-index: 5;
+
+            width: 90%;
+
+            max-width: 1000px;
+
+            margin:
+                -45px auto 0;
+
+        }
+
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            background: white;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 15px 40px
+                rgba(15, 23, 42, 0.10);
+
+            overflow: hidden;
+
+        }
+
+
+        .stat {
+
+            padding:
+                24px 15px;
+
+            text-align: center;
+
+            border-right:
+                1px solid var(--border);
+
+        }
+
+
+        .stat:last-child {
+
+            border-right: none;
+
+        }
+
+
+        .stat strong {
+
+            display: block;
+
+            color: var(--primary);
+
+            font-size: 28px;
+
+            line-height: 1;
+
+        }
+
+
+        .stat span {
+
+            display: block;
+
+            margin-top: 8px;
+
+            color: var(--muted);
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+        }
+
+
+
+        /* =========================================================
+           MAIN
+        ========================================================= */
+
+        .main-container {
+
+            width: 90%;
+
+            max-width: 1180px;
+
+            margin: auto;
+
+            padding:
+                80px 0 60px;
+
+        }
+
+
+
+        /* =========================================================
+           SECTION HEADER
+        ========================================================= */
+
+        .section-heading {
+
+            max-width: 750px;
+
+            margin:
+                0 auto 42px;
+
+            text-align: center;
+
+        }
+
+
+        .section-label {
+
+            color: var(--blue);
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            letter-spacing: 1.5px;
+
+            text-transform: uppercase;
+
+        }
+
+
+        .section-heading h2 {
+
+            margin-top: 10px;
+
+            color: var(--primary);
+
+            font-size:
+                clamp(
+                    31px,
+                    5vw,
+                    44px
+                );
+
+            letter-spacing: -1px;
+
+        }
+
+
+        .section-heading p {
+
+            margin-top: 12px;
+
+            color: var(--muted);
+
             font-size: 16px;
-            font-weight: bold;
 
-            border-radius: 8px;
+        }
 
-            box-shadow: 0 5px 14px rgba(2, 132, 199, 0.25);
+
+
+        /* =========================================================
+           PROJECT GRID
+        ========================================================= */
+
+        .project-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 25px;
+
+        }
+
+
+
+        /* =========================================================
+           PROJECT CARD
+        ========================================================= */
+
+        .project-card {
+
+            position: relative;
+
+            display: flex;
+
+            flex-direction: column;
+
+            min-height: 350px;
+
+            padding: 28px;
+
+            overflow: hidden;
+
+            background: white;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 18px;
+
+            box-shadow:
+                var(--shadow);
 
             transition:
                 transform 0.3s ease,
                 box-shadow 0.3s ease,
-                background 0.3s ease;
+                border-color 0.3s ease;
+
         }
 
-        .open-button:hover {
-            transform: translateY(-3px) scale(1.03);
 
-            background: linear-gradient(
-                135deg,
-                #0369a1,
-                #075985
-            );
+        .project-card:hover {
 
-            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35);
+            transform:
+                translateY(-8px);
+
+            border-color:
+                #bfdbfe;
+
+            box-shadow:
+                var(--shadow-hover);
+
         }
 
-        .arrow {
-            display: inline-block;
-            transition: transform 0.3s ease;
+
+        .card-top {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            gap: 15px;
+
         }
 
-        .open-button:hover .arrow {
-            transform: translateX(5px);
+
+        .project-number {
+
+            min-width: 48px;
+            height: 48px;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #06b6d4
+                );
+
+            border-radius: 12px;
+
+            font-size: 15px;
+
+            font-weight: 800;
+
+            box-shadow:
+                0 6px 16px
+                rgba(37, 99, 235, 0.22);
+
         }
 
-        .circle {
-            position: fixed;
-            z-index: -1;
 
-            width: 180px;
-            height: 180px;
+        .project-category {
 
-            background: rgba(14, 165, 233, 0.12);
+            padding:
+                6px 11px;
+
+            color: #1d4ed8;
+
+            background: #eff6ff;
+
+            border:
+                1px solid #dbeafe;
+
+            border-radius: 999px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.6px;
+
+        }
+
+
+        .project-card h3 {
+
+            margin-top: 24px;
+
+            color: var(--primary);
+
+            font-size: 25px;
+
+            line-height: 1.25;
+
+        }
+
+
+        .project-description {
+
+            margin-top: 12px;
+
+            color: var(--muted);
+
+            font-size: 15px;
+
+            line-height: 1.7;
+
+        }
+
+
+
+        /* =========================================================
+           PROJECT TECHNOLOGIES
+        ========================================================= */
+
+        .project-tech {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 7px;
+
+            margin:
+                20px 0 24px;
+
+        }
+
+
+        .project-tech span {
+
+            padding:
+                6px 9px;
+
+            color: #475569;
+
+            background: #f8fafc;
+
+            border:
+                1px solid #e2e8f0;
+
+            border-radius: 7px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+        }
+
+
+
+        /* =========================================================
+           PROJECT BUTTON
+        ========================================================= */
+
+        .project-footer {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-top: auto;
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid var(--border);
+
+        }
+
+
+        .view-project {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding:
+                10px 17px;
+
+            color: white;
+
+            background: var(--primary);
+
+            border-radius: 8px;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease;
+
+        }
+
+
+        .view-project:hover {
+
+            transform:
+                translateY(-2px);
+
+            background: var(--blue);
+
+        }
+
+
+        .project-arrow {
+
+            font-size: 18px;
+
+            transition:
+                transform 0.2s ease;
+
+        }
+
+
+        .view-project:hover
+        .project-arrow {
+
+            transform:
+                translateX(4px);
+
+        }
+
+
+        .project-status {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            color: #15803d;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+        }
+
+
+        .status-dot {
+
+            width: 8px;
+            height: 8px;
+
+            background: #22c55e;
+
             border-radius: 50%;
 
-            animation: floatingCircle 6s ease-in-out infinite;
         }
 
-        .circle-one {
-            top: 8%;
-            left: 5%;
+
+
+        /* =========================================================
+           SPECIAL CARD COLORS
+        ========================================================= */
+
+        .color-blue
+        .project-number {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #0284c7
+                );
+
         }
 
-        .circle-two {
-            right: 5%;
-            bottom: 8%;
 
-            width: 240px;
-            height: 240px;
+        .color-green
+        .project-number {
 
-            animation-delay: 2s;
+            background:
+                linear-gradient(
+                    135deg,
+                    #16a34a,
+                    #22c55e
+                );
+
         }
 
-        @keyframes backgroundAnimation {
-            0% {
-                background-position: 0% 50%;
-            }
 
-            50% {
-                background-position: 100% 50%;
-            }
+        .color-purple
+        .project-number {
 
-            100% {
-                background-position: 0% 50%;
-            }
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #a855f7
+                );
+
         }
 
-        @keyframes fadeDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .color-orange
+        .project-number {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ea580c,
+                    #f59e0b
+                );
+
         }
+
+
+        .color-cyan
+        .project-number {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0891b2,
+                    #06b6d4
+                );
+
+        }
+
+
+
+        /* =========================================================
+           SKILLS SECTION
+        ========================================================= */
+
+        .skills-section {
+
+            margin-top: 75px;
+
+            padding: 45px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #172554
+                );
+
+            border-radius: 22px;
+
+            box-shadow:
+                0 20px 45px
+                rgba(15, 23, 42, 0.14);
+
+        }
+
+
+        .skills-section h2 {
+
+            font-size: 32px;
+
+            text-align: center;
+
+        }
+
+
+        .skills-section > p {
+
+            max-width: 700px;
+
+            margin:
+                12px auto 30px;
+
+            color: #cbd5e1;
+
+            text-align: center;
+
+        }
+
+
+        .skills-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 13px;
+
+        }
+
+
+        .skill-item {
+
+            padding: 15px;
+
+            text-align: center;
+
+            background:
+                rgba(255, 255, 255, 0.06);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.10);
+
+            border-radius: 10px;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+        }
+
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        footer {
+
+            margin-top: 20px;
+
+            padding:
+                38px 20px;
+
+            text-align: center;
+
+            color: #94a3b8;
+
+            background: #020617;
+
+        }
+
+
+        footer strong {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: white;
+
+            font-size: 17px;
+
+        }
+
+
+        .footer-tech {
+
+            margin-top: 12px;
+
+            color: #64748b;
+
+            font-size: 13px;
+
+        }
+
+
+
+        /* =========================================================
+           ANIMATIONS
+        ========================================================= */
 
         @keyframes fadeUp {
+
             from {
+
                 opacity: 0;
-                transform: translateY(40px);
+
+                transform:
+                    translateY(30px);
+
             }
 
             to {
+
                 opacity: 1;
-                transform: translateY(0);
+
+                transform:
+                    translateY(0);
+
             }
+
         }
 
-        @keyframes floatingCircle {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
 
-            50% {
-                transform: translateY(-25px);
-            }
+        .project-card {
+
+            animation:
+                fadeUp 0.7s ease both;
+
         }
 
-        @media (max-width: 600px) {
-            body {
-                padding: 30px 15px;
+
+        .project-card:nth-child(2) {
+
+            animation-delay:
+                0.06s;
+
+        }
+
+
+        .project-card:nth-child(3) {
+
+            animation-delay:
+                0.12s;
+
+        }
+
+
+        .project-card:nth-child(4) {
+
+            animation-delay:
+                0.18s;
+
+        }
+
+
+        .project-card:nth-child(5) {
+
+            animation-delay:
+                0.24s;
+
+        }
+
+
+        .project-card:nth-child(6) {
+
+            animation-delay:
+                0.30s;
+
+        }
+
+
+        .project-card:nth-child(7) {
+
+            animation-delay:
+                0.36s;
+
+        }
+
+
+
+        /* =========================================================
+           TABLET
+        ========================================================= */
+
+        @media (
+            max-width: 900px
+        ) {
+
+            .project-grid {
+
+                grid-template-columns:
+                    1fr;
+
             }
 
-            h1 {
-                font-size: 29px;
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
             }
 
-            .subtitle {
-                font-size: 15px;
+
+            .stat:nth-child(2) {
+
+                border-right: none;
+
             }
 
-            .card {
-                padding: 23px;
+
+            .stat:nth-child(1),
+            .stat:nth-child(2) {
+
+                border-bottom:
+                    1px solid var(--border);
+
             }
 
-            .card h2 {
+
+            .skills-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+        }
+
+
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (
+            max-width: 650px
+        ) {
+
+            .navbar {
+
+                justify-content: center;
+
+            }
+
+
+            .nav-links {
+
+                display: none;
+
+            }
+
+
+            .hero {
+
+                min-height: 570px;
+
+                padding:
+                    75px 18px 80px;
+
+            }
+
+
+            .hero h1 {
+
+                letter-spacing: -1.5px;
+
+            }
+
+
+            .hero-description {
+
+                font-size: 16px;
+
+            }
+
+
+            .stats-wrapper {
+
+                margin-top: -35px;
+
+            }
+
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+
+            .stat {
+
+                padding:
+                    20px 10px;
+
+            }
+
+
+            .main-container {
+
+                width: 92%;
+
+                padding-top: 65px;
+
+            }
+
+
+            .project-card {
+
+                min-height: 0;
+
+                padding: 22px;
+
+            }
+
+
+            .project-card h3 {
+
                 font-size: 22px;
+
             }
 
-            .open-button {
-                width: 100%;
+
+            .project-footer {
+
+                flex-direction: column;
+
+                align-items: stretch;
+
+                gap: 13px;
+
             }
+
+
+            .view-project {
+
+                justify-content: center;
+
+            }
+
+
+            .project-status {
+
+                justify-content: center;
+
+            }
+
+
+            .skills-section {
+
+                padding:
+                    32px 20px;
+
+            }
+
+
+            .skills-grid {
+
+                grid-template-columns:
+                    1fr 1fr;
+
+            }
+
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                scroll-behavior: auto !important;
+
+
+        /* =========================================================
+           REDUCED MOTION
+        ========================================================= */
+
+        @media (
+            prefers-reduced-motion: reduce
+        ) {
+
+            * {
+
+                animation: none !important;
+
+                transition: none !important;
+
             }
+
         }
+
     </style>
+
 </head>
+
+
 
 <body>
 
-    <div class="circle circle-one"></div>
-    <div class="circle circle-two"></div>
 
-    <main class="container">
+<!-- BACKGROUND -->
 
-        <header class="header">
-            <h1>IoT Projects</h1>
+<div
+    class="background-circle circle-one"
+></div>
 
-        </header>
+<div
+    class="background-circle circle-two"
+></div>
 
-        <section class="card">
+<div
+    class="background-circle circle-three"
+></div>
 
-            <h2>Smart Home Automation Project</h2>
 
-            <a
-                href="Smart Home Automation/"
-                class="open-button"
-                aria-label="Open Smart Home Automation Project"
-            >
-                Open Experiment
 
-                <span class="arrow">
-                    &rarr;
-                </span>
-            </a>
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
 
-        </section>
+<nav class="navbar">
 
-          <section class="card">
 
-            <h2>AI Animal Detection</h2>
+    <a
+        href="#"
+        class="brand"
+    >
 
-            <a
-                href="AI Animal Detection/"
-                class="open-button"
-                aria-label="Open Radar using Arduino UNO"
-            >
-                Open Experiment
+        <span class="brand-icon">
+            &lt;/&gt;
+        </span>
 
-                <span class="arrow">
-                    &rarr;
-                </span>
-            </a>
+        Engineering Projects
 
-        </section>
-        
-        <section class="card">
+    </a>
 
-            <h2>Radar using Arduino UNO</h2>
 
-            <a
-                href="Radar/"
-                class="open-button"
-                aria-label="Open Radar using Arduino UNO"
-            >
-                Open Experiment
+    <div class="nav-links">
 
-                <span class="arrow">
-                    &rarr;
-                </span>
-            </a>
+        <a href="#projects">
+            Projects
+        </a>
 
-        </section>
+        <a href="#skills">
+            Technologies
+        </a>
 
-         <section class="card">
+    </div>
 
-            <h2>Smart Door Viewer System</h2>
 
-            <a
-                href="Smart Door bell/"
-                class="open-button"
-                aria-label="Open Radar using Arduino UNO"
-            >
-                Open Experiment
+</nav>
 
-                <span class="arrow">
-                    &rarr;
-                </span>
-            </a>
 
-        </section>
 
-          <section class="card">
+<!-- =========================================================
+     HERO
+========================================================= -->
 
-            <h2>Smart Irrigation System</h2>
+<header class="hero">
 
-            <a
-                href="Smart Irrigation System/"
-                class="open-button"
-                aria-label="Open Radar using Arduino UNO"
-            >
-                Open Experiment
 
-                <span class="arrow">
-                    &rarr;
-                </span>
-            </a>
+    <div class="hero-content">
 
-        </section>
 
-          <section class="card">
+        <div class="hero-label">
 
-            <h2>Weather & Air Monitoring</h2>
+            <span class="hero-label-dot"></span>
+
+            Engineering Project Portfolio
+
+        </div>
+
+
+        <h1>
+
+            Building Practical
+
+            <span class="gradient-text">
+                Automation & IoT
+            </span>
+
+            Projects
+
+        </h1>
+
+
+        <p class="hero-description">
+
+            A collection of hands-on engineering projects
+            covering IoT, Embedded Systems, Raspberry Pi,
+            Arduino, Computer Vision, Artificial Intelligence,
+            Robotics and Industrial Automation.
+
+        </p>
+
+
+        <div class="hero-actions">
+
 
             <a
-                href="Weather & Air Monitoring/"
-                class="open-button"
-                aria-label="Open Radar using Arduino UNO"
+                href="#projects"
+                class="hero-button primary"
             >
-                Open Experiment
 
-                <span class="arrow">
-                    &rarr;
-                </span>
+                Explore Projects
+                <span>↓</span>
+
             </a>
 
-        </section>
-    </main>
+
+            <a
+                href="#skills"
+                class="hero-button secondary"
+            >
+
+                View Technologies
+
+            </a>
+
+
+        </div>
+
+
+        <div class="hero-tech">
+
+            <span class="tech-badge">
+                Arduino
+            </span>
+
+            <span class="tech-badge">
+                Raspberry Pi
+            </span>
+
+            <span class="tech-badge">
+                Python
+            </span>
+
+            <span class="tech-badge">
+                OpenCV
+            </span>
+
+            <span class="tech-badge">
+                Blynk IoT
+            </span>
+
+            <span class="tech-badge">
+                Robotics
+            </span>
+
+            <span class="tech-badge">
+                Computer Vision
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+</header>
+
+
+
+<!-- =========================================================
+     STATS
+========================================================= -->
+
+<div class="stats-wrapper">
+
+
+    <div class="stats">
+
+
+        <div class="stat">
+
+            <strong>
+                7
+            </strong>
+
+            <span>
+                Complete Projects
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            <strong>
+                4+
+            </strong>
+
+            <span>
+                Engineering Domains
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            <strong>
+                3
+            </strong>
+
+            <span>
+                Main Platforms
+            </span>
+
+        </div>
+
+
+        <div class="stat">
+
+            <strong>
+                100%
+            </strong>
+
+            <span>
+                Hands-On Projects
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main
+    class="main-container"
+    id="projects"
+>
+
+
+    <div class="section-heading">
+
+
+        <span class="section-label">
+
+            Featured Work
+
+        </span>
+
+
+        <h2>
+
+            Engineering Projects
+
+        </h2>
+
+
+        <p>
+
+            Explore the complete hardware setup,
+            circuit connections, software configuration,
+            source code and working principles
+            for each project.
+
+        </p>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         PROJECT GRID
+    ====================================================== -->
+
+    <div class="project-grid">
+
+
+
+        <!-- PROJECT 01 -->
+
+        <article
+            class="project-card color-purple"
+        >
+
+
+            <div class="card-top">
+
+
+                <div class="project-number">
+                    01
+                </div>
+
+
+                <span class="project-category">
+
+                    Computer Vision
+
+                </span>
+
+
+            </div>
+
+
+            <h3>
+
+                Gesture Controlled
+                Smart Home Automation
+
+            </h3>
+
+
+            <p class="project-description">
+
+                Raspberry Pi based smart home system
+                that uses real-time hand gesture recognition
+                to control LED, fan, water pump
+                and buzzer through a relay module.
+
+            </p>
+
+
+            <div class="project-tech">
+
+                <span>Raspberry Pi</span>
+                <span>Python</span>
+                <span>OpenCV</span>
+                <span>Hand Tracking</span>
+                <span>GPIO</span>
+
+            </div>
+
+
+            <div class="project-footer">
+
+
+                <a
+                    href="Smart Home Automation/"
+                    class="view-project"
+                >
+
+                    View Project
+
+                    <span class="project-arrow">
+                        →
+                    </span>
+
+                </a>
+
+
+                <span class="project-status">
+
+                    <span class="status-dot"></span>
+
+                    Completed
+
+                </span>
+
+
+            </div>
+
+
+        </article>
+
+
+
+        <!-- PROJECT 02 -->
+
+        <article
+            class="project-card color-green"
+        >
+
+
+            <div class="card-top">
+
+
+                <div class="project-number">
+                    02
+                </div>
+
+
+                <span class="project-category">
+
+                    Edge AI
+
+                </span>
+
+
+            </div>
+
+
+            <h3>
+
+                AI Animal Detection
+
+            </h3>
+
+
+            <p class="project-description">
+
+                Real-time AI animal detection system
+                using Raspberry Pi, OpenCV and MobileNet SSD
+                with live bounding boxes and
+                GPIO buzzer alerts.
+
+            </p>
+
+
+            <div class="project-tech">
+
+                <span>Raspberry Pi</span>
+                <span>Python</span>
+                <span>OpenCV</span>
+                <span>MobileNet SSD</span>
+                <span>AI</span>
+
+            </div>
+
+
+            <div class="project-footer">
+
+
+                <a
+                    href="AI Animal Detection/"
+                    class="view-project"
+                >
+
+                    View Project
+
+                    <span class="project-arrow">
+                        →
+                    </span>
+
+                </a>
+
+
+                <span class="project-status">
+
+                    <span class="status-dot"></span>
+
+                    Completed
+
+                </span>
+
+
+            </div>
+
+
+        </article>
+
+
+
+        <!-- PROJECT 03 -->
+
+        <article
+            class="project-card color-blue"
+        >
+
+
+            <div class="card-top">
+
+
+                <div class="project-number">
+                    03
+                </div>
+
+
+                <span class="project-category">
+
+                    Embedded Systems
+
+                </span>
+
+
+            </div>
+
+
+            <h3>
+
+                Arduino UNO Radar System
+
+            </h3>
+
+
+            <p class="project-description">
+
+                Ultrasonic radar-style object detection
+                using Arduino UNO, HC-SR04 and
+                a servo motor with real-time graphical
+                visualization in Processing IDE.
+
+            </p>
+
+
+            <div class="project-tech">
+
+                <span>Arduino UNO</span>
+                <span>HC-SR04</span>
+                <span>Servo</span>
+                <span>Processing</span>
+                <span>Serial</span>
+
+            </div>
+
+
+            <div class="project-footer">
+
+
+                <a
+                    href="Radar/"
+                    class="view-project"
+                >
+
+                    View Project
+
+                    <span class="project-arrow">
+                        →
+                    </span>
+
+                </a>
+
+
+                <span class="project-status">
+
+                    <span class="status-dot"></span>
+
+                    Completed
+
+                </span>
+
+
+            </div>
+
+
+        </article>
+
+
+
+        <!-- PROJECT 04 -->
+
+        <article
+            class="project-card color-orange"
+        >
+
+
+            <div class="card-top">
+
+
+                <div class="project-number">
+                    04
+                </div>
+
+
+                <span class="project-category">
+
+                    IoT Security
+
+                </span>
+
+
+            </div>
+
+
+            <h3>
+
+                Smart Door Viewer
+                & Visitor Alert System
+
+            </h3>
+
+
+            <p class="project-description">
+
+                ESP32-CAM based door monitoring system
+                that captures visitor images
+                and sends real-time photo alerts
+                through a Telegram bot.
+
+            </p>
+
+
+            <div class="project-tech">
+
+                <span>ESP32-CAM</span>
+                <span>OV2640</span>
+                <span>Wi-Fi</span>
+                <span>Telegram API</span>
+                <span>Arduino</span>
+
+            </div>
+
+
+            <div class="project-footer">
+
+
+                <a
+                    href="Smart Door bell/"
+                    class="view-project"
+                >
+
+                    View Project
+
+                    <span class="project-arrow">
+                        →
+                    </span>
+
+                </a>
+
+
+                <span class="project-status">
+
+                    <span class="status-dot"></span>
+
+                    Completed
+
+                </span>
+
+
+            </div>
+
+
+        </article>
+
+
+
+        <!-- PROJECT 05 -->
+
+        <article
+            class="project-card color-green"
+        >
+
+
+            <div class="card-top">
+
+
+                <div class="project-number">
+                    05
+                </div>
+
+
+                <span class="project-category">
+
+                    Smart Agriculture
+
+                </span>
+
+
+            </div>
+
+
+            <h3>
+
+                Smart Irrigation System
+
+            </h3>
+
+
+            <p class="project-description">
+
+                Arduino UNO R4 WiFi based irrigation system
+                with soil moisture, rain, temperature
+                and humidity monitoring plus automatic
+                and manual pump control through Blynk IoT.
+
+            </p>
+
+
+            <div class="project-tech">
+
+                <span>UNO R4 WiFi</span>
+                <span>Blynk IoT</span>
+                <span>DHT11</span>
+                <span>Soil Sensor</span>
+                <span>Relay</span>
+
+            </div>
+
+
+            <div class="project-footer">
+
+
+                <a
+                    href="Smart Irrigation System/"
+                    class="view-project"
+                >
+
+                    View Project
+
+                    <span class="project-arrow">
+                        →
+                    </span>
+
+                </a>
+
+
+                <span class="project-status">
+
+                    <span class="status-dot"></span>
+
+                    Completed
+
+                </span>
+
+
+            </div>
+
+
+        </article>
+
+
+
+        <!-- PROJECT 06 -->
+
+        <article
+            class="project-card color-cyan"
+        >
+
+
+            <div class="card-top">
+
+
+                <div class="project-number">
+                    06
+                </div>
+
+
+                <span class="project-category">
+
+                    Environmental IoT
+
+                </span>
+
+
+            </div>
+
+
+            <h3>
+
+                Weather & Air Monitoring
+
+            </h3>
+
+
+            <p class="project-description">
+
+                IoT environmental monitoring system
+                using Arduino UNO R4 WiFi,
+                DHT11 and MQ-series gas sensors
+                with live monitoring through Blynk.
+
+            </p>
+
+
+            <div class="project-tech">
+
+                <span>UNO R4 WiFi</span>
+                <span>Blynk</span>
+                <span>DHT11</span>
+                <span>MQ135</span>
+                <span>MQ2</span>
+                <span>MQ9</span>
+
+            </div>
+
+
+            <div class="project-footer">
+
+
+                <a
+                    href="Weather & Air Monitoring/"
+                    class="view-project"
+                >
+
+                    View Project
+
+                    <span class="project-arrow">
+                        →
+                    </span>
+
+                </a>
+
+
+                <span class="project-status">
+
+                    <span class="status-dot"></span>
+
+                    Completed
+
+                </span>
+
+
+            </div>
+
+
+        </article>
+
+
+
+        <!-- PROJECT 07 -->
+
+        <article
+            class="project-card color-purple"
+        >
+
+
+            <div class="card-top">
+
+
+                <div class="project-number">
+                    07
+                </div>
+
+
+                <span class="project-category">
+
+                    Industrial Automation
+
+                </span>
+
+
+            </div>
+
+
+            <h3>
+
+                AI Based Color Sorting System
+
+            </h3>
+
+
+            <p class="project-description">
+
+                Automated machine-vision sorting system
+                using Raspberry Pi, OpenCV,
+                conveyor automation, proxy sensing
+                and Robot Magician robotic pick-and-place.
+
+            </p>
+
+
+            <div class="project-tech">
+
+                <span>Raspberry Pi</span>
+                <span>OpenCV</span>
+                <span>Robot Magician</span>
+                <span>Conveyor</span>
+                <span>Proxy Sensor</span>
+                <span>Python</span>
+
+            </div>
+
+
+            <div class="project-footer">
+
+
+                <!--
+                    Change this folder name only
+                    if your actual GitHub folder
+                    is named differently.
+                -->
+
+                <a
+                    href="AI Color Sorting System/"
+                    class="view-project"
+                >
+
+                    View Project
+
+                    <span class="project-arrow">
+                        →
+                    </span>
+
+                </a>
+
+
+                <span class="project-status">
+
+                    <span class="status-dot"></span>
+
+                    Completed
+
+                </span>
+
+
+            </div>
+
+
+        </article>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         SKILLS / TECHNOLOGIES
+    ====================================================== -->
+
+    <section
+        class="skills-section"
+        id="skills"
+    >
+
+
+        <h2>
+
+            Technologies Used Across Projects
+
+        </h2>
+
+
+        <p>
+
+            These projects demonstrate practical
+            integration of software, electronics,
+            computer vision, IoT and robotics.
+
+        </p>
+
+
+        <div class="skills-grid">
+
+
+            <div class="skill-item">
+                Raspberry Pi
+            </div>
+
+
+            <div class="skill-item">
+                Arduino UNO
+            </div>
+
+
+            <div class="skill-item">
+                Arduino UNO R4 WiFi
+            </div>
+
+
+            <div class="skill-item">
+                ESP32-CAM
+            </div>
+
+
+            <div class="skill-item">
+                Python
+            </div>
+
+
+            <div class="skill-item">
+                C / C++
+            </div>
+
+
+            <div class="skill-item">
+                OpenCV
+            </div>
+
+
+            <div class="skill-item">
+                MobileNet SSD
+            </div>
+
+
+            <div class="skill-item">
+                Blynk IoT
+            </div>
+
+
+            <div class="skill-item">
+                Computer Vision
+            </div>
+
+
+            <div class="skill-item">
+                GPIO Control
+            </div>
+
+
+            <div class="skill-item">
+                Robot Programming
+            </div>
+
+
+            <div class="skill-item">
+                Sensors
+            </div>
+
+
+            <div class="skill-item">
+                Relay Control
+            </div>
+
+
+            <div class="skill-item">
+                Serial Communication
+            </div>
+
+
+            <div class="skill-item">
+                Industrial Automation
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+
+    <strong>
+
+        Engineering Project Portfolio
+
+    </strong>
+
+
+    <p>
+
+        IoT • Embedded Systems • Robotics •
+        Artificial Intelligence • Computer Vision • Automation
+
+    </p>
+
+
+    <p class="footer-tech">
+
+        Designed as a personal technical project portfolio.
+
+    </p>
+
+
+</footer>
+
+
 
 </body>
 
