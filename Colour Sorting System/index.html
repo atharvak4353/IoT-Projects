@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AI Based Color Sorting System using Raspberry Pi 4, OpenCV, USB camera, proxy sensor, conveyor and Robot Magician.">
+<title>AI Based Color Sorting System</title>
+<style>
+:root{--primary:#0f172a;--secondary:#1e3a8a;--accent:#2563eb;--surface:#fff;--bg:#f8fafc;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--green:#16a34a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+.hero{padding:80px 20px;text-align:center;color:#fff;background:linear-gradient(135deg,#020617,#0f172a 55%,#1e3a8a)}
+.hero .tag{display:inline-block;padding:7px 14px;border:1px solid #ffffff33;border-radius:999px;background:#ffffff12;font-size:13px;font-weight:bold;letter-spacing:.7px}
+.hero h1{font-size:clamp(38px,6vw,64px);line-height:1.08;margin:20px 0 15px}.hero p{max-width:850px;margin:auto;color:#dbeafe;font-size:18px}
+.badges{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:25px}.badge{padding:7px 12px;border-radius:999px;background:#ffffff12;border:1px solid #ffffff24;font-size:13px}
+nav{position:sticky;top:0;z-index:10;display:flex;justify-content:center;gap:20px;flex-wrap:wrap;padding:14px;background:#fffffff5;border-bottom:1px solid var(--border);box-shadow:0 3px 12px #0f172a0d}
+nav a{color:#334155;text-decoration:none;font-size:14px;font-weight:bold}nav a:hover{color:var(--accent)}
+.container{width:90%;max-width:1100px;margin:auto;padding:45px 0}.section{background:#fff;margin-bottom:30px;padding:30px;border:1px solid var(--border);border-radius:17px;box-shadow:0 8px 30px #0f172a0d}
+h2{margin-top:0;color:var(--primary);font-size:28px;border-bottom:2px solid #dbeafe;padding-bottom:10px}h3{color:var(--secondary);margin-top:28px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{padding:19px;background:#f8fafc;border:1px solid var(--border);border-radius:13px}.card strong{display:block;color:var(--secondary);font-size:17px;margin-bottom:6px}.card p{margin:0;color:var(--muted);font-size:14px}
+.info{padding:18px;background:#eff6ff;border-left:5px solid var(--accent);border-radius:8px}.success{padding:15px;margin-top:18px;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;border-radius:9px}.warning{padding:15px;margin-top:18px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:9px}
+.table-wrap{overflow-x:auto}table{width:100%;min-width:650px;border-collapse:collapse;margin-top:15px}th,td{padding:12px;border:1px solid var(--border);text-align:left}th{background:var(--primary);color:white}tr:nth-child(even){background:#f8fafc}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.flow div{padding:16px;text-align:center;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;font-weight:bold;color:#1e3a8a}
+.code-head{display:flex;justify-content:space-between;align-items:center;padding:11px 15px;background:#1e293b;color:#fff;border-radius:9px 9px 0 0}.copy{border:0;border-radius:6px;background:#2563eb;color:#fff;padding:7px 12px;font-weight:bold;cursor:pointer}
+pre{margin:0 0 15px;padding:20px;overflow:auto;background:#020617;color:#e2e8f0;border-radius:0 0 9px 9px;font:13px/1.55 Consolas,monospace;max-height:700px}
+ol,ul{padding-left:24px}li{margin-bottom:8px}.outcome{padding:25px;color:#fff;background:linear-gradient(135deg,#0f172a,#1e3a8a);border-radius:14px}.outcome h3{color:#fff;margin-top:0}.outcome p{color:#dbeafe}
+footer{text-align:center;padding:30px;background:#020617;color:#94a3b8}footer strong{color:#fff}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.flow{grid-template-columns:repeat(2,1fr)}}@media(max-width:550px){.grid,.flow{grid-template-columns:1fr}.section{padding:20px}.hero{padding:60px 18px}}
+</style>
+</head>
+<body>
+<header class="hero">
+<span class="tag">COMPUTER VISION • ROBOTICS • INDUSTRIAL AUTOMATION</span>
+<h1>AI Based Color Sorting System</h1>
+<p>Automated red, blue and yellow object sorting using Raspberry Pi 4, USB Camera, OpenCV, E18-D80NK proxy sensor, conveyor control and a Robot Magician pick-and-place robot.</p>
+<div class="badges"><span class="badge">Raspberry Pi 4</span><span class="badge">Python</span><span class="badge">OpenCV</span><span class="badge">Robot Magician</span><span class="badge">Machine Vision</span><span class="badge">GPIO</span></div>
+</header>
+
+<nav>
+<a href="#about">About</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#software">Software</a><a href="#calibration">Calibration</a><a href="#working">Working</a><a href="#code">Code</a><a href="#troubleshooting">Notes</a>
+</nav>
+
+<main class="container">
+<section class="section" id="about">
+<h2>Project Overview</h2>
+<div class="info"><strong>Purpose:</strong> Automatically detect colored objects, move them to a pickup point, and sort them into the correct bin using machine vision and robotic pick-and-place.</div>
+<h3>Objectives</h3>
+<div class="grid">
+<div class="card"><strong>Color Detection</strong><p>Detect red, blue and yellow objects using OpenCV.</p></div>
+<div class="card"><strong>Conveyor Control</strong><p>Automatically start and stop the conveyor through a relay.</p></div>
+<div class="card"><strong>Accurate Pickup</strong><p>Use a proxy sensor to confirm that the object reached the pickup position.</p></div>
+<div class="card"><strong>Robot Sorting</strong><p>Robot Magician picks the object using vacuum suction and places it in the correct bin.</p></div>
+<div class="card"><strong>Live Dashboard</strong><p>Display object counts, detected color and system state.</p></div>
+<div class="card"><strong>Industrial Automation</strong><p>Demonstrates integration of computer vision, sensors, conveyor and robotics.</p></div>
+</div>
+<h3>Applications</h3>
+<p>Manufacturing • Packaging • Warehouse Automation • Educational Robotics Labs • Industrial Automation</p>
+</section>
+
+<section class="section" id="components">
+<h2>Components Required</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Component</th><th>Qty</th><th>Purpose</th><th>Specification</th></tr></thead>
+<tbody>
+<tr><td>Raspberry Pi 4</td><td>1</td><td>Main controller</td><td>4 GB RAM</td></tr>
+<tr><td>Robot Magician</td><td>1</td><td>Pick and place robot</td><td>Vacuum suction</td></tr>
+<tr><td>USB Camera</td><td>1</td><td>Capture object images</td><td>640×480 or higher</td></tr>
+<tr><td>E18-D80NK Proxy Sensor</td><td>1</td><td>Detect object at pickup position</td><td>NPN, 5–24 V</td></tr>
+<tr><td>Relay Module</td><td>1</td><td>Start/Stop conveyor</td><td>1 Channel</td></tr>
+<tr><td>PWM DC Motor Controller</td><td>1</td><td>Control conveyor speed</td><td>12 V DC</td></tr>
+<tr><td>DC Conveyor Motor</td><td>1</td><td>Move object</td><td>12 V</td></tr>
+<tr><td>12 V Power Supply</td><td>1</td><td>Power conveyor</td><td>12 V DC</td></tr>
+<tr><td>Sorting Bins</td><td>3</td><td>Collect objects</td><td>Red, Blue, Yellow</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="section" id="connections">
+<h2>Hardware Connections</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Connection</th><th>Details</th></tr></thead>
+<tbody>
+<tr><td>Relay VCC</td><td>Raspberry Pi 3.3 V</td></tr>
+<tr><td>Relay GND</td><td>Raspberry Pi GND</td></tr>
+<tr><td>Relay Signal</td><td>Raspberry Pi GPIO17</td></tr>
+<tr><td>Proxy Sensor Signal</td><td>Raspberry Pi GPIO23</td></tr>
+<tr><td>Proxy Sensor VCC</td><td>Raspberry Pi 5 V</td></tr>
+<tr><td>Proxy Sensor GND</td><td>Raspberry Pi GND</td></tr>
+<tr><td>USB Camera</td><td>Raspberry Pi USB Port</td></tr>
+<tr><td>Robot Magician USB-A</td><td>Raspberry Pi USB Port</td></tr>
+<tr><td>Relay COM</td><td>PWM Controller Power (+)</td></tr>
+<tr><td>Relay NC</td><td>12 V Positive Supply</td></tr>
+<tr><td>PWM Output</td><td>DC Conveyor Motor</td></tr>
+</tbody></table></div>
+<div class="warning"><strong>Important:</strong> Complete all wiring before powering ON the system. Connect all grounds together, secure USB connections, and check 12 V supply polarity.</div>
+</section>
+
+<section class="section" id="software">
+<h2>Software Requirements</h2>
+<div class="grid">
+<div class="card"><strong>Raspberry Pi OS</strong><p>Operating system</p></div>
+<div class="card"><strong>Python 3</strong><p>Programming language</p></div>
+<div class="card"><strong>OpenCV</strong><p>Image processing and color detection</p></div>
+<div class="card"><strong>NumPy</strong><p>Array processing</p></div>
+<div class="card"><strong>RPi.GPIO</strong><p>GPIO control</p></div>
+<div class="card"><strong>pydobot + pyserial</strong><p>Robot and USB communication</p></div>
+</div>
+<h3>Virtual Environment</h3>
+<div class="code-head"><span>Terminal</span><button class="copy" onclick="copyCode('install',this)">Copy</button></div>
+<pre><code id="install">cd ~/project_folder
+source myenv/bin/activate
+pip install opencv-python numpy pydobot pyserial RPi.GPIO</code></pre>
+</section>
+
+<section class="section" id="calibration">
+<h2>Robot Calibration & Coordinate Teaching</h2>
+<p>The robot must be taught four positions. They are stored in <strong>dobot_coords.json</strong> and loaded on later runs.</p>
+<ol>
+<li>Open the project folder in Terminal.</li>
+<li>Activate the environment: <strong>source myenv/bin/activate</strong>.</li>
+<li>Run <strong>python3 color_sor.py</strong>.</li>
+<li>When asked for <strong>PICK</strong>, hold the robot Unlock/Lock Symbol button, manually move the robot to the pickup position, release it, then press Enter.</li>
+<li>Repeat the same teaching process for <strong>BIN_RED</strong>.</li>
+<li>Repeat for <strong>BIN_BLUE</strong>.</li>
+<li>Repeat for <strong>BIN_YELLOW</strong>.</li>
+<li>The program automatically creates <strong>dobot_coords.json</strong>.</li>
+</ol>
+<div class="success"><strong>Saved positions:</strong> PICK, BIN_RED, BIN_BLUE and BIN_YELLOW. You do not need to recalibrate every time if the physical setup remains unchanged.</div>
+<h3>When to Calibrate Again</h3>
+<ul><li>Robot Magician has been moved.</li><li>Conveyor position changed.</li><li>Color bins were repositioned.</li><li>Pickup point changed.</li><li>Robot is not picking or placing accurately.</li></ul>
+<h3>Recalibration</h3>
+<p>Delete the old <strong>dobot_coords.json</strong>, activate the virtual environment and run the program again. Teach all four positions to generate a new coordinate file.</p>
+</section>
+
+<section class="section" id="working">
+<h2>Complete Working Sequence</h2>
+<div class="flow">
+<div>1. Camera detects color</div><div>2. Conveyor starts</div><div>3. Object moves</div><div>4. Proxy detects object</div>
+<div>5. Conveyor stops</div><div>6. Robot picks object</div><div>7. Correct bin selected</div><div>8. System returns to IDLE</div>
+</div>
+<h3>Color Detection</h3>
+<p>The USB camera captures the object image. OpenCV converts the Region of Interest (ROI) into HSV color space. Predefined HSV ranges identify red, blue and yellow. Morphological opening and closing reduce noise, the largest contour is evaluated, and stable-frame detection confirms the color.</p>
+<h3>System States</h3>
+<div class="grid">
+<div class="card"><strong>IDLE</strong><p>Waiting for a stable red, blue or yellow object detection.</p></div>
+<div class="card"><strong>RUN</strong><p>Conveyor is moving the detected object toward the proxy sensor.</p></div>
+<div class="card"><strong>WAIT</strong><p>Robot operation has completed and the system waits for the previous object to leave the camera area.</p></div>
+</div>
+</section>
+
+<section class="section" id="code">
+<h2>Main Python Program</h2>
+<p>The SOP identifies the main program as <strong>color_sor.py</strong>. The complete source code is long, so the portfolio page can link directly to the Python file while keeping the page readable.</p>
+<div class="code-head"><span>Run Project</span><button class="copy" onclick="copyCode('run',this)">Copy</button></div>
+<pre><code id="run">source myenv/bin/activate
+python3 color_sor.py</code></pre>
+<h3>Add/Edit Code Using Nano</h3>
+<div class="code-head"><span>Terminal</span><button class="copy" onclick="copyCode('nano',this)">Copy</button></div>
+<pre><code id="nano">cd ~/Desktop
+nano color_sor.py
+
+# Save: Ctrl + O, then Enter
+# Exit: Ctrl + X
+
+python3 color_sor.py</code></pre>
+<div class="info"><strong>Core program settings from the project:</strong><br>Relay GPIO: 17<br>Proxy GPIO: 23<br>Proxy logic: Active LOW<br>Conveyor safety cutoff: 10 seconds<br>Detected colors: Red, Blue, Yellow<br>Calibration file: dobot_coords.json</div>
+</section>
+
+<section class="section" id="troubleshooting">
+<h2>Important Operating Notes</h2>
+<ul>
+<li>The E18-D80NK NPN proxy sensor is treated as active LOW by the program.</li>
+<li>The conveyor has a safety timeout if the proxy sensor does not detect the object.</li>
+<li>Keep the camera view and lighting consistent for reliable HSV detection.</li>
+<li>Recalibrate whenever the physical robot, conveyor, pickup point or bins move.</li>
+<li>Press <strong>Q</strong> while the camera window is active, or <strong>Ctrl + C</strong> in Terminal, to stop the program.</li>
+</ul>
+</section>
+
+<section class="section">
+<h2>Project Outcome</h2>
+<div class="outcome">
+<h3>Integrated Machine Vision & Robotic Sorting</h3>
+<p>The system combines Raspberry Pi image processing, HSV color detection, conveyor automation, proxy sensing and robotic pick-and-place. It automatically identifies colored objects, moves them to the pickup location and sorts them into the corresponding red, blue or yellow bin.</p>
+<p>The project demonstrates how Artificial Intelligence, Computer Vision, Robotics and Industrial Automation can work together in an automated sorting application.</p>
+</div>
+</section>
+
+<section class="section">
+<h2>Suggested GitHub Repository Structure</h2>
+<div class="code-head"><span>Repository</span></div>
+<pre><code>AI-Color-Sorting-System/
+├── index.html
+├── README.md
+├── color_sor.py
+├── dobot_coords.json
+├── images/
+│   ├── system-overview.jpg
+│   ├── calibration.jpg
+│   └── dashboard.jpg
+└── docs/
+    └── color_sorting_sop.pdf</code></pre>
+</section>
+</main>
+
+<footer><strong>AI Based Color Sorting System</strong><br>Raspberry Pi • OpenCV • Machine Vision • Robot Magician • Industrial Automation</footer>
+
+<script>
+function copyCode(id,button){
+ const text=document.getElementById(id).innerText;
+ navigator.clipboard.writeText(text).then(()=>{
+  const old=button.textContent;button.textContent="Copied!";
+  setTimeout(()=>button.textContent=old,1800);
+ }).catch(()=>alert("Code could not be copied."));
+}
+</script>
+</body>
+</html>
