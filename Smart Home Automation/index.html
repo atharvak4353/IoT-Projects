@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -9,976 +10,2445 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Smart Home Automation</title>
+    <meta
+        name="description"
+        content="Gesture Controlled Smart Home Automation using Raspberry Pi, OpenCV, hand tracking and relay-based appliance control."
+    >
+
+    <title>
+        Gesture Controlled Smart Home Automation | Raspberry Pi Project
+    </title>
+
 
     <style>
+
+        :root {
+            --primary: #0f172a;
+            --secondary: #075985;
+            --accent: #0ea5e9;
+            --accent-dark: #0284c7;
+            --accent-light: #e0f2fe;
+
+            --surface: #ffffff;
+            --background: #f8fafc;
+
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+        }
+
+
+        /* ==========================
+           GLOBAL
+        ========================== */
+
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
+
 
         html {
             scroll-behavior: smooth;
         }
 
+
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            color: #1e293b;
-            background: #f1f5f9;
-            line-height: 1.6;
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: var(--background);
+            color: var(--text);
+
+            line-height: 1.7;
         }
 
-        header {
-            padding: 55px 20px;
-            text-align: center;
-            color: white;
-            background: linear-gradient(135deg, #0284c7, #075985);
+
+        img {
+            max-width: 100%;
         }
 
-        header h1 {
-            margin: 0 0 12px;
-            font-size: 40px;
-        }
 
-        header p {
-            max-width: 750px;
-            margin: auto;
-            color: #e0f2fe;
-            font-size: 17px;
-        }
+        /* ==========================
+           HERO
+        ========================== */
 
-        .logo {
+        .hero {
+
+            position: relative;
+
+            min-height: 540px;
+
             display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 85px 25px;
+
+            color: white;
+
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(14, 165, 233, 0.30),
+                    transparent 35%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #020617,
+                    #0f172a 50%,
+                    #075985
+                );
+
+        }
+
+
+        .hero::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 450px;
+            height: 450px;
+
+            top: -180px;
+            left: -130px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(14, 165, 233, 0.10);
+
+        }
+
+
+        .hero-content {
+
+            position: relative;
+            z-index: 2;
+
+            max-width: 900px;
+
+        }
+
+
+        .project-label {
+
+            display: inline-block;
+
+            margin-bottom: 20px;
+
+            padding: 7px 15px;
+
+            color: #bae6fd;
+
+            background:
+                rgba(14, 165, 233, 0.10);
+
+            border:
+                1px solid
+                rgba(186, 230, 253, 0.35);
+
+            border-radius: 999px;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+
+        }
+
+
+        .hero h1 {
+
+            margin: 0;
+
+            font-size:
+                clamp(38px, 7vw, 68px);
+
+            line-height: 1.08;
+
+            letter-spacing: -2px;
+
+        }
+
+
+        .hero-description {
+
+            max-width: 780px;
+
+            margin:
+                24px auto 0;
+
+            color: #cbd5e1;
+
+            font-size: 18px;
+
+        }
+
+
+        .hero-buttons {
+
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 14px;
+
+            margin-top: 32px;
+
+        }
+
+
+        .btn {
+
+            display: inline-flex;
+
             justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
+
+            min-height: 46px;
+
+            padding:
+                11px 22px;
+
+            border-radius: 9px;
+
+            text-decoration: none;
+
+            font-weight: 700;
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease;
+
         }
 
-        .logo img {
-            width: 160px;
-            height: auto;
-            display: block;
-            padding: 8px;
-            object-fit: contain;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+        .btn:hover {
+
+            transform:
+                translateY(-2px);
+
         }
+
+
+        .btn-primary {
+
+            color: white;
+
+            background: var(--accent);
+
+        }
+
+
+        .btn-primary:hover {
+
+            background: var(--accent-dark);
+
+        }
+
+
+        .btn-secondary {
+
+            color: white;
+
+            background:
+                rgba(255, 255, 255, 0.08);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.20);
+
+        }
+
+
+        .btn-secondary:hover {
+
+            background:
+                rgba(255, 255, 255, 0.14);
+
+        }
+
+
+        /* ==========================
+           BADGES
+        ========================== */
+
+        .badges {
+
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-top: 30px;
+
+        }
+
+
+        .badge {
+
+            padding:
+                7px 13px;
+
+            color: #e2e8f0;
+
+            background:
+                rgba(255, 255, 255, 0.07);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.14);
+
+            border-radius: 999px;
+
+            font-size: 13px;
+            font-weight: 600;
+
+        }
+
+
+        /* ==========================
+           NAVIGATION
+        ========================== */
 
         nav {
+
             position: sticky;
+
             top: 0;
+
             z-index: 100;
 
             display: flex;
+
             justify-content: center;
-            gap: 25px;
+
+            gap: 22px;
+
             flex-wrap: wrap;
 
-            padding: 15px;
-            background: white;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+            padding: 15px 20px;
+
+            background:
+                rgba(255, 255, 255, 0.96);
+
+            backdrop-filter:
+                blur(10px);
+
+            border-bottom:
+                1px solid var(--border);
+
+            box-shadow:
+                0 4px 14px
+                rgba(15, 23, 42, 0.05);
+
         }
+
 
         nav a {
-            color: #075985;
+
+            color: #334155;
+
             text-decoration: none;
-            font-weight: bold;
+
+            font-size: 14px;
+            font-weight: 700;
+
         }
+
 
         nav a:hover {
-            color: #0284c7;
+
+            color: var(--accent-dark);
+
         }
+
+
+        /* ==========================
+           MAIN
+        ========================== */
 
         .container {
+
             width: 90%;
-            max-width: 1000px;
+
+            max-width: 1100px;
+
             margin: auto;
-            padding: 40px 0;
+
+            padding: 50px 0;
+
         }
+
 
         .section {
-            margin-bottom: 30px;
-            padding: 28px;
-            background: white;
-            border-radius: 14px;
-            box-shadow: 0 5px 18px rgba(15, 23, 42, 0.08);
-            animation: fadeUp 0.8s ease;
+
+            margin-bottom: 35px;
+
+            padding: 32px;
+
+            background: var(--surface);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 10px 35px
+                rgba(15, 23, 42, 0.05);
+
         }
 
-        .section h2 {
-            margin-top: 0;
-            padding-bottom: 10px;
-            color: #075985;
-            border-bottom: 2px solid #e0f2fe;
-        }
 
-        .section h3 {
-            margin-top: 25px;
-            color: #0369a1;
-        }
-
-        .project-info {
-            padding: 18px;
-            background: #f0f9ff;
-            border-left: 5px solid #0284c7;
-            border-radius: 8px;
-        }
-
-        .project-info p {
-            margin: 7px 0;
-        }
-
-        .requirements-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-top: 20px;
-        }
-
-        .requirement-card {
-            padding: 16px;
-            text-align: center;
-            overflow: hidden;
-
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 12px;
-
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
-
-            transition:
-                transform 0.3s ease,
-                box-shadow 0.3s ease;
-        }
-
-        .requirement-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 22px rgba(2, 132, 199, 0.18);
-        }
-
-        .requirement-card span {
-            width: 100%;
-            height: 170px;
+        .section-title {
 
             display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin:
+                0 0 24px;
+
+            color: var(--primary);
+
+            font-size: 28px;
+
+        }
+
+
+        .section-title::before {
+
+            content: "";
+
+            width: 5px;
+            height: 30px;
+
+            background: var(--accent);
+
+            border-radius: 999px;
+
+        }
+
+
+        .section h3 {
+
+            margin-top: 28px;
+
+            color: var(--secondary);
+
+        }
+
+
+        /* ==========================
+           ABOUT
+        ========================== */
+
+        .overview-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1.25fr 0.75fr;
+
+            gap: 28px;
+
+            align-items: start;
+
+        }
+
+
+        .overview-text p {
+
+            margin-bottom: 14px;
+
+            color: #475569;
+
+            font-size: 16px;
+
+        }
+
+
+        .project-meta {
+
+            padding: 20px;
+
+            background: #f8fafc;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+        }
+
+
+        .meta-item {
+
+            padding: 11px 0;
+
+            border-bottom:
+                1px solid var(--border);
+
+        }
+
+
+        .meta-item:last-child {
+
+            border-bottom: none;
+
+        }
+
+
+        .meta-label {
+
+            display: block;
+
+            margin-bottom: 3px;
+
+            color: var(--muted);
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.7px;
+
+        }
+
+
+        .meta-value {
+
+            color: var(--primary);
+
+            font-weight: 700;
+
+        }
+
+
+        /* ==========================
+           FEATURES
+        ========================== */
+
+        .feature-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 16px;
+
+        }
+
+
+        .feature-card {
+
+            padding: 20px;
+
+            background: #f8fafc;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+
+        }
+
+
+        .feature-card:hover {
+
+            transform:
+                translateY(-4px);
+
+            box-shadow:
+                0 12px 25px
+                rgba(15, 23, 42, 0.08);
+
+        }
+
+
+        .feature-card strong {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: var(--secondary);
+
+            font-size: 17px;
+
+        }
+
+
+        .feature-card p {
+
+            margin: 0;
+
+            color: var(--muted);
+
+            font-size: 14px;
+
+        }
+
+
+        /* ==========================
+           COMPONENTS
+        ========================== */
+
+        .requirements-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+        }
+
+
+        .requirement-card {
+
+            overflow: hidden;
+
+            padding: 15px;
+
+            text-align: center;
+
+            background: #f8fafc;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+
+        }
+
+
+        .requirement-card:hover {
+
+            transform:
+                translateY(-5px);
+
+            box-shadow:
+                0 12px 24px
+                rgba(14, 165, 233, 0.12);
+
+        }
+
+
+        .requirement-card span {
+
+            height: 160px;
+
+            display: flex;
+
             justify-content: center;
             align-items: center;
 
-            margin-bottom: 14px;
             padding: 10px;
-            overflow: hidden;
+
+            margin-bottom: 12px;
 
             background: white;
+
             border-radius: 10px;
+
         }
 
-        .requirement-card span img {
+
+        .requirement-card img {
+
             width: 100%;
             height: 100%;
-            display: block;
+
             object-fit: contain;
-            object-position: center;
-            transition: transform 0.3s ease;
+
         }
 
-        .requirement-card:hover span img {
-            transform: scale(1.08);
-        }
 
         .requirement-card strong {
-            display: block;
-            margin-top: 5px;
-            color: #075985;
-            font-size: 18px;
+
+            color: var(--primary);
+
+            font-size: 16px;
+
         }
+
 
         .requirement-card p {
-            margin: 7px 0 0;
-            color: #475569;
-            font-size: 14px;
+
+            margin-top: 6px;
+            margin-bottom: 0;
+
+            color: var(--muted);
+
+            font-size: 13px;
+
         }
 
-        ul,
-        ol {
-            padding-left: 24px;
-        }
 
-        li {
-            margin-bottom: 9px;
-        }
+        /* ==========================
+           TABLES
+        ========================== */
 
         .table-wrapper {
+
             overflow-x: auto;
+
         }
 
+
         table {
+
             width: 100%;
-            min-width: 600px;
-            margin-top: 15px;
+
+            min-width: 650px;
+
             border-collapse: collapse;
+
+            margin-top: 18px;
+
         }
+
 
         th,
         td {
-            padding: 13px;
+
+            padding:
+                13px 14px;
+
             text-align: left;
-            border: 1px solid #cbd5e1;
+
+            border:
+                1px solid var(--border);
+
         }
+
 
         th {
+
             color: white;
-            background: #075985;
+
+            background: var(--primary);
+
         }
+
 
         tr:nth-child(even) {
-            background: #f0f9ff;
+
+            background: #f8fafc;
+
         }
 
+
+        /* ==========================
+           CIRCUIT
+        ========================== */
+
         .circuit-image-card {
-            margin-top: 22px;
-            padding: 15px;
+
+            padding: 18px;
+
             text-align: center;
 
             background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 12px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
         }
+
 
         .circuit-image-card img {
+
             width: 100%;
+
             max-height: 650px;
+
             object-fit: contain;
-            background: white;
-            border-radius: 8px;
+
+            border-radius: 10px;
+
         }
 
-        .circuit-image-card h3 {
-            margin-bottom: 5px;
+
+        .circuit-image-card p {
+
+            margin-top: 8px;
+
+            color: var(--muted);
+
         }
+
+
+        /* ==========================
+           GESTURES
+        ========================== */
 
         .gesture-grid {
+
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
-            margin-top: 20px;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 16px;
+
         }
+
 
         .gesture-card {
-            padding: 18px;
+
+            padding: 22px;
+
             background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
         }
+
+
+        .gesture-number {
+
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 14px;
+
+            color: white;
+
+            background: var(--accent);
+
+            border-radius: 50%;
+
+            font-weight: 800;
+
+            font-size: 18px;
+
+        }
+
 
         .gesture-card strong {
+
             display: block;
-            margin-bottom: 7px;
-            color: #075985;
+
+            margin-bottom: 8px;
+
+            color: var(--secondary);
+
             font-size: 18px;
+
         }
 
-        .status-on {
-            color: #166534;
-            font-weight: bold;
+
+        .gesture-card p {
+
+            margin: 0;
+
+            color: var(--muted);
+
         }
 
-        .status-off {
-            color: #b91c1c;
-            font-weight: bold;
+
+        /* ==========================
+           INSTALLATION
+        ========================== */
+
+        .install-step {
+
+            margin-top: 20px;
+
+            padding: 20px;
+
+            background: #f8fafc;
+
+            border:
+                1px solid #bae6fd;
+
+            border-radius: 14px;
+
         }
+
+
+        .install-step h3 {
+
+            margin-top: 0;
+
+        }
+
+
+        /* ==========================
+           CODE
+        ========================== */
 
         .code-header {
+
             display: flex;
+
             align-items: center;
-            justify-content: space-between;
+
+            justify-content:
+                space-between;
+
             gap: 15px;
 
-            padding: 12px 16px;
+            padding:
+                12px 16px;
 
             color: white;
-            background: #1e293b;
 
-            border-radius: 10px 10px 0 0;
+            background: #111827;
+
+            border-radius:
+                10px 10px 0 0;
+
         }
+
 
         .copy-button {
-            padding: 8px 14px;
+
+            padding:
+                8px 14px;
 
             color: white;
-            background: #0284c7;
+
+            background: var(--accent);
 
             border: none;
-            border-radius: 6px;
+
+            border-radius: 7px;
 
             cursor: pointer;
-            font-weight: bold;
+
+            font-weight: 700;
+
         }
+
 
         .copy-button:hover {
-            background: #0369a1;
+
+            background: var(--accent-dark);
+
         }
 
+
         pre {
+
             margin: 0 0 15px;
+
             padding: 22px;
+
             overflow-x: auto;
 
             color: #e2e8f0;
-            background: #0f172a;
 
-            border-radius: 0 0 10px 10px;
+            background: #020617;
 
-            font-family: Consolas, monospace;
+            border-radius:
+                0 0 10px 10px;
+
+            font-family:
+                Consolas,
+                "Courier New",
+                monospace;
+
             font-size: 14px;
-            line-height: 1.6;
+
+            line-height: 1.65;
+
         }
+
+
+        /* ==========================
+           NOTES
+        ========================== */
+
+        .note,
+        .warning,
+        .success-note {
+
+            margin-top: 20px;
+
+            padding: 16px;
+
+            border-radius: 10px;
+
+        }
+
 
         .note {
-            margin-top: 20px;
-            padding: 15px;
 
             color: #854d0e;
-            background: #fef9c3;
 
-            border: 1px solid #fde047;
-            border-radius: 8px;
+            background: #fefce8;
+
+            border:
+                1px solid #fde68a;
+
         }
+
 
         .warning {
-            margin-top: 20px;
-            padding: 15px;
 
             color: #991b1b;
-            background: #fee2e2;
 
-            border: 1px solid #fca5a5;
-            border-radius: 8px;
+            background: #fef2f2;
+
+            border:
+                1px solid #fecaca;
+
         }
+
 
         .success-note {
-            margin-top: 20px;
-            padding: 15px;
 
             color: #166534;
-            background: #dcfce7;
 
-            border: 1px solid #86efac;
-            border-radius: 8px;
+            background: #f0fdf4;
+
+            border:
+                1px solid #bbf7d0;
+
         }
 
-        .back-button,
-        .download-button {
-            display: inline-block;
-            margin: 5px 5px 5px 0;
-            padding: 11px 20px;
+
+        /* ==========================
+           OUTCOME
+        ========================== */
+
+        .outcome-box {
+
+            padding: 28px;
 
             color: white;
-            background: #0284c7;
 
-            text-decoration: none;
-            border-radius: 7px;
-            font-weight: bold;
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #075985
+                );
 
-            transition:
-                background 0.3s ease,
-                transform 0.3s ease;
+            border-radius: 16px;
+
         }
 
-        .back-button:hover,
-        .download-button:hover {
-            background: #075985;
-            transform: translateY(-2px);
+
+        .outcome-box h3 {
+
+            margin-top: 0;
+
+            color: white;
+
         }
+
+
+        .outcome-box p {
+
+            margin-top: 10px;
+
+            color: #dbeafe;
+
+        }
+
+
+        /* ==========================
+           FOOTER
+        ========================== */
 
         footer {
-            padding: 22px;
+
+            padding:
+                35px 20px;
+
             text-align: center;
-            color: #cbd5e1;
-            background: #0f172a;
+
+            color: #94a3b8;
+
+            background: #020617;
+
         }
 
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(25px);
-            }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        footer strong {
+
+            color: white;
+
         }
 
-        @media (max-width: 800px) {
+
+        /* ==========================
+           RESPONSIVE
+        ========================== */
+
+        @media (
+            max-width: 900px
+        ) {
+
             .requirements-grid {
-                grid-template-columns: repeat(2, 1fr);
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
             }
 
-            header h1 {
-                font-size: 32px;
-            }
-        }
 
-        @media (max-width: 650px) {
+            .feature-grid,
             .gesture-grid {
-                grid-template-columns: 1fr;
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
             }
+
+
+            .overview-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
         }
 
-        @media (max-width: 520px) {
-            .requirements-grid {
-                grid-template-columns: 1fr;
-            }
 
-            .requirement-card span {
-                height: 190px;
-            }
+        @media (
+            max-width: 650px
+        ) {
 
             .section {
-                padding: 20px;
+
+                padding: 22px;
+
             }
 
-            header h1 {
-                font-size: 27px;
+
+            .requirements-grid,
+            .feature-grid,
+            .gesture-grid {
+
+                grid-template-columns: 1fr;
+
             }
+
 
             nav {
-                gap: 13px;
-                font-size: 14px;
+
+                gap: 12px;
+
+                font-size: 13px;
+
             }
 
-            .copy-button {
-                padding: 7px 10px;
+
+            .hero {
+
+                min-height: 470px;
+
+                padding:
+                    65px 20px;
+
             }
+
+
+            .hero h1 {
+
+                letter-spacing: -1px;
+
+            }
+
+
+            .hero-description {
+
+                font-size: 16px;
+
+            }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
-    <header>
 
-        <div class="logo">
+<!-- ==========================
+     HERO
+========================== -->
 
-            <img
-                src="Simusoft logo.jpeg"
-                alt="Simusoft Technology Logo"
+<header class="hero">
+
+    <div class="hero-content">
+
+        <span class="project-label">
+            Computer Vision • Raspberry Pi • Home Automation
+        </span>
+
+        <h1>
+            Gesture Controlled Smart Home Automation
+        </h1>
+
+        <p class="hero-description">
+
+            A computer-vision based home automation system
+            that uses Raspberry Pi,
+            a USB camera,
+            hand gesture recognition
+            and relay-based appliance control.
+
+            Different finger gestures are used
+            to control multiple electrical devices
+            without touching physical switches.
+
+        </p>
+
+
+        <div class="hero-buttons">
+
+            <a
+                class="btn btn-primary"
+                href="#code"
             >
+                View Source Code
+            </a>
+
+            <a
+                class="btn btn-secondary"
+                href="#circuit"
+            >
+                View Circuit
+            </a>
+
+            <a
+                class="btn btn-secondary"
+                href="#gestures"
+            >
+                Gesture Controls
+            </a>
 
         </div>
 
-        <h1>Smart Home Automation</h1>
 
-        <p>
-            Raspberry Pi based home automation system using a USB camera,
-            hand gesture detection and a 4-channel relay module.
-        </p>
+        <div class="badges">
 
-    </header>
+            <span class="badge">
+                Raspberry Pi
+            </span>
 
-    <nav>
-        <a href="#details">Project Details</a>
-        <a href="#requirements">Components</a>
-        <a href="#connections">Connections</a>
-        <a href="#circuit">Circuit</a>
-        <a href="#gestures">Gestures</a>
-        <a href="#installation">Installation</a>
-        <a href="#code">Python Code</a>
-        <a href="#steps">Operating Steps</a>
-    </nav>
+            <span class="badge">
+                Python
+            </span>
 
-    <main class="container">
+            <span class="badge">
+                OpenCV
+            </span>
 
-        <!-- Project Details -->
+            <span class="badge">
+                Hand Tracking
+            </span>
 
-        <section class="section" id="details">
+            <span class="badge">
+                GPIO
+            </span>
 
-            <h2>Project Details</h2>
+            <span class="badge">
+                4-Channel Relay
+            </span>
 
-            <div class="project-info">
+            <span class="badge">
+                Computer Vision
+            </span>
 
-                <p>
-                    <strong>Project Name:</strong>
-                    Smart Home Automation
-                </p>
+        </div>
 
-                <p>
-                    <strong>Controller:</strong>
-                    Raspberry Pi
-                </p>
+    </div>
 
-                <p>
-                    <strong>Input Device:</strong>
-                    USB Camera
-                </p>
+</header>
 
-                <p>
-                    <strong>Control Method:</strong>
-                    Hand Gesture Detection
-                </p>
 
-                <p>
-                    <strong>Output Controller:</strong>
-                    4-Channel Relay Module
-                </p>
 
-                <p>
-                    <strong>Controlled Devices:</strong>
-                    LED, Fan, Water Pump and Buzzer
-                </p>
+<!-- ==========================
+     NAVIGATION
+========================== -->
 
-                <p>
-                    <strong>Programming Language:</strong>
-                    Python
-                </p>
+<nav>
 
-                <p>
-                    <strong>Purpose:</strong>
-                    To control home appliances without touching physical
-                    switches by showing different hand gestures to a camera.
-                </p>
+    <a href="#about">
+        About
+    </a>
 
-            </div>
+    <a href="#features">
+        Features
+    </a>
 
-        </section>
+    <a href="#components">
+        Hardware
+    </a>
 
-        <!-- Requirements -->
+    <a href="#connections">
+        Connections
+    </a>
 
-        <section class="section" id="requirements">
+    <a href="#circuit">
+        Circuit
+    </a>
 
-            <h2>Required Components</h2>
+    <a href="#gestures">
+        Gestures
+    </a>
 
-            <div class="requirements-grid">
+    <a href="#installation">
+        Setup
+    </a>
 
-                <div class="requirement-card">
+    <a href="#code">
+        Code
+    </a>
 
-                    <span>
-                        <img
-                            src="Raspberry PI.png"
-                            alt="Raspberry Pi"
-                        >
-                    </span>
+</nav>
 
-                    <strong>Raspberry Pi</strong>
 
-                    <p>
-                        Main controller that processes the camera image.
-                    </p>
 
-                </div>
+<main class="container">
 
-                <div class="requirement-card">
 
-                    <span>
-                        <img
-                            src="USB camera.png"
-                            alt="USB Camera"
-                        >
-                    </span>
+<!-- ==========================
+     ABOUT
+========================== -->
 
-                    <strong>USB Camera</strong>
+<section
+    class="section"
+    id="about"
+>
 
-                    <p>
-                        Captures the hand gestures of the user.
-                    </p>
+    <h2 class="section-title">
+        About the Project
+    </h2>
 
-                </div>
 
-                <div class="requirement-card">
+    <div class="overview-grid">
 
-                    <span>
-                        <img
-                            src="4 channel relay.png"
-                            alt="4 Channel Relay Module"
-                        >
-                    </span>
 
-                    <strong>4-Channel Relay</strong>
-
-                    <p>
-                        Switches the connected devices ON and OFF.
-                    </p>
-
-                </div>
-
-                <div class="requirement-card">
-
-                    <span>
-                        <img
-                            src="Jumper Wires.png"
-                            alt="Jumper Wires"
-                        >
-                    </span>
-
-                    <strong>Jumper Wires</strong>
-
-                    <p>
-                        Connect the relay module to the Raspberry Pi.
-                    </p>
-
-                </div>
-
-                <div class="requirement-card">
-
-                    <span>
-                        <img
-                            src="Power supply.png"
-                            alt="Raspberry Pi Power Supply"
-                        >
-                    </span>
-
-                    <strong>R-Pi Power Supply</strong>
-
-                    <p>
-                        Provides stable power to the Raspberry Pi.
-                    </p>
-
-                </div>
-
-                <div class="requirement-card">
-
-                    <span>
-                        <img
-                            src="5V fan.png"
-                            alt="5V Fan"
-                        >
-                    </span>
-
-                    <strong>5V Fan</strong>
-
-                    <p>
-                        Actuators.
-                    </p>
-
-                </div>
-
-                <div class="requirement-card">
-
-                    <span>
-                        <img
-                            src="2 Led.png"
-                            alt="2 Leds"
-                        >
-                    </span>
-
-                    <strong>2 Leds</strong>
-
-                    <p>
-                       Actuators.
-                    </p>
-
-                </div>
-
-                <div class="requirement-card">
-
-                    <span>
-                        <img
-                            src="Motor pump.png"
-                            alt="Motor Pump"
-                        >
-                    </span>
-
-                    <strong>Motor Pump</strong>
-
-                    <p>
-                        Actuators.
-                    </p>
-
-                </div>
-
-                </div>
-
-                <div class="requirement-card">
-
-                    <span>
-                        <img
-                            src="Breadboard.png"
-                            alt="Breadboard"
-                        >
-                    </span>
-
-                    <strong>Breadboard</strong>
-
-                    <p>
-                       Actuators.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- Connections -->
-
-        <section class="section" id="connections">
-
-            <h2>Circuit Connections</h2>
-
-            <div class="table-wrapper">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Component</th>
-                            <th>Pin Name</th>
-                            <th>Raspberry Pi Connection</th>
-                            <th>Controlled Device</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-                            <td>Relay Channel 1</td>
-                            <td>IN1</td>
-                            <td>GPIO 17</td>
-                            <td>LED</td>
-                        </tr>
-
-                        <tr>
-                            <td>Relay Channel 2</td>
-                            <td>IN2</td>
-                            <td>GPIO 27</td>
-                            <td>Fan</td>
-                        </tr>
-
-                        <tr>
-                            <td>Relay Channel 3</td>
-                            <td>IN3</td>
-                            <td>GPIO 22</td>
-                            <td>Water Pump</td>
-                        </tr>
-
-                        <tr>
-                            <td>Relay Channel 4</td>
-                            <td>IN4</td>
-                            <td>GPIO 23</td>
-                            <td>Buzzer</td>
-                        </tr>
-
-                        <tr>
-                            <td>Relay Module</td>
-                            <td>VCC</td>
-                            <td>5V</td>
-                            <td>Relay power</td>
-                        </tr>
-
-                        <tr>
-                            <td>Relay Module</td>
-                            <td>GND</td>
-                            <td>GND</td>
-                            <td>Common ground</td>
-                        </tr>
-
-                        <tr>
-                            <td>USB Camera</td>
-                            <td>USB</td>
-                            <td>Raspberry Pi USB Port</td>
-                            <td>Hand detection</td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-            <div class="note">
-                Many relay modules are active LOW. In an active-LOW relay,
-                GPIO LOW turns the device ON and GPIO HIGH turns it OFF.
-            </div>
-
-            <div class="warning">
-                <strong>Safety:</strong>
-                Do not connect high-voltage AC appliances unless the wiring
-                is completed and checked by a qualified person. Test the
-                project first using low-voltage devices.
-            </div>
-
-        </section>
-
-        <!-- Circuit Diagram -->
-
-        <section class="section" id="circuit">
-
-            <h2>Circuit Diagram</h2>
+        <div class="overview-text">
 
             <p>
-                The USB camera is connected directly to the Raspberry Pi.
-                The Raspberry Pi controls four relay channels for the LED,
-                fan, water pump and buzzer.
+
+                This project implements
+                a gesture-controlled Smart Home Automation system
+                using a Raspberry Pi and computer vision.
+
             </p>
 
-            <div class="circuit-image-card">
+
+            <p>
+
+                A USB camera continuously captures
+                the user's hand.
+
+                The software detects
+                the number of raised fingers
+                and associates each gesture
+                with a specific appliance.
+
+            </p>
+
+
+            <p>
+
+                The Raspberry Pi then controls
+                a 4-channel relay module
+                through GPIO pins.
+
+                The relay channels can be used
+                to switch an LED,
+                fan,
+                water pump
+                and buzzer.
+
+            </p>
+
+
+            <p>
+
+                The project demonstrates
+                integration of computer vision,
+                Python programming,
+                Raspberry Pi GPIO,
+                physical device control
+                and real-time human-machine interaction.
+
+            </p>
+
+        </div>
+
+
+        <div class="project-meta">
+
+            <div class="meta-item">
+
+                <span class="meta-label">
+                    Controller
+                </span>
+
+                <span class="meta-value">
+                    Raspberry Pi
+                </span>
+
+            </div>
+
+
+            <div class="meta-item">
+
+                <span class="meta-label">
+                    Input
+                </span>
+
+                <span class="meta-value">
+                    USB Camera
+                </span>
+
+            </div>
+
+
+            <div class="meta-item">
+
+                <span class="meta-label">
+                    Vision
+                </span>
+
+                <span class="meta-value">
+                    Hand Gesture Detection
+                </span>
+
+            </div>
+
+
+            <div class="meta-item">
+
+                <span class="meta-label">
+                    Output Interface
+                </span>
+
+                <span class="meta-value">
+                    4-Channel Relay
+                </span>
+
+            </div>
+
+
+            <div class="meta-item">
+
+                <span class="meta-label">
+                    Programming
+                </span>
+
+                <span class="meta-value">
+                    Python
+                </span>
+
+            </div>
+
+
+            <div class="meta-item">
+
+                <span class="meta-label">
+                    Domain
+                </span>
+
+                <span class="meta-value">
+                    IoT / Computer Vision
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================
+     FEATURES
+========================== -->
+
+<section
+    class="section"
+    id="features"
+>
+
+    <h2 class="section-title">
+        Key Features
+    </h2>
+
+
+    <div class="feature-grid">
+
+
+        <div class="feature-card">
+
+            <strong>
+                Touch-Free Control
+            </strong>
+
+            <p>
+                Appliances are controlled
+                using hand gestures instead
+                of physical switches.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                Real-Time Vision
+            </strong>
+
+            <p>
+                USB camera frames are
+                processed continuously
+                for gesture recognition.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                Multiple Appliances
+            </strong>
+
+            <p>
+                Four independent relay
+                channels provide control
+                of multiple devices.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                Gesture Debouncing
+            </strong>
+
+            <p>
+                Gesture delay logic prevents
+                accidental rapid relay switching.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                Emergency OFF
+            </strong>
+
+            <p>
+                Showing five fingers
+                turns all connected devices OFF.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                Safe Cleanup
+            </strong>
+
+            <p>
+                The program releases
+                the camera and resets GPIO
+                when it exits.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================
+     COMPONENTS
+========================== -->
+
+<section
+    class="section"
+    id="components"
+>
+
+    <h2 class="section-title">
+        Hardware Components
+    </h2>
+
+
+    <div class="requirements-grid">
+
+
+        <div class="requirement-card">
+
+            <span>
 
                 <img
-                    src="SHA.png"
-                    alt="Smart Home Automation circuit diagram"
+                    src="Raspberry PI.png"
+                    alt="Raspberry Pi"
                 >
 
-                <h3>Smart Home Automation Circuit</h3>
+            </span>
 
-                <p>
-                    Raspberry Pi with USB camera and 4-channel relay module.
-                </p>
-
-            </div>
-
-        </section>
-
-        <!-- Gesture Controls -->
-
-        <section class="section" id="gestures">
-
-            <h2>Hand Gesture Controls</h2>
+            <strong>
+                Raspberry Pi
+            </strong>
 
             <p>
-                The camera detects the number of raised fingers. Each gesture
-                controls one home appliance.
+                Main computing platform.
             </p>
 
-            <div class="gesture-grid">
+        </div>
 
-                <div class="gesture-card">
 
-                    <strong>One Finger</strong>
 
-                    Controls Relay Channel 1.
+        <div class="requirement-card">
 
-                    <p>
-                        Device: <strong>LED</strong>
-                    </p>
+            <span>
 
-                </div>
+                <img
+                    src="USB camera.png"
+                    alt="USB Camera"
+                >
 
-                <div class="gesture-card">
+            </span>
 
-                    <strong>Two Fingers</strong>
+            <strong>
+                USB Camera
+            </strong>
 
-                    Controls Relay Channel 2.
+            <p>
+                Captures hand gestures.
+            </p>
 
-                    <p>
-                        Device: <strong>Fan</strong>
-                    </p>
+        </div>
 
-                </div>
 
-                <div class="gesture-card">
 
-                    <strong>Three Fingers</strong>
+        <div class="requirement-card">
 
-                    Controls Relay Channel 3.
+            <span>
 
-                    <p>
-                        Device: <strong>Water Pump</strong>
-                    </p>
+                <img
+                    src="4 channel relay.png"
+                    alt="4 Channel Relay"
+                >
 
-                </div>
+            </span>
 
-                <div class="gesture-card">
+            <strong>
+                4-Channel Relay
+            </strong>
 
-                    <strong>Four Fingers</strong>
+            <p>
+                Switches connected loads.
+            </p>
 
-                    Controls Relay Channel 4.
+        </div>
 
-                    <p>
-                        Device: <strong>Buzzer</strong>
-                    </p>
 
-                </div>
 
-                <div class="gesture-card">
+        <div class="requirement-card">
 
-                    <strong>Five Fingers</strong>
+            <span>
 
-                    Turns all connected devices OFF.
+                <img
+                    src="Jumper Wires.png"
+                    alt="Jumper Wires"
+                >
 
-                    <p class="status-off">
-                        All Devices OFF
-                    </p>
+            </span>
 
-                </div>
+            <strong>
+                Jumper Wires
+            </strong>
 
-                <div class="gesture-card">
+            <p>
+                GPIO and relay connections.
+            </p>
 
-                    <strong>Keyboard Control</strong>
+        </div>
 
-                    Press the Q key to close the camera and stop the program.
 
-                    <p>
-                        Key: <strong>Q</strong>
-                    </p>
 
-                </div>
+        <div class="requirement-card">
 
-            </div>
+            <span>
 
-            <div class="note">
-                Hold the gesture steadily in front of the camera for better
-                and more reliable detection.
-            </div>
+                <img
+                    src="Power supply.png"
+                    alt="Raspberry Pi Power Supply"
+                >
 
-        </section>
+            </span>
 
-        <!-- Installation -->
+            <strong>
+                Raspberry Pi Power Supply
+            </strong>
 
-        <section class="section" id="installation">
+            <p>
+                Provides stable power.
+            </p>
 
-            <!-- Required Libraries -->
+        </div>
 
-<section class="section" id="installation">
 
-    <h2>Required Libraries</h2>
+
+        <div class="requirement-card">
+
+            <span>
+
+                <img
+                    src="5V fan.png"
+                    alt="5V Fan"
+                >
+
+            </span>
+
+            <strong>
+                5V Fan
+            </strong>
+
+            <p>
+                Demonstration appliance.
+            </p>
+
+        </div>
+
+
+
+        <div class="requirement-card">
+
+            <span>
+
+                <img
+                    src="2 Led.png"
+                    alt="LEDs"
+                >
+
+            </span>
+
+            <strong>
+                LEDs
+            </strong>
+
+            <p>
+                Visual demonstration load.
+            </p>
+
+        </div>
+
+
+
+        <div class="requirement-card">
+
+            <span>
+
+                <img
+                    src="Motor pump.png"
+                    alt="Water Pump"
+                >
+
+            </span>
+
+            <strong>
+                Water Pump
+            </strong>
+
+            <p>
+                Relay-controlled load.
+            </p>
+
+        </div>
+
+
+
+        <div class="requirement-card">
+
+            <span>
+
+                <img
+                    src="Breadboard.png"
+                    alt="Breadboard"
+                >
+
+            </span>
+
+            <strong>
+                Breadboard
+            </strong>
+
+            <p>
+                Used for prototype wiring.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================
+     CONNECTIONS
+========================== -->
+
+<section
+    class="section"
+    id="connections"
+>
+
+    <h2 class="section-title">
+        GPIO & Relay Connections
+    </h2>
+
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Component
+                    </th>
+
+                    <th>
+                        Pin
+                    </th>
+
+                    <th>
+                        Raspberry Pi
+                    </th>
+
+                    <th>
+                        Function
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                <tr>
+
+                    <td>
+                        Relay Channel 1
+                    </td>
+
+                    <td>
+                        IN1
+                    </td>
+
+                    <td>
+                        GPIO 17
+                    </td>
+
+                    <td>
+                        LED
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Relay Channel 2
+                    </td>
+
+                    <td>
+                        IN2
+                    </td>
+
+                    <td>
+                        GPIO 27
+                    </td>
+
+                    <td>
+                        Fan
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Relay Channel 3
+                    </td>
+
+                    <td>
+                        IN3
+                    </td>
+
+                    <td>
+                        GPIO 22
+                    </td>
+
+                    <td>
+                        Water Pump
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Relay Channel 4
+                    </td>
+
+                    <td>
+                        IN4
+                    </td>
+
+                    <td>
+                        GPIO 23
+                    </td>
+
+                    <td>
+                        Buzzer
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Relay Module
+                    </td>
+
+                    <td>
+                        VCC
+                    </td>
+
+                    <td>
+                        5V
+                    </td>
+
+                    <td>
+                        Relay Power
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Relay Module
+                    </td>
+
+                    <td>
+                        GND
+                    </td>
+
+                    <td>
+                        GND
+                    </td>
+
+                    <td>
+                        Common Ground
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        USB Camera
+                    </td>
+
+                    <td>
+                        USB
+                    </td>
+
+                    <td>
+                        USB Port
+                    </td>
+
+                    <td>
+                        Gesture Detection
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
 
     <div class="note">
-        <strong>Important:</strong>
-        Install all the libraries in the given sequence and install
-        them one at a time.
+
+        The program assumes an
+        <strong>active-LOW relay module</strong>.
+
+        GPIO LOW switches the relay ON,
+        while GPIO HIGH switches it OFF.
+
     </div>
 
-    <!-- Step 1 -->
 
-    <h3>Step 1: Update Raspberry Pi and Install Build Packages</h3>
+    <div class="warning">
 
-    <div class="code-header">
-        <span>Terminal Command 01</span>
+        <strong>Electrical Safety:</strong>
 
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep1', this)"
+        Test the project using low-voltage
+        devices first.
+
+        Do not connect mains-voltage appliances
+        unless the relay, enclosure,
+        wiring and protection have been
+        designed and verified appropriately.
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================
+     CIRCUIT
+========================== -->
+
+<section
+    class="section"
+    id="circuit"
+>
+
+    <h2 class="section-title">
+        Circuit Diagram
+    </h2>
+
+
+    <div class="circuit-image-card">
+
+        <img
+            src="SHA.png"
+            alt="Gesture controlled Smart Home Automation circuit diagram"
         >
-            Copy
-        </button>
+
+
+        <h3>
+            System Wiring
+        </h3>
+
+
+        <p>
+
+            Raspberry Pi connected
+            to a USB camera and
+            a four-channel relay module
+            controlling multiple loads.
+
+        </p>
+
     </div>
 
-    <pre><code id="libraryStep1">sudo apt update
+</section>
+
+
+
+<!-- ==========================
+     GESTURES
+========================== -->
+
+<section
+    class="section"
+    id="gestures"
+>
+
+    <h2 class="section-title">
+        Gesture Mapping
+    </h2>
+
+
+    <div class="gesture-grid">
+
+
+        <div class="gesture-card">
+
+            <div class="gesture-number">
+                1
+            </div>
+
+            <strong>
+                One Finger
+            </strong>
+
+            <p>
+                Toggles the LED
+                connected to Relay 1.
+            </p>
+
+        </div>
+
+
+
+        <div class="gesture-card">
+
+            <div class="gesture-number">
+                2
+            </div>
+
+            <strong>
+                Two Fingers
+            </strong>
+
+            <p>
+                Toggles the fan
+                connected to Relay 2.
+            </p>
+
+        </div>
+
+
+
+        <div class="gesture-card">
+
+            <div class="gesture-number">
+                3
+            </div>
+
+            <strong>
+                Three Fingers
+            </strong>
+
+            <p>
+                Toggles the water pump
+                connected to Relay 3.
+            </p>
+
+        </div>
+
+
+
+        <div class="gesture-card">
+
+            <div class="gesture-number">
+                4
+            </div>
+
+            <strong>
+                Four Fingers
+            </strong>
+
+            <p>
+                Toggles the buzzer
+                connected to Relay 4.
+            </p>
+
+        </div>
+
+
+
+        <div class="gesture-card">
+
+            <div class="gesture-number">
+                5
+            </div>
+
+            <strong>
+                Five Fingers
+            </strong>
+
+            <p>
+                Immediately turns
+                all connected devices OFF.
+            </p>
+
+        </div>
+
+
+
+        <div class="gesture-card">
+
+            <div class="gesture-number">
+                Q
+            </div>
+
+            <strong>
+                Keyboard Exit
+            </strong>
+
+            <p>
+                Press Q to stop
+                the camera stream
+                and safely exit.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="note">
+
+        Keep the hand clearly visible,
+        well illuminated and steady
+        for more reliable gesture detection.
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================
+     SOFTWARE
+========================== -->
+
+<section class="section">
+
+    <h2 class="section-title">
+        Software & Technologies
+    </h2>
+
+
+    <div class="feature-grid">
+
+
+        <div class="feature-card">
+
+            <strong>
+                Python 3.10
+            </strong>
+
+            <p>
+                Main application language.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                OpenCV
+            </strong>
+
+            <p>
+                Captures and processes
+                camera frames.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                Hand Tracking
+            </strong>
+
+            <p>
+                Detects the hand
+                and raised fingers.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                RPi.GPIO
+            </strong>
+
+            <p>
+                Controls Raspberry Pi
+                GPIO outputs.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                GPIO Zero
+            </strong>
+
+            <p>
+                Raspberry Pi GPIO
+                support library.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                Virtual Environment
+            </strong>
+
+            <p>
+                Isolates project
+                Python dependencies.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================
+     INSTALLATION
+========================== -->
+
+<section
+    class="section"
+    id="installation"
+>
+
+    <h2 class="section-title">
+        Installation & Setup
+    </h2>
+
+
+    <div class="note">
+
+        Install the required packages
+        in sequence and one at a time.
+
+    </div>
+
+
+    <div class="install-step">
+
+        <h3>
+            1. Update Raspberry Pi
+        </h3>
+
+        <div class="code-header">
+
+            <span>
+                Terminal
+            </span>
+
+            <button
+                type="button"
+                class="copy-button"
+                onclick="copyCode('setup1', this)"
+            >
+                Copy
+            </button>
+
+        </div>
+
+        <pre><code id="setup1">sudo apt update
 
 sudo apt install -y build-essential libssl-dev zlib1g-dev \
 libncurses5-dev libncursesw5-dev libreadline-dev libsqlite3-dev \
-libgdbm-dev libdb5.3-dev libbz2-dev libexpat1-dev liblzma-dev tk-dev \
-libffi-dev uuid-dev wget</code></pre>
+libgdbm-dev libdb5.3-dev libbz2-dev libexpat1-dev liblzma-dev \
+tk-dev libffi-dev uuid-dev wget</code></pre>
 
-    <!-- Step 2 -->
-
-    <h3>Step 2: Download Python 3.10.13</h3>
-
-    <div class="code-header">
-        <span>Terminal Command 02</span>
-
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep2', this)"
-        >
-            Copy
-        </button>
     </div>
 
-    <pre><code id="libraryStep2">cd /usr/src
+
+
+    <div class="install-step">
+
+        <h3>
+            2. Download Python 3.10.13
+        </h3>
+
+        <div class="code-header">
+
+            <span>
+                Terminal
+            </span>
+
+            <button
+                type="button"
+                class="copy-button"
+                onclick="copyCode('setup2', this)"
+            >
+                Copy
+            </button>
+
+        </div>
+
+        <pre><code id="setup2">cd /usr/src
 
 sudo wget https://www.python.org/ftp/python/3.10.13/Python-3.10.13.tgz
 
@@ -986,413 +2456,333 @@ sudo tar -xf Python-3.10.13.tgz
 
 cd Python-3.10.13</code></pre>
 
-    <!-- Step 3 -->
-
-    <h3>Step 3: Configure and Compile Python</h3>
-
-    <div class="code-header">
-        <span>Terminal Command 03</span>
-
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep3', this)"
-        >
-            Copy
-        </button>
     </div>
 
-    <pre><code id="libraryStep3">sudo ./configure --enable-optimizations
 
-sudo make -j4</code></pre>
 
-    <!-- Step 4 -->
+    <div class="install-step">
 
-    <h3>Step 4: Install Python 3.10</h3>
+        <h3>
+            3. Compile Python
+        </h3>
 
-    <div class="code-header">
-        <span>Terminal Command 04</span>
+        <div class="code-header">
 
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep4', this)"
-        >
-            Copy
-        </button>
+            <span>
+                Terminal
+            </span>
+
+            <button
+                type="button"
+                class="copy-button"
+                onclick="copyCode('setup3', this)"
+            >
+                Copy
+            </button>
+
+        </div>
+
+        <pre><code id="setup3">sudo ./configure --enable-optimizations
+
+sudo make -j4
+
+sudo make altinstall</code></pre>
+
     </div>
 
-    <pre><code id="libraryStep4">sudo make altinstall</code></pre>
 
-    <!-- Step 5 -->
 
-    <h3>Step 5: Check Python Version</h3>
+    <div class="install-step">
 
-    <div class="code-header">
-        <span>Terminal Command 05</span>
+        <h3>
+            4. Verify Python
+        </h3>
 
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep5', this)"
-        >
-            Copy
-        </button>
+        <div class="code-header">
+
+            <span>
+                Terminal
+            </span>
+
+            <button
+                type="button"
+                class="copy-button"
+                onclick="copyCode('setup4', this)"
+            >
+                Copy
+            </button>
+
+        </div>
+
+        <pre><code id="setup4">python3.10 --version</code></pre>
+
     </div>
 
-    <pre><code id="libraryStep5">python3.10 --version</code></pre>
 
-    <!-- Step 6 -->
 
-    <h3>Step 6: Return to Home Directory</h3>
+    <div class="install-step">
 
-    <div class="code-header">
-        <span>Terminal Command 06</span>
+        <h3>
+            5. Create Virtual Environment
+        </h3>
 
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep6', this)"
-        >
-            Copy
-        </button>
+        <div class="code-header">
+
+            <span>
+                Terminal
+            </span>
+
+            <button
+                type="button"
+                class="copy-button"
+                onclick="copyCode('setup5', this)"
+            >
+                Copy
+            </button>
+
+        </div>
+
+        <pre><code id="setup5">cd
+
+python3.10 -m venv mp-env
+
+source mp-env/bin/activate</code></pre>
+
     </div>
 
-    <pre><code id="libraryStep6">cd</code></pre>
 
-    <!-- Step 7 -->
 
-    <h3>Step 7: Create Python Virtual Environment</h3>
+    <div class="install-step">
 
-    <div class="code-header">
-        <span>Terminal Command 07</span>
+        <h3>
+            6. Install Computer Vision Packages
+        </h3>
 
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep7', this)"
-        >
-            Copy
-        </button>
+        <div class="code-header">
+
+            <span>
+                Terminal
+            </span>
+
+            <button
+                type="button"
+                class="copy-button"
+                onclick="copyCode('setup6', this)"
+            >
+                Copy
+            </button>
+
+        </div>
+
+        <pre><code id="setup6">pip install mediapipe
+
+pip install opencv-python==4.7.0.72
+
+pip install tflite-runtime</code></pre>
+
     </div>
 
-    <pre><code id="libraryStep7">python3.10 -m venv mp-env</code></pre>
 
-    <!-- Step 8 -->
 
-    <h3>Step 8: Activate Virtual Environment</h3>
+    <div class="install-step">
 
-    <div class="code-header">
-        <span>Terminal Command 08</span>
+        <h3>
+            7. Install GPIO Libraries
+        </h3>
 
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep8', this)"
-        >
-            Copy
-        </button>
+        <div class="code-header">
+
+            <span>
+                Terminal
+            </span>
+
+            <button
+                type="button"
+                class="copy-button"
+                onclick="copyCode('setup7', this)"
+            >
+                Copy
+            </button>
+
+        </div>
+
+        <pre><code id="setup7">pip install gpiozero
+
+pip install RPi.GPIO</code></pre>
+
     </div>
 
-    <pre><code id="libraryStep8">source mp-env/bin/activate</code></pre>
 
-    <!-- Step 9 -->
 
-    <h3>Step 9: Install MediaPipe</h3>
+    <div class="install-step">
 
-    <div class="code-header">
-        <span>Terminal Command 09</span>
+        <h3>
+            8. Additional Audio Packages
+        </h3>
 
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep9', this)"
-        >
-            Copy
-        </button>
+        <div class="code-header">
+
+            <span>
+                Terminal
+            </span>
+
+            <button
+                type="button"
+                class="copy-button"
+                onclick="copyCode('setup8', this)"
+            >
+                Copy
+            </button>
+
+        </div>
+
+        <pre><code id="setup8">sudo apt install python3-pyaudio
+
+pip3 install SpeechRecognition
+
+sudo apt install portaudio19-dev python3-pyaudio -y
+
+pip3 install SpeechRecognition pyaudio
+
+sudo apt install flac -y</code></pre>
+
     </div>
 
-    <pre><code id="libraryStep9">pip install mediapipe</code></pre>
 
-    <!-- Step 10 -->
 
-    <h3>Step 10: Install OpenCV</h3>
+    <div class="install-step">
 
-    <div class="code-header">
-        <span>Terminal Command 10</span>
+        <h3>
+            9. Configure Audio Card
+        </h3>
 
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep10', this)"
-        >
-            Copy
-        </button>
-    </div>
+        <div class="code-header">
 
-    <pre><code id="libraryStep10">pip install opencv-python==4.7.0.72</code></pre>
+            <span>
+                Terminal
+            </span>
 
-    <!-- Step 11 -->
+            <button
+                type="button"
+                class="copy-button"
+                onclick="copyCode('setup9', this)"
+            >
+                Copy
+            </button>
 
-    <h3>Step 11: Install TensorFlow Lite Runtime</h3>
+        </div>
 
-    <div class="code-header">
-        <span>Terminal Command 11</span>
+        <pre><code id="setup9">sudo nano ~/.asoundrc</code></pre>
 
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep11', this)"
-        >
-            Copy
-        </button>
-    </div>
 
-    <pre><code id="libraryStep11">pip install tflite-runtime</code></pre>
+        <p>
+            Add:
+        </p>
 
-    <!-- Step 12 -->
 
-    <h3>Step 12: Activate Virtual Environment Again</h3>
+        <div class="code-header">
 
-    <div class="code-header">
-        <span>Terminal Command 12</span>
+            <span>
+                .asoundrc
+            </span>
 
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep12', this)"
-        >
-            Copy
-        </button>
-    </div>
+            <button
+                type="button"
+                class="copy-button"
+                onclick="copyCode('audioConfig', this)"
+            >
+                Copy
+            </button>
 
-    <pre><code id="libraryStep12">source mp-env/bin/activate</code></pre>
+        </div>
 
-    <!-- Step 13 -->
-
-    <h3>Step 13: Install GPIO Zero</h3>
-
-    <div class="code-header">
-        <span>Terminal Command 13</span>
-
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep13', this)"
-        >
-            Copy
-        </button>
-    </div>
-
-    <pre><code id="libraryStep13">pip install gpiozero</code></pre>
-
-    <!-- Step 14 -->
-
-    <h3>Step 14: Install RPi.GPIO</h3>
-
-    <div class="code-header">
-        <span>Terminal Command 14</span>
-
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep14', this)"
-        >
-            Copy
-        </button>
-    </div>
-
-    <pre><code id="libraryStep14">pip install RPi.GPIO</code></pre>
-
-    <!-- Step 15 -->
-
-    <h3>Step 15: Install Python PyAudio</h3>
-
-    <div class="code-header">
-        <span>Terminal Command 15</span>
-
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep15', this)"
-        >
-            Copy
-        </button>
-    </div>
-
-    <pre><code id="libraryStep15">sudo apt install python3-pyaudio</code></pre>
-
-    <!-- Step 16 -->
-
-    <h3>Step 16: Install Speech Recognition</h3>
-
-    <div class="code-header">
-        <span>Terminal Command 16</span>
-
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep16', this)"
-        >
-            Copy
-        </button>
-    </div>
-
-    <pre><code id="libraryStep16">pip3 install SpeechRecognition</code></pre>
-
-    <!-- Step 17 -->
-
-    <h3>Step 17: Install PortAudio and PyAudio Packages</h3>
-
-    <div class="code-header">
-        <span>Terminal Command 17</span>
-
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep17', this)"
-        >
-            Copy
-        </button>
-    </div>
-
-    <pre><code id="libraryStep17">sudo apt install portaudio19-dev python3-pyaudio -y</code></pre>
-
-    <!-- Step 18 -->
-
-    <h3>Step 18: Install SpeechRecognition and PyAudio</h3>
-
-    <div class="code-header">
-        <span>Terminal Command 18</span>
-
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep18', this)"
-        >
-            Copy
-        </button>
-    </div>
-
-    <pre><code id="libraryStep18">pip3 install SpeechRecognition pyaudio</code></pre>
-
-    <!-- Step 19 -->
-
-    <h3>Step 19: Install FLAC</h3>
-
-    <div class="code-header">
-        <span>Terminal Command 19</span>
-
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep19', this)"
-        >
-            Copy
-        </button>
-    </div>
-
-    <pre><code id="libraryStep19">sudo apt install flac -y</code></pre>
-
-    <!-- Step 20 -->
-
-    <h3>Step 20: Configure the Audio Card</h3>
-
-    <div class="code-header">
-        <span>Terminal Command 20</span>
-
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep20', this)"
-        >
-            Copy
-        </button>
-    </div>
-
-    <pre><code id="libraryStep20">sudo nano ~/.asoundrc</code></pre>
-
-    <p>
-        Paste the following two lines inside the file:
-    </p>
-
-    <div class="code-header">
-        <span>Audio Configuration</span>
-
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('audioConfiguration', this)"
-        >
-            Copy
-        </button>
-    </div>
-
-    <pre><code id="audioConfiguration">defaults.pcm.card 1
+        <pre><code id="audioConfig">defaults.pcm.card 1
 defaults.ctl.card 1</code></pre>
 
-    <div class="note">
-        After pasting the two lines, press
-        <strong>Ctrl + O</strong>, press <strong>Enter</strong>,
-        and then press <strong>Ctrl + X</strong>.
     </div>
 
-    <!-- Step 21 -->
 
-    <h3>Step 21: Reboot Raspberry Pi</h3>
 
-    <div class="code-header">
-        <span>Terminal Command 21</span>
+    <div class="install-step">
 
-        <button
-            type="button"
-            class="copy-button"
-            onclick="copyCode('libraryStep21', this)"
-        >
-            Copy
-        </button>
-    </div>
+        <h3>
+            10. Reboot
+        </h3>
 
-    <pre><code id="libraryStep21">reboot</code></pre>
+        <div class="code-header">
 
-    <div class="success-note">
-        After rebooting, activate the virtual environment using
-        <strong>source mp-env/bin/activate</strong> before running the
-        Smart Home Automation Python program.
+            <span>
+                Terminal
+            </span>
+
+            <button
+                type="button"
+                class="copy-button"
+                onclick="copyCode('setup10', this)"
+            >
+                Copy
+            </button>
+
+        </div>
+
+        <pre><code id="setup10">reboot</code></pre>
+
+
+        <div class="success-note">
+
+            After rebooting,
+            activate the virtual environment:
+
+            <strong>
+                source mp-env/bin/activate
+            </strong>
+
+        </div>
+
     </div>
 
 </section>
 
-        </section>
 
-        <!-- Python Code -->
 
-        <section class="section" id="code">
+<!-- ==========================
+     PYTHON CODE
+========================== -->
 
-            <h2>Raspberry Pi Python Code</h2>
+<section
+    class="section"
+    id="code"
+>
 
-            <div class="code-header">
+    <h2 class="section-title">
+        Python Application
+    </h2>
 
-                <span>smart_home.py</span>
 
-                <button
-                    type="button"
-                    class="copy-button"
-                    onclick="copyCode('pythonCode', this)"
-                >
-                    Copy Code
-                </button>
+    <div class="code-header">
 
-            </div>
+        <span>
+            smart_home.py
+        </span>
 
-            <pre><code id="pythonCode">import time
+        <button
+            type="button"
+            class="copy-button"
+            onclick="copyCode('pythonCode', this)"
+        >
+            Copy Code
+        </button>
+
+    </div>
+
+
+    <pre><code id="pythonCode">import time
 import cv2
 import RPi.GPIO as GPIO
 from cvzone.HandTrackingModule import HandDetector
 
-# -------------------------------
-# GPIO pin configuration
-# -------------------------------
+
+# GPIO configuration
 
 RELAY_LED = 17
 RELAY_FAN = 27
@@ -1406,147 +2796,253 @@ RELAY_PINS = [
     RELAY_BUZZER
 ]
 
-# Most relay modules are active LOW.
+
+# Active LOW relay logic
+
 RELAY_ON = GPIO.LOW
 RELAY_OFF = GPIO.HIGH
 
-# -------------------------------
+
 # GPIO setup
-# -------------------------------
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
 for relay_pin in RELAY_PINS:
-    GPIO.setup(relay_pin, GPIO.OUT)
-    GPIO.output(relay_pin, RELAY_OFF)
 
-# -------------------------------
-# Camera and hand detector
-# -------------------------------
+    GPIO.setup(
+        relay_pin,
+        GPIO.OUT
+    )
+
+    GPIO.output(
+        relay_pin,
+        RELAY_OFF
+    )
+
+
+# Camera
 
 camera = cv2.VideoCapture(0)
 
-camera.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+camera.set(
+    cv2.CAP_PROP_FRAME_WIDTH,
+    640
+)
+
+camera.set(
+    cv2.CAP_PROP_FRAME_HEIGHT,
+    480
+)
+
+
+# Hand detector
 
 detector = HandDetector(
     detectionCon=0.8,
     maxHands=1
 )
 
-# Prevent repeated switching from every frame.
+
 last_gesture = -1
 last_action_time = 0
 
 GESTURE_DELAY = 1.0
 
 
-def set_relay(relay_pin, state):
-    """
-    Turn a relay ON or OFF.
-    """
+def set_relay(
+    relay_pin,
+    state
+):
 
     if state:
-        GPIO.output(relay_pin, RELAY_ON)
+
+        GPIO.output(
+            relay_pin,
+            RELAY_ON
+        )
+
     else:
-        GPIO.output(relay_pin, RELAY_OFF)
+
+        GPIO.output(
+            relay_pin,
+            RELAY_OFF
+        )
 
 
 def turn_all_off():
-    """
-    Turn all connected devices OFF.
-    """
 
     for relay_pin in RELAY_PINS:
-        set_relay(relay_pin, False)
+
+        set_relay(
+            relay_pin,
+            False
+        )
 
 
-def toggle_relay(relay_pin):
-    """
-    Toggle the selected relay state.
-    """
+def toggle_relay(
+    relay_pin
+):
 
-    current_state = GPIO.input(relay_pin)
+    current_state =
+        GPIO.input(
+            relay_pin
+        )
 
     if current_state == RELAY_OFF:
-        set_relay(relay_pin, True)
+
+        set_relay(
+            relay_pin,
+            True
+        )
+
         return "ON"
 
-    set_relay(relay_pin, False)
+    set_relay(
+        relay_pin,
+        False
+    )
+
     return "OFF"
 
 
-def process_gesture(finger_count):
-    """
-    Control devices according to the number
-    of detected fingers.
-    """
+def process_gesture(
+    finger_count
+):
 
     if finger_count == 1:
-        state = toggle_relay(RELAY_LED)
+
+        state =
+            toggle_relay(
+                RELAY_LED
+            )
+
         return "LED " + state
 
+
     if finger_count == 2:
-        state = toggle_relay(RELAY_FAN)
+
+        state =
+            toggle_relay(
+                RELAY_FAN
+            )
+
         return "FAN " + state
 
+
     if finger_count == 3:
-        state = toggle_relay(RELAY_PUMP)
+
+        state =
+            toggle_relay(
+                RELAY_PUMP
+            )
+
         return "WATER PUMP " + state
 
+
     if finger_count == 4:
-        state = toggle_relay(RELAY_BUZZER)
+
+        state =
+            toggle_relay(
+                RELAY_BUZZER
+            )
+
         return "BUZZER " + state
 
+
     if finger_count == 5:
+
         turn_all_off()
+
         return "ALL DEVICES OFF"
+
 
     return "SHOW 1 TO 5 FINGERS"
 
 
-status_message = "System Ready"
+status_message =
+    "System Ready"
+
 
 try:
+
     while True:
-        success, frame = camera.read()
+
+        success, frame =
+            camera.read()
+
 
         if not success:
-            print("Camera frame could not be read.")
+
+            print(
+                "Camera frame could not be read."
+            )
+
             break
 
-        frame = cv2.flip(frame, 1)
 
-        hands, frame = detector.findHands(
-            frame,
-            draw=True
-        )
+        frame =
+            cv2.flip(
+                frame,
+                1
+            )
+
+
+        hands, frame =
+            detector.findHands(
+                frame,
+                draw=True
+            )
+
 
         finger_count = 0
 
+
         if hands:
-            hand = hands[0]
 
-            finger_list = detector.fingersUp(hand)
-            finger_count = finger_list.count(1)
+            hand =
+                hands[0]
 
-            current_time = time.time()
+
+            finger_list =
+                detector.fingersUp(
+                    hand
+                )
+
+
+            finger_count =
+                finger_list.count(1)
+
+
+            current_time =
+                time.time()
+
 
             if (
                 finger_count != last_gesture
-                and current_time - last_action_time
+                and
+                current_time - last_action_time
                 &gt;= GESTURE_DELAY
             ):
-                status_message = process_gesture(
-                    finger_count
-                )
 
-                last_gesture = finger_count
-                last_action_time = current_time
+                status_message =
+                    process_gesture(
+                        finger_count
+                    )
+
+
+                last_gesture =
+                    finger_count
+
+
+                last_action_time =
+                    current_time
+
 
         else:
+
             last_gesture = -1
+
 
         cv2.rectangle(
             frame,
@@ -1555,6 +3051,7 @@ try:
             (15, 23, 42),
             -1
         )
+
 
         cv2.putText(
             frame,
@@ -1566,15 +3063,18 @@ try:
             2
         )
 
+
         cv2.putText(
             frame,
-            "Fingers: " + str(finger_count),
+            "Fingers: "
+            + str(finger_count),
             (25, 78),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.7,
             (0, 255, 255),
             2
         )
+
 
         cv2.putText(
             frame,
@@ -1586,6 +3086,7 @@ try:
             2
         )
 
+
         cv2.putText(
             frame,
             "Press Q to exit",
@@ -1596,215 +3097,326 @@ try:
             1
         )
 
+
         cv2.imshow(
             "Smart Home Automation",
             frame
         )
 
-        key = cv2.waitKey(1) &amp; 0xFF
+
+        key =
+            cv2.waitKey(1) &amp; 0xFF
+
 
         if key == ord("q"):
+
             break
 
+
 except KeyboardInterrupt:
-    print("Program stopped by user.")
+
+    print(
+        "Program stopped by user."
+    )
+
 
 finally:
+
     turn_all_off()
 
     camera.release()
+
     cv2.destroyAllWindows()
+
     GPIO.cleanup()
 
-    print("GPIO cleaned and all devices turned OFF.")</code></pre>
+    print(
+        "GPIO cleaned and all devices turned OFF."
+    )</code></pre>
 
-            <a
-                href="smart_home.py"
-                class="download-button"
-                download
-            >
-                Download Python Code
-            </a>
 
-            <div class="note">
-                Run the program with:
-                <strong>python3 smart_home.py</strong>
-            </div>
+    <div class="note">
 
-        </section>
+        Run the application using:
 
-        <!-- Operating Steps -->
+        <strong>
+            python3 smart_home.py
+        </strong>
 
-        <section class="section" id="steps">
+    </div>
 
-            <h2>Steps to Operate the Project</h2>
+</section>
 
-            <ol>
 
-                <li>
-                    Connect the relay module to the Raspberry Pi according
-                    to the connection table.
-                </li>
 
-                <li>
-                    Connect the USB camera to the Raspberry Pi.
-                </li>
+<!-- ==========================
+     OPERATION
+========================== -->
 
-                <li>
-                    Connect the LED, fan, water pump and buzzer to their
-                    respective relay channels.
-                </li>
+<section class="section">
 
-                <li>
-                    Switch ON the Raspberry Pi and open the terminal.
-                </li>
+    <h2 class="section-title">
+        How to Run
+    </h2>
 
-                <li>
-                    Install the required Python libraries.
-                </li>
 
-                <li>
-                    Save the Python program as
-                    <strong>smart_home.py</strong>.
-                </li>
+    <ol>
 
-                <li>
-                    Open the terminal in the code folder.
-                </li>
+        <li>
+            Complete all Raspberry Pi
+            and relay connections.
+        </li>
 
-                <li>
-                    Run the program using:
-                    <strong>python3 smart_home.py</strong>
-                </li>
+        <li>
+            Connect the USB camera.
+        </li>
 
-                <li>
-                    Show one to four fingers to control the devices.
-                </li>
+        <li>
+            Connect the required
+            low-voltage demonstration loads.
+        </li>
 
-                <li>
-                    Show five fingers to turn all devices OFF.
-                </li>
+        <li>
+            Start the Raspberry Pi.
+        </li>
 
-                <li>
-                    Press the Q key to stop the program.
-                </li>
+        <li>
+            Open a terminal.
+        </li>
 
-            </ol>
+        <li>
+            Activate the virtual environment:
+            <strong>
+                source mp-env/bin/activate
+            </strong>.
+        </li>
 
-            <div class="success-note">
-                The camera window displays the detected fingers and the
-                current appliance control action.
-            </div>
+        <li>
+            Navigate to the project folder.
+        </li>
 
-        </section>
+        <li>
+            Run:
+            <strong>
+                python3 smart_home.py
+            </strong>.
+        </li>
 
-        <!-- Troubleshooting -->
+        <li>
+            Show one to four fingers
+            to control individual devices.
+        </li>
 
-        <section class="section" id="troubleshooting">
+        <li>
+            Show five fingers
+            to switch all devices OFF.
+        </li>
 
-            <h2>Common Problems and Solutions</h2>
+        <li>
+            Press Q to exit.
+        </li>
 
-            <div class="table-wrapper">
+    </ol>
 
-                <table>
+</section>
 
-                    <thead>
-                        <tr>
-                            <th>Problem</th>
-                            <th>Possible Cause</th>
-                            <th>Solution</th>
-                        </tr>
-                    </thead>
 
-                    <tbody>
 
-                        <tr>
-                            <td>Camera is not opening</td>
-                            <td>Incorrect camera index</td>
-                            <td>
-                                Change VideoCapture(0) to VideoCapture(1).
-                            </td>
-                        </tr>
+<!-- ==========================
+     OUTCOME
+========================== -->
 
-                        <tr>
-                            <td>Relay is always ON</td>
-                            <td>Relay is active LOW</td>
-                            <td>
-                                Keep RELAY_ON as GPIO.LOW and RELAY_OFF
-                                as GPIO.HIGH.
-                            </td>
-                        </tr>
+<section class="section">
 
-                        <tr>
-                            <td>Hand is not detected</td>
-                            <td>Poor lighting</td>
-                            <td>
-                                Improve lighting and keep the hand clearly
-                                visible.
-                            </td>
-                        </tr>
+    <h2 class="section-title">
+        Project Outcome
+    </h2>
 
-                        <tr>
-                            <td>Device switches repeatedly</td>
-                            <td>Gesture is changing rapidly</td>
-                            <td>
-                                Hold the hand steady and increase
-                                GESTURE_DELAY.
-                            </td>
-                        </tr>
 
-                        <tr>
-                            <td>GPIO permission error</td>
-                            <td>Insufficient permission</td>
-                            <td>
-                                Run the code using sudo or verify Raspberry
-                                Pi GPIO permissions.
-                            </td>
-                        </tr>
+    <div class="outcome-box">
 
-                    </tbody>
+        <h3>
+            Gesture-Based Human Machine Interface Prototype
+        </h3>
 
-                </table>
 
-            </div>
+        <p>
 
-        </section>
+            The project demonstrates
+            real-time image processing,
+            gesture recognition,
+            embedded GPIO control,
+            relay interfacing
+            and physical device automation.
 
-        <a
-            href="../index.html"
-            class="back-button"
-        >
-            ← Back to Home
-        </a>
+        </p>
 
-    </main>
 
-    <footer>
-        Smart Home Automation Project
-    </footer>
+        <p>
 
-    <script>
-        function copyCode(codeId, button) {
-            const code =
-                document.getElementById(codeId).innerText;
+            It provides a foundation
+            for future development such as
+            voice control,
+            IoT-based remote access,
+            gesture customization,
+            machine-learning based gesture recognition,
+            appliance status monitoring
+            and integration with smart-home platforms.
 
-            navigator.clipboard
-                .writeText(code)
-                .then(function () {
-                    const originalText =
-                        button.textContent;
+        </p>
 
-                    button.textContent = "Copied!";
+    </div>
 
-                    setTimeout(function () {
-                        button.textContent = originalText;
-                    }, 2000);
-                })
-                .catch(function () {
-                    alert("Code could not be copied.");
-                });
-        }
-    </script>
+</section>
+
+
+
+<!-- ==========================
+     REPOSITORY STRUCTURE
+========================== -->
+
+<section class="section">
+
+    <h2 class="section-title">
+        Suggested Repository Structure
+    </h2>
+
+
+    <div class="code-header">
+
+        <span>
+            Repository
+        </span>
+
+    </div>
+
+
+    <pre><code>Gesture-Smart-Home-Automation/
+│
+├── index.html
+├── README.md
+├── LICENSE
+│
+├── src/
+│   └── smart_home.py
+│
+├── images/
+│   ├── circuit-diagram.png
+│   ├── raspberry-pi.png
+│   ├── usb-camera.png
+│   ├── relay-module.png
+│   ├── fan.png
+│   ├── led.png
+│   ├── pump.png
+│   ├── breadboard.png
+│   └── jumper-wires.png
+│
+└── docs/
+    └── project-documentation.pdf</code></pre>
+
+</section>
+
+
+</main>
+
+
+
+<!-- ==========================
+     FOOTER
+========================== -->
+
+<footer>
+
+    <p>
+
+        <strong>
+            Gesture Controlled Smart Home Automation
+        </strong>
+
+        <br>
+
+        Personal Raspberry Pi,
+        Computer Vision &
+        Embedded Systems Project
+
+    </p>
+
+
+    <p>
+
+        Built using Raspberry Pi,
+        Python,
+        OpenCV,
+        hand tracking
+        and relay-based appliance control.
+
+    </p>
+
+</footer>
+
+
+
+<!-- ==========================
+     JAVASCRIPT
+========================== -->
+
+<script>
+
+    function copyCode(
+        codeId,
+        button
+    )
+    {
+
+        const code =
+            document
+            .getElementById(
+                codeId
+            )
+            .innerText;
+
+
+        navigator.clipboard
+            .writeText(code)
+
+            .then(function ()
+            {
+
+                const originalText =
+                    button.textContent;
+
+
+                button.textContent =
+                    "Copied!";
+
+
+                setTimeout(
+                    function ()
+                    {
+
+                        button.textContent =
+                            originalText;
+
+                    },
+                    1800
+                );
+
+            })
+
+
+            .catch(function ()
+            {
+
+                alert(
+                    "Code could not be copied."
+                );
+
+            });
+
+    }
+
+</script>
+
 
 </body>
 
