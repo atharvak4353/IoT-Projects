@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -9,1255 +10,2886 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Smart Door Viewer and Visitor Alert System</title>
+    <meta
+        name="description"
+        content="ESP32-CAM Smart Door Viewer and Visitor Alert System with Telegram photo notifications."
+    >
+
+    <title>
+        Smart Door Viewer & Visitor Alert System | ESP32-CAM
+    </title>
+
 
     <style>
-        * {
-            box-sizing: border-box;
+
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
+
+        :root {
+
+            --primary: #0f172a;
+            --secondary: #075985;
+
+            --accent: #0ea5e9;
+            --accent-dark: #0284c7;
+            --accent-light: #e0f2fe;
+
+            --background: #f8fafc;
+            --surface: #ffffff;
+
+            --text: #1e293b;
+            --muted: #64748b;
+
+            --border: #e2e8f0;
+
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+
         }
+
+
+        * {
+
+            margin: 0;
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
 
         html {
+
             scroll-behavior: smooth;
+
         }
+
 
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            color: #1e293b;
-            background: #f1f5f9;
-            line-height: 1.6;
+
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: var(--background);
+
+            color: var(--text);
+
+            line-height: 1.7;
+
         }
 
-        header {
-            padding: 55px 20px;
-            text-align: center;
-            color: white;
-            background: linear-gradient(
-                135deg,
-                #0284c7,
-                #075985
-            );
+
+        img {
+
+            max-width: 100%;
+
         }
 
-        header h1 {
-            margin: 0 0 12px;
-            font-size: 40px;
-        }
 
-        header p {
-            max-width: 760px;
-            margin: auto;
-            color: #e0f2fe;
-            font-size: 17px;
-        }
 
-        .logo {
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+
+            position: relative;
+
+            min-height: 550px;
+
             display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 85px 25px;
+
+            text-align: center;
+
+            color: white;
+
+            overflow: hidden;
+
+            background:
+
+                radial-gradient(
+                    circle at top right,
+                    rgba(14, 165, 233, 0.30),
+                    transparent 35%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #020617,
+                    #0f172a 50%,
+                    #075985
+                );
+
+        }
+
+
+        .hero::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 450px;
+            height: 450px;
+
+            top: -180px;
+            left: -130px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(14, 165, 233, 0.10);
+
+        }
+
+
+        .hero-content {
+
+            position: relative;
+
+            z-index: 2;
+
+            max-width: 950px;
+
+        }
+
+
+        .project-label {
+
+            display: inline-block;
+
+            margin-bottom: 20px;
+
+            padding: 7px 15px;
+
+            color: #bae6fd;
+
+            background:
+                rgba(14, 165, 233, 0.10);
+
+            border:
+                1px solid
+                rgba(186, 230, 253, 0.35);
+
+            border-radius: 999px;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+
+        }
+
+
+        .hero h1 {
+
+            margin: 0;
+
+            font-size:
+                clamp(38px, 7vw, 67px);
+
+            line-height: 1.08;
+
+            letter-spacing: -2px;
+
+        }
+
+
+        .hero-description {
+
+            max-width: 800px;
+
+            margin:
+                24px auto 0;
+
+            color: #cbd5e1;
+
+            font-size: 18px;
+
+        }
+
+
+
+        /* =========================================================
+           HERO BUTTONS
+        ========================================================= */
+
+        .hero-buttons {
+
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 14px;
+
+            margin-top: 32px;
+
+        }
+
+
+        .btn {
+
+            display: inline-flex;
+
             justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
+
+            min-height: 46px;
+
+            padding:
+                11px 22px;
+
+            border-radius: 9px;
+
+            text-decoration: none;
+
+            font-weight: 700;
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease;
+
         }
 
-        .logo img {
-            width: 160px;
-            height: auto;
-            display: block;
-            padding: 8px;
-            object-fit: contain;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+        .btn:hover {
+
+            transform:
+                translateY(-2px);
+
         }
+
+
+        .btn-primary {
+
+            color: white;
+
+            background: var(--accent);
+
+        }
+
+
+        .btn-primary:hover {
+
+            background: var(--accent-dark);
+
+        }
+
+
+        .btn-secondary {
+
+            color: white;
+
+            background:
+                rgba(255, 255, 255, 0.08);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.20);
+
+        }
+
+
+        .btn-secondary:hover {
+
+            background:
+                rgba(255, 255, 255, 0.14);
+
+        }
+
+
+
+        /* =========================================================
+           TECHNOLOGY BADGES
+        ========================================================= */
+
+        .badges {
+
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-top: 30px;
+
+        }
+
+
+        .badge {
+
+            padding:
+                7px 13px;
+
+            color: #e2e8f0;
+
+            background:
+                rgba(255, 255, 255, 0.07);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.14);
+
+            border-radius: 999px;
+
+            font-size: 13px;
+            font-weight: 600;
+
+        }
+
+
+
+        /* =========================================================
+           NAVIGATION
+        ========================================================= */
 
         nav {
+
             position: sticky;
+
             top: 0;
+
             z-index: 100;
 
             display: flex;
+
             justify-content: center;
+
             gap: 22px;
+
             flex-wrap: wrap;
 
-            padding: 15px;
-            background: white;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+            padding:
+                15px 20px;
+
+            background:
+                rgba(255, 255, 255, 0.96);
+
+            backdrop-filter:
+                blur(10px);
+
+            border-bottom:
+                1px solid var(--border);
+
+            box-shadow:
+                0 4px 14px
+                rgba(15, 23, 42, 0.05);
+
         }
+
 
         nav a {
-            color: #075985;
+
+            color: #334155;
+
             text-decoration: none;
-            font-weight: bold;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
         }
+
 
         nav a:hover {
-            color: #0284c7;
+
+            color: var(--accent-dark);
+
         }
+
+
+
+        /* =========================================================
+           MAIN
+        ========================================================= */
 
         .container {
+
             width: 90%;
-            max-width: 1050px;
+
+            max-width: 1100px;
+
             margin: auto;
-            padding: 40px 0;
+
+            padding:
+                50px 0;
+
         }
+
 
         .section {
-            margin-bottom: 30px;
-            padding: 28px;
 
-            background: white;
-            border-radius: 14px;
+            margin-bottom: 35px;
 
-            box-shadow: 0 5px 18px
-                rgba(15, 23, 42, 0.08);
+            padding: 32px;
 
-            animation: fadeUp 0.8s ease;
+            background: var(--surface);
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 10px 35px
+                rgba(15, 23, 42, 0.05);
+
         }
 
-        .section h2 {
-            margin-top: 0;
-            padding-bottom: 10px;
 
-            color: #075985;
-            border-bottom: 2px solid #e0f2fe;
-        }
-
-        .section h3 {
-            margin-top: 25px;
-            color: #0369a1;
-        }
-
-        .project-info {
-            padding: 18px;
-
-            background: #f0f9ff;
-            border-left: 5px solid #0284c7;
-            border-radius: 8px;
-        }
-
-        .project-info p {
-            margin: 7px 0;
-        }
-
-        .requirements-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-top: 20px;
-        }
-
-        .requirement-card {
-            padding: 16px;
-            text-align: center;
-            overflow: hidden;
-
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 12px;
-
-            box-shadow: 0 4px 12px
-                rgba(15, 23, 42, 0.08);
-
-            transition:
-                transform 0.3s ease,
-                box-shadow 0.3s ease;
-        }
-
-        .requirement-card:hover {
-            transform: translateY(-6px);
-
-            box-shadow: 0 10px 22px
-                rgba(2, 132, 199, 0.18);
-        }
-
-        .requirement-card span {
-            width: 100%;
-            height: 170px;
+        .section-title {
 
             display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin:
+                0 0 24px;
+
+            color: var(--primary);
+
+            font-size: 28px;
+
+        }
+
+
+        .section-title::before {
+
+            content: "";
+
+            width: 5px;
+            height: 30px;
+
+            background: var(--accent);
+
+            border-radius: 999px;
+
+        }
+
+
+        .section h3 {
+
+            margin-top: 28px;
+
+            color: var(--secondary);
+
+        }
+
+
+
+        /* =========================================================
+           PROJECT OVERVIEW
+        ========================================================= */
+
+        .overview-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1.25fr 0.75fr;
+
+            gap: 28px;
+
+            align-items: start;
+
+        }
+
+
+        .overview-text p {
+
+            margin-bottom: 14px;
+
+            color: #475569;
+
+            font-size: 16px;
+
+        }
+
+
+        .project-meta {
+
+            padding: 20px;
+
+            background: #f8fafc;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+        }
+
+
+        .meta-item {
+
+            padding: 11px 0;
+
+            border-bottom:
+                1px solid var(--border);
+
+        }
+
+
+        .meta-item:last-child {
+
+            border-bottom: none;
+
+        }
+
+
+        .meta-label {
+
+            display: block;
+
+            margin-bottom: 3px;
+
+            color: var(--muted);
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.7px;
+
+        }
+
+
+        .meta-value {
+
+            color: var(--primary);
+
+            font-weight: 700;
+
+        }
+
+
+
+        /* =========================================================
+           FEATURES
+        ========================================================= */
+
+        .feature-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 16px;
+
+        }
+
+
+        .feature-card {
+
+            padding: 20px;
+
+            background: #f8fafc;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+
+        }
+
+
+        .feature-card:hover {
+
+            transform:
+                translateY(-4px);
+
+            box-shadow:
+                0 12px 25px
+                rgba(15, 23, 42, 0.08);
+
+        }
+
+
+        .feature-card strong {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: var(--secondary);
+
+            font-size: 17px;
+
+        }
+
+
+        .feature-card p {
+
+            margin: 0;
+
+            color: var(--muted);
+
+            font-size: 14px;
+
+        }
+
+
+
+        /* =========================================================
+           COMPONENTS
+        ========================================================= */
+
+        .requirements-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+        }
+
+
+        .requirement-card {
+
+            overflow: hidden;
+
+            padding: 15px;
+
+            text-align: center;
+
+            background: #f8fafc;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+
+        }
+
+
+        .requirement-card:hover {
+
+            transform:
+                translateY(-5px);
+
+            box-shadow:
+                0 12px 24px
+                rgba(14, 165, 233, 0.12);
+
+        }
+
+
+        .requirement-card span {
+
+            height: 160px;
+
+            display: flex;
+
             justify-content: center;
             align-items: center;
 
-            margin-bottom: 14px;
             padding: 10px;
-            overflow: hidden;
+
+            margin-bottom: 12px;
 
             background: white;
+
             border-radius: 10px;
+
         }
 
-        .requirement-card span img {
+
+        .requirement-card img {
+
             width: 100%;
             height: 100%;
-            display: block;
 
             object-fit: contain;
-            object-position: center;
 
-            transition: transform 0.3s ease;
         }
 
-        .requirement-card:hover span img {
-            transform: scale(1.08);
-        }
 
         .requirement-card strong {
-            display: block;
-            margin-top: 5px;
 
-            color: #075985;
-            font-size: 18px;
+            color: var(--primary);
+
+            font-size: 16px;
+
         }
+
 
         .requirement-card p {
-            margin: 7px 0 0;
-            color: #475569;
-            font-size: 14px;
+
+            margin-top: 6px;
+
+            color: var(--muted);
+
+            font-size: 13px;
+
         }
 
-        ul,
-        ol {
-            padding-left: 24px;
-        }
 
-        li {
-            margin-bottom: 9px;
-        }
+
+        /* =========================================================
+           TABLE
+        ========================================================= */
 
         .table-wrapper {
+
             overflow-x: auto;
+
         }
 
+
         table {
+
             width: 100%;
+
             min-width: 620px;
-            margin-top: 15px;
+
             border-collapse: collapse;
+
+            margin-top: 18px;
+
         }
+
 
         th,
         td {
-            padding: 13px;
+
+            padding:
+                13px 14px;
+
             text-align: left;
-            border: 1px solid #cbd5e1;
+
+            border:
+                1px solid var(--border);
+
         }
+
 
         th {
+
             color: white;
-            background: #075985;
+
+            background: var(--primary);
+
         }
+
 
         tr:nth-child(even) {
-            background: #f0f9ff;
+
+            background: #f8fafc;
+
         }
 
+
+
+        /* =========================================================
+           CIRCUIT
+        ========================================================= */
+
         .circuit-image-card {
-            margin-top: 22px;
-            padding: 15px;
+
+            padding: 18px;
+
             text-align: center;
 
             background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 12px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
         }
+
 
         .circuit-image-card img {
+
             width: 100%;
+
             max-height: 650px;
+
             object-fit: contain;
 
-            background: white;
-            border-radius: 8px;
+            border-radius: 10px;
+
         }
 
-        .circuit-image-card h3 {
-            margin-bottom: 5px;
+
+        .circuit-image-card p {
+
+            margin-top: 8px;
+
+            color: var(--muted);
+
         }
+
+
+
+        /* =========================================================
+           WORKING
+        ========================================================= */
 
         .working-grid {
+
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
             gap: 18px;
-            margin-top: 20px;
+
         }
+
 
         .working-card {
-            padding: 18px;
+
+            padding: 20px;
 
             background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 14px;
+
         }
+
+
+        .step-number {
+
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 12px;
+
+            color: white;
+
+            background: var(--accent);
+
+            border-radius: 50%;
+
+            font-weight: 800;
+
+        }
+
 
         .working-card strong {
-            display: block;
-            margin-bottom: 7px;
 
-            color: #075985;
-            font-size: 18px;
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: var(--secondary);
+
         }
+
+
+        .working-card p {
+
+            color: var(--muted);
+
+            font-size: 14px;
+
+        }
+
+
+
+        /* =========================================================
+           SETUP STEPS
+        ========================================================= */
+
+        .setup-step {
+
+            margin-top: 20px;
+
+            padding: 20px;
+
+            background: #f8fafc;
+
+            border:
+                1px solid #bae6fd;
+
+            border-radius: 14px;
+
+        }
+
+
+        .setup-step h3 {
+
+            margin-top: 0;
+
+        }
+
+
+
+        /* =========================================================
+           CODE
+        ========================================================= */
 
         .code-header {
+
             display: flex;
+
+            justify-content:
+                space-between;
+
             align-items: center;
-            justify-content: space-between;
+
             gap: 15px;
 
-            padding: 12px 16px;
+            padding:
+                12px 16px;
 
             color: white;
-            background: #1e293b;
 
-            border-radius: 10px 10px 0 0;
+            background: #111827;
+
+            border-radius:
+                10px 10px 0 0;
+
         }
+
 
         .copy-button {
-            padding: 8px 14px;
+
+            padding:
+                8px 14px;
 
             color: white;
-            background: #0284c7;
+
+            background: var(--accent);
 
             border: none;
-            border-radius: 6px;
+
+            border-radius: 7px;
 
             cursor: pointer;
-            font-weight: bold;
+
+            font-weight: 700;
+
         }
+
 
         .copy-button:hover {
-            background: #0369a1;
+
+            background: var(--accent-dark);
+
         }
 
+
         pre {
-            margin: 0 0 15px;
+
+            margin:
+                0 0 15px;
+
             padding: 22px;
+
             overflow-x: auto;
 
             color: #e2e8f0;
-            background: #0f172a;
 
-            border-radius: 0 0 10px 10px;
+            background: #020617;
 
-            font-family: Consolas, monospace;
+            border-radius:
+                0 0 10px 10px;
+
+            font-family:
+                Consolas,
+                "Courier New",
+                monospace;
+
             font-size: 14px;
-            line-height: 1.6;
+
+            line-height: 1.65;
+
         }
+
+
+
+        /* =========================================================
+           NOTES
+        ========================================================= */
+
+        .note,
+        .warning,
+        .success-note,
+        .info-note {
+
+            margin-top: 20px;
+
+            padding: 16px;
+
+            border-radius: 10px;
+
+        }
+
 
         .note {
-            margin-top: 20px;
-            padding: 15px;
 
             color: #854d0e;
-            background: #fef9c3;
 
-            border: 1px solid #fde047;
-            border-radius: 8px;
+            background: #fefce8;
+
+            border:
+                1px solid #fde68a;
+
         }
+
 
         .warning {
-            margin-top: 20px;
-            padding: 15px;
 
             color: #991b1b;
-            background: #fee2e2;
 
-            border: 1px solid #fca5a5;
-            border-radius: 8px;
+            background: #fef2f2;
+
+            border:
+                1px solid #fecaca;
+
         }
+
 
         .success-note {
-            margin-top: 20px;
-            padding: 15px;
 
             color: #166534;
-            background: #dcfce7;
 
-            border: 1px solid #86efac;
-            border-radius: 8px;
+            background: #f0fdf4;
+
+            border:
+                1px solid #bbf7d0;
+
         }
+
 
         .info-note {
-            margin-top: 20px;
-            padding: 15px;
 
-            color: #0c4a6e;
-            background: #e0f2fe;
+            color: #075985;
 
-            border: 1px solid #7dd3fc;
-            border-radius: 8px;
+            background: #f0f9ff;
+
+            border:
+                1px solid #bae6fd;
+
         }
 
-        .back-button,
-        .download-button {
-            display: inline-block;
-            margin: 5px 5px 5px 0;
-            padding: 11px 20px;
+
+
+        /* =========================================================
+           OUTCOME
+        ========================================================= */
+
+        .outcome-box {
+
+            padding: 28px;
 
             color: white;
-            background: #0284c7;
 
-            text-decoration: none;
-            border-radius: 7px;
-            font-weight: bold;
+            background:
 
-            transition:
-                background 0.3s ease,
-                transform 0.3s ease;
+                linear-gradient(
+                    135deg,
+                    #0f172a,
+                    #075985
+                );
+
+            border-radius: 16px;
+
         }
 
-        .back-button:hover,
-        .download-button:hover {
-            background: #075985;
-            transform: translateY(-2px);
+
+        .outcome-box h3 {
+
+            margin-top: 0;
+
+            color: white;
+
         }
+
+
+        .outcome-box p {
+
+            margin-top: 10px;
+
+            color: #dbeafe;
+
+        }
+
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
 
         footer {
-            padding: 22px;
+
+            padding:
+                35px 20px;
+
             text-align: center;
 
-            color: #cbd5e1;
-            background: #0f172a;
+            color: #94a3b8;
+
+            background: #020617;
+
         }
 
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(25px);
-            }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        footer strong {
+
+            color: white;
+
         }
 
-        @media (max-width: 800px) {
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (
+            max-width: 900px
+        ) {
+
             .requirements-grid {
-                grid-template-columns: repeat(2, 1fr);
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
             }
 
+
+            .feature-grid,
             .working-grid {
-                grid-template-columns: 1fr;
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
             }
 
-            header h1 {
-                font-size: 32px;
+
+            .overview-grid {
+
+                grid-template-columns: 1fr;
+
             }
+
         }
 
-        @media (max-width: 520px) {
-            .requirements-grid {
-                grid-template-columns: 1fr;
-            }
 
-            .requirement-card span {
-                height: 190px;
-            }
+        @media (
+            max-width: 650px
+        ) {
 
             .section {
-                padding: 20px;
+
+                padding: 22px;
+
             }
 
-            header h1 {
-                font-size: 27px;
+
+            .requirements-grid,
+            .feature-grid,
+            .working-grid {
+
+                grid-template-columns: 1fr;
+
             }
+
 
             nav {
-                gap: 13px;
-                font-size: 14px;
+
+                gap: 12px;
+
             }
 
-            .copy-button {
-                padding: 7px 10px;
+
+            .hero {
+
+                min-height: 480px;
+
+                padding:
+                    65px 20px;
+
             }
+
+
+            .hero h1 {
+
+                letter-spacing: -1px;
+
+            }
+
+
+            .hero-description {
+
+                font-size: 16px;
+
+            }
+
         }
+
     </style>
+
 </head>
+
+
 
 <body>
 
-    <header>
 
-        <div class="logo">
+<!-- =========================================================
+     HERO
+========================================================= -->
 
-            <img
-                src="Simusoft logo.jpeg"
-                alt="Simusoft Technology Logo"
+<header class="hero">
+
+    <div class="hero-content">
+
+
+        <span class="project-label">
+
+            IoT • Embedded Systems • Smart Security
+
+        </span>
+
+
+        <h1>
+
+            Smart Door Viewer
+            & Visitor Alert System
+
+        </h1>
+
+
+        <p class="hero-description">
+
+            An ESP32-CAM based IoT security system
+            that detects a visitor through a doorbell button,
+            captures their photograph
+            and sends a real-time Telegram notification
+            directly to the user's smartphone.
+
+        </p>
+
+
+        <div class="hero-buttons">
+
+
+            <a
+                href="#code"
+                class="btn btn-primary"
             >
+
+                View Source Code
+
+            </a>
+
+
+            <a
+                href="#circuit"
+                class="btn btn-secondary"
+            >
+
+                View Circuit
+
+            </a>
+
+
+            <a
+                href="#telegram"
+                class="btn btn-secondary"
+            >
+
+                Telegram Setup
+
+            </a>
+
 
         </div>
 
-        <h1>Smart Door Viewer & Visitor Alert System</h1>
 
-        <p>
-            ESP32-CAM based smart door security system that captures
-            a visitor's photo and sends a real-time Telegram alert
-            when the doorbell button is pressed.
-        </p>
+        <div class="badges">
 
-    </header>
 
-    <nav>
-        <a href="#details">Project Details</a>
-        <a href="#requirements">Components</a>
-        <a href="#software">Software</a>
-        <a href="#connections">Connections</a>
-        <a href="#circuit">Circuit</a>
-        <a href="#telegram">Telegram Setup</a>
-        <a href="#configuration">Configuration</a>
-        <a href="#code">Arduino Code</a>
-        <a href="#steps">Operating Steps</a>
-    </nav>
+            <span class="badge">
+                ESP32-CAM
+            </span>
 
-    <main class="container">
 
-        <!-- Project Details -->
+            <span class="badge">
+                OV2640
+            </span>
 
-        <section class="section" id="details">
 
-            <h2>Project Details</h2>
+            <span class="badge">
+                Arduino
+            </span>
 
-            <div class="project-info">
 
-                <p>
-                    <strong>Project Name:</strong>
-                    Smart Door Viewer & Visitor Alert System
-                </p>
+            <span class="badge">
+                Wi-Fi
+            </span>
 
-                <p>
-                    <strong>Controller:</strong>
+
+            <span class="badge">
+                Telegram API
+            </span>
+
+
+            <span class="badge">
+                IoT
+            </span>
+
+
+            <span class="badge">
+                C++
+            </span>
+
+
+        </div>
+
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<nav>
+
+    <a href="#about">
+        About
+    </a>
+
+    <a href="#features">
+        Features
+    </a>
+
+    <a href="#components">
+        Hardware
+    </a>
+
+    <a href="#connections">
+        Connections
+    </a>
+
+    <a href="#circuit">
+        Circuit
+    </a>
+
+    <a href="#telegram">
+        Telegram
+    </a>
+
+    <a href="#working">
+        Working
+    </a>
+
+    <a href="#code">
+        Code
+    </a>
+
+</nav>
+
+
+
+<main class="container">
+
+
+
+<!-- =========================================================
+     ABOUT
+========================================================= -->
+
+<section
+    class="section"
+    id="about"
+>
+
+
+    <h2 class="section-title">
+
+        About the Project
+
+    </h2>
+
+
+    <div class="overview-grid">
+
+
+        <div class="overview-text">
+
+
+            <p>
+
+                This project implements
+                an IoT-based smart door security system
+                using an ESP32-CAM AI Thinker board.
+
+            </p>
+
+
+            <p>
+
+                When a visitor presses
+                the doorbell push button,
+                the ESP32-CAM activates a buzzer,
+                captures an image using
+                the OV2640 camera
+                and sends an alert through Telegram.
+
+            </p>
+
+
+            <p>
+
+                The system allows the user
+                to remotely receive visitor photographs
+                without requiring a dedicated
+                mobile application or local server.
+
+            </p>
+
+
+            <p>
+
+                The Telegram bot can also
+                receive commands from the user
+                to capture a photograph
+                or control the ESP32-CAM flash LED.
+
+            </p>
+
+
+        </div>
+
+
+        <div class="project-meta">
+
+
+            <div class="meta-item">
+
+                <span class="meta-label">
+                    Controller
+                </span>
+
+                <span class="meta-value">
                     ESP32-CAM AI Thinker
-                </p>
-
-                <p>
-                    <strong>Camera:</strong>
-                    OV2640 Camera Module
-                </p>
-
-                <p>
-                    <strong>Input Device:</strong>
-                    Push Button
-                </p>
-
-                <p>
-                    <strong>Output Device:</strong>
-                    Active Buzzer
-                </p>
-
-                <p>
-                    <strong>Communication:</strong>
-                    Wi-Fi and Telegram Bot
-                </p>
-
-                <p>
-                    <strong>Programming Software:</strong>
-                    Arduino IDE 2.x
-                </p>
-
-                <p>
-                    <strong>Purpose:</strong>
-                    To detect a visitor at the door, sound a buzzer,
-                    capture the visitor's photograph and send the
-                    photograph to the owner's Telegram account.
-                </p>
+                </span>
 
             </div>
 
-        </section>
 
-        <!-- Hardware Requirements -->
+            <div class="meta-item">
 
-        <section class="section" id="requirements">
+                <span class="meta-label">
+                    Camera
+                </span>
 
-            <h2>Required Components</h2>
-
-            <div class="requirements-grid">
-
-                <div class="requirement-card">
-
-                    <span>
-                        <img
-                            src="ESP32 CAM.png"
-                            alt="ESP32-CAM AI Thinker"
-                        >
-                    </span>
-
-                    <strong>ESP32-CAM</strong>
-
-                    <p>
-                        Main controller with built-in Wi-Fi and
-                        camera support.
-                    </p>
-
-                </div>
-
-                <div class="requirement-card">
-
-                    <span>
-                        <img
-                            src="USB TTL.png"
-                            alt="USB to TTL programmer"
-                        >
-                    </span>
-
-                    <strong>USB-to-TTL Programmer</strong>
-
-                    <p>
-                        Uploads the Arduino program to ESP32-CAM.
-                    </p>
-
-                </div>
-
-                <div class="requirement-card">
-
-                    <span>
-                        <img
-                            src="Push Button.png"
-                            alt="Push Button"
-                        >
-                    </span>
-
-                    <strong>Push Button</strong>
-
-                    <p>
-                        Works as the visitor doorbell button.
-                    </p>
-
-                </div>
-
-                <div class="requirement-card">
-
-                    <span>
-                        <img
-                            src="Buzzer.png"
-                            alt="Active buzzer"
-                        >
-                    </span>
-
-                    <strong>Active Buzzer</strong>
-
-                    <p>
-                        Produces a sound when the visitor presses
-                        the button.
-                    </p>
-
-                </div>
-
-                <div class="requirement-card">
-
-                    <span>
-                        <img
-                            src="Jumper Wires.png"
-                            alt="Jumper Wires"
-                        >
-                    </span>
-
-                    <strong>Jumper Wires</strong>
-
-                    <p>
-                        Used to make the circuit connections.
-                    </p>
-
-                </div>
-
-                <div class="requirement-card">
-
-                    <span>
-                        <img
-                            src="Breadboard.png"
-                            alt="Breadboard"
-                        >
-                    </span>
-
-                    <strong>Breadboard</strong>
-
-                    <p>
-                        Optional board for temporary circuit assembly.
-                    </p>
-
-                </div>
-
-                <div class="requirement-card">
-
-                    <span>
-                        <img
-                            src="5V Power Supply.png"
-                            alt="5 volt power supply"
-                        >
-                    </span>
-
-                    <strong>5V Power Supply</strong>
-
-                    <p>
-                        Provides a stable power supply to ESP32-CAM.
-                    </p>
-
-                </div>
-
-        </section>
-
-        <!-- Software Requirements -->
-
-        <section class="section" id="software">
-
-            <h2>Software Requirements</h2>
-
-            <div class="table-wrapper">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Software or Library</th>
-                            <th>Version</th>
-                            <th>Purpose</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-                            <td>Arduino IDE</td>
-                            <td>2.x</td>
-                            <td>
-                                Used to write and upload the ESP32-CAM code.
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                ESP32 by Espressif Systems
-                            </td>
-                            <td>3.3.8</td>
-                            <td>
-                                Adds ESP32-CAM board support to Arduino IDE.
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>UniversalTelegramBot</td>
-                            <td>Latest compatible version</td>
-                            <td>
-                                Sends Telegram messages and visitor photos.
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>ArduinoJson</td>
-                            <td>7.4.3</td>
-                            <td>
-                                Handles Telegram API data.
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Telegram Application</td>
-                            <td>Current version</td>
-                            <td>
-                                Receives visitor alerts and photos.
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
+                <span class="meta-value">
+                    OV2640
+                </span>
 
             </div>
 
-            <div class="note">
-                <strong>Important:</strong>
-                Install the ESP32 board package and both Arduino
-                libraries before compiling the program.
+
+            <div class="meta-item">
+
+                <span class="meta-label">
+                    Connectivity
+                </span>
+
+                <span class="meta-value">
+                    2.4 GHz Wi-Fi
+                </span>
+
             </div>
 
-        </section>
 
-        <!-- Installation -->
+            <div class="meta-item">
 
-        <section class="section" id="installation">
+                <span class="meta-label">
+                    Notification
+                </span>
 
-            <h2>Arduino IDE Installation</h2>
+                <span class="meta-value">
+                    Telegram Bot
+                </span>
 
-            <h3>Step 1: Install ESP32 Board Package</h3>
+            </div>
+
+
+            <div class="meta-item">
+
+                <span class="meta-label">
+                    Programming
+                </span>
+
+                <span class="meta-value">
+                    Arduino / C++
+                </span>
+
+            </div>
+
+
+            <div class="meta-item">
+
+                <span class="meta-label">
+                    Project Domain
+                </span>
+
+                <span class="meta-value">
+                    IoT / Smart Security
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     FEATURES
+========================================================= -->
+
+<section
+    class="section"
+    id="features"
+>
+
+
+    <h2 class="section-title">
+
+        Key Features
+
+    </h2>
+
+
+    <div class="feature-grid">
+
+
+        <div class="feature-card">
+
+            <strong>
+                Visitor Detection
+            </strong>
 
             <p>
-                Open Arduino IDE and go to:
+
+                Doorbell button connected
+                to GPIO13 detects visitor input.
+
             </p>
 
-            <div class="project-info">
-                <strong>
-                    File → Preferences → Additional Boards Manager URLs
-                </strong>
-            </div>
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                Photo Capture
+            </strong>
 
             <p>
-                Paste the following URL:
+
+                OV2640 camera automatically
+                captures the visitor's photograph.
+
             </p>
 
-            <div class="code-header">
+        </div>
 
-                <span>ESP32 Board Manager URL</span>
 
-                <button
-                    type="button"
-                    class="copy-button"
-                    onclick="copyCode('boardURL', this)"
-                >
-                    Copy
-                </button>
+        <div class="feature-card">
 
-            </div>
-
-            <pre><code id="boardURL">https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json</code></pre>
+            <strong>
+                Telegram Alert
+            </strong>
 
             <p>
-                Open Boards Manager, search for
-                <strong>ESP32 by Espressif Systems</strong>
-                and install version <strong>3.3.8</strong>.
+
+                Sends a real-time visitor
+                notification through Telegram.
+
             </p>
 
-            <h3>Step 2: Install Required Libraries</h3>
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                Remote Photo Request
+            </strong>
 
             <p>
-                Open:
+
+                The /photo command allows
+                the user to remotely capture
+                another image.
+
             </p>
 
-            <div class="project-info">
-                <strong>
-                    Sketch → Include Library → Manage Libraries
-                </strong>
-            </div>
+        </div>
 
-            <ol>
-                <li>
-                    Install
-                    <strong>UniversalTelegramBot</strong>
-                    by Brian Lough.
-                </li>
 
-                <li>
-                    Install
-                    <strong>ArduinoJson</strong>
-                    by Benoit Blanchon, version 7.4.3.
-                </li>
-            </ol>
+        <div class="feature-card">
 
-        </section>
-
-        <!-- Connections -->
-
-        <section class="section" id="connections">
-
-            <h2>Circuit Connections</h2>
-
-            <h3>USB-to-TTL Programmer Connections</h3>
-
-            <div class="table-wrapper">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>USB-to-TTL Pin</th>
-                            <th>ESP32-CAM Pin</th>
-                            <th>Purpose</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-                            <td>TX</td>
-                            <td>U0R / GPIO3</td>
-                            <td>Serial data to ESP32-CAM</td>
-                        </tr>
-
-                        <tr>
-                            <td>RX</td>
-                            <td>U0T / GPIO1</td>
-                            <td>Serial data from ESP32-CAM</td>
-                        </tr>
-
-                        <tr>
-                            <td>5V</td>
-                            <td>5V</td>
-                            <td>Power supply</td>
-                        </tr>
-
-                        <tr>
-                            <td>GND</td>
-                            <td>GND</td>
-                            <td>Common ground</td>
-                        </tr>
-
-                        <tr>
-                            <td>GPIO0</td>
-                            <td>GND</td>
-                            <td>
-                                Connect only while uploading the program
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-            <h3>Doorbell Button and Buzzer Connections</h3>
-
-            <div class="table-wrapper">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Component</th>
-                            <th>Component Pin</th>
-                            <th>ESP32-CAM Connection</th>
-                            <th>Purpose</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-                            <td>Push Button</td>
-                            <td>Terminal 1</td>
-                            <td>GPIO13</td>
-                            <td>Doorbell input</td>
-                        </tr>
-
-                        <tr>
-                            <td>Push Button</td>
-                            <td>Terminal 2</td>
-                            <td>GND</td>
-                            <td>Ground connection</td>
-                        </tr>
-
-                        <tr>
-                            <td>Active Buzzer</td>
-                            <td>Positive</td>
-                            <td>GPIO12</td>
-                            <td>Buzzer control</td>
-                        </tr>
-
-                        <tr>
-                            <td>Active Buzzer</td>
-                            <td>Negative</td>
-                            <td>GND</td>
-                            <td>Ground connection</td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-            <div class="warning">
-                <strong>Important:</strong>
-                ESP32-CAM requires a stable 5V supply. Weak power may
-                cause camera initialization errors or repeated restarts.
-            </div>
-
-        </section>
-
-        <!-- Circuit Diagram -->
-
-        <section class="section" id="circuit">
-
-            <h2>Circuit Diagram</h2>
+            <strong>
+                Flash Control
+            </strong>
 
             <p>
-                Connect the USB-to-TTL programmer, push button and active
-                buzzer according to the connection tables.
+
+                ESP32-CAM flash LED
+                can be toggled remotely
+                using Telegram.
+
             </p>
 
-            <div class="circuit-image-card">
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                Buzzer Alert
+            </strong>
+
+            <p>
+
+                An active buzzer provides
+                a local audible indication
+                when the button is pressed.
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     COMPONENTS
+========================================================= -->
+
+<section
+    class="section"
+    id="components"
+>
+
+
+    <h2 class="section-title">
+
+        Hardware Components
+
+    </h2>
+
+
+    <div class="requirements-grid">
+
+
+        <div class="requirement-card">
+
+            <span>
 
                 <img
-                    src="ESP32 CAM Circuit Diagram 1.png"
-                    alt="ESP32-CAM smart door viewer circuit diagram"
+                    src="ESP32 CAM.png"
+                    alt="ESP32 CAM AI Thinker"
                 >
 
-                <h3>Smart Door Viewer Circuit</h3>
+            </span>
 
-                <p>
-                    ESP32-CAM connected to a USB-to-TTL programmer,
-                    push button and active buzzer.
-                </p>
-
-            </div>
-
-        </section>
-
-        <!-- Telegram Setup -->
-
-        <section class="section" id="telegram">
-
-            <h2>Telegram Bot Setup</h2>
-
-            <h3>Step 1: Create a Telegram Bot</h3>
-
-            <ol>
-                <li>Open the Telegram application.</li>
-
-                <li>
-                    Search for
-                    <strong>@BotFather</strong>.
-                </li>
-
-                <li>
-                    Send the command
-                    <strong>/newbot</strong>.
-                </li>
-
-                <li>
-                    Enter a name for your bot.
-                </li>
-
-                <li>
-                    Enter a unique username ending with
-                    <strong>bot</strong>.
-                </li>
-
-                <li>
-                    Copy the Bot Token provided by BotFather.
-                </li>
-            </ol>
-
-            <div class="warning">
-                Keep your Telegram Bot Token private. Anyone with the
-                token may be able to control your bot.
-            </div>
-
-            <h3>Step 2: Obtain Telegram Chat ID</h3>
-
-            <ol>
-                <li>Open your newly created bot.</li>
-
-                <li>Press the START button.</li>
-
-                <li>
-                    Send a message such as
-                    <strong>Hello</strong>.
-                </li>
-
-                <li>
-                    Open the following address in a browser after
-                    replacing YOUR_TOKEN with your Bot Token.
-                </li>
-            </ol>
-
-            <div class="code-header">
-
-                <span>Telegram Get Updates URL</span>
-
-                <button
-                    type="button"
-                    class="copy-button"
-                    onclick="copyCode('telegramURL', this)"
-                >
-                    Copy
-                </button>
-
-            </div>
-
-            <pre><code id="telegramURL">https://api.telegram.org/botYOUR_TOKEN/getUpdates</code></pre>
+            <strong>
+                ESP32-CAM
+            </strong>
 
             <p>
-                Find the <strong>chat</strong> object and copy the
-                numeric <strong>id</strong>. This number is your
-                Telegram Chat ID.
+                Main controller and camera platform.
             </p>
 
-        </section>
+        </div>
 
-        <!-- Board Configuration -->
 
-        <section class="section" id="configuration">
 
-            <h2>Arduino IDE Board Configuration</h2>
+        <div class="requirement-card">
 
-            <div class="table-wrapper">
+            <span>
 
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Setting</th>
-                            <th>Required Selection</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-                            <td>Board</td>
-                            <td>AI Thinker ESP32-CAM</td>
-                        </tr>
-
-                        <tr>
-                            <td>PSRAM</td>
-                            <td>Enabled</td>
-                        </tr>
-
-                        <tr>
-                            <td>Partition Scheme</td>
-                            <td>Huge APP</td>
-                        </tr>
-
-                        <tr>
-                            <td>Upload Speed</td>
-                            <td>115200</td>
-                        </tr>
-
-                        <tr>
-                            <td>Port</td>
-                            <td>USB-to-TTL COM Port</td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-            <div class="note">
-                Connect GPIO0 to GND before uploading. After uploading,
-                disconnect GPIO0 from GND and press the RESET button.
-            </div>
-
-        </section>
-
-        <!-- Working Principle -->
-
-        <section class="section" id="working">
-
-            <h2>Working Principle</h2>
-
-            <div class="working-grid">
-
-                <div class="working-card">
-
-                    <strong>1. Wi-Fi Connection</strong>
-
-                    ESP32-CAM connects to the configured 2.4 GHz Wi-Fi
-                    network.
-
-                </div>
-
-                <div class="working-card">
-
-                    <strong>2. Camera Initialization</strong>
-
-                    The OV2640 camera is initialized and the system
-                    enters standby mode.
-
-                </div>
-
-                <div class="working-card">
-
-                    <strong>3. Button Monitoring</strong>
-
-                    ESP32-CAM continuously monitors the push button
-                    connected to GPIO13.
-
-                </div>
-
-                <div class="working-card">
-
-                    <strong>4. Visitor Detection</strong>
-
-                    When the visitor presses the button, the buzzer
-                    connected to GPIO12 is activated.
-
-                </div>
-
-                <div class="working-card">
-
-                    <strong>5. Telegram Notification</strong>
-
-                    The system sends the message
-                    “Someone is at the door!” to Telegram.
-
-                </div>
-
-                <div class="working-card">
-
-                    <strong>6. Visitor Photograph</strong>
-
-                    ESP32-CAM captures the visitor's photograph and
-                    uploads it to the Telegram bot.
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- Arduino Code -->
-
-        <section class="section" id="code">
-
-            <h2>ESP32-CAM Code</h2>
-
-            <div class="code-header">
-
-                <span>Smart Door Viewer and Visitor Alert System</span>
-
-                <button
-                    type="button"
-                    class="copy-button"
-                    onclick="copyCode('arduinoCode', this)"
+                <img
+                    src="USB TTL.png"
+                    alt="USB to TTL programmer"
                 >
-                    Copy Code
-                </button>
 
+            </span>
+
+            <strong>
+                USB-to-TTL Programmer
+            </strong>
+
+            <p>
+                Used to upload firmware.
+            </p>
+
+        </div>
+
+
+
+        <div class="requirement-card">
+
+            <span>
+
+                <img
+                    src="Push Button.png"
+                    alt="Push Button"
+                >
+
+            </span>
+
+            <strong>
+                Push Button
+            </strong>
+
+            <p>
+                Works as the doorbell input.
+            </p>
+
+        </div>
+
+
+
+        <div class="requirement-card">
+
+            <span>
+
+                <img
+                    src="Buzzer.png"
+                    alt="Active Buzzer"
+                >
+
+            </span>
+
+            <strong>
+                Active Buzzer
+            </strong>
+
+            <p>
+                Provides an audible alert.
+            </p>
+
+        </div>
+
+
+
+        <div class="requirement-card">
+
+            <span>
+
+                <img
+                    src="Jumper Wires.png"
+                    alt="Jumper Wires"
+                >
+
+            </span>
+
+            <strong>
+                Jumper Wires
+            </strong>
+
+            <p>
+                Used for circuit connections.
+            </p>
+
+        </div>
+
+
+
+        <div class="requirement-card">
+
+            <span>
+
+                <img
+                    src="Breadboard.png"
+                    alt="Breadboard"
+                >
+
+            </span>
+
+            <strong>
+                Breadboard
+            </strong>
+
+            <p>
+                Used for prototype assembly.
+            </p>
+
+        </div>
+
+
+
+        <div class="requirement-card">
+
+            <span>
+
+                <img
+                    src="5V Power Supply.png"
+                    alt="5V Power Supply"
+                >
+
+            </span>
+
+            <strong>
+                5V Power Supply
+            </strong>
+
+            <p>
+                Provides stable power to ESP32-CAM.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     SOFTWARE
+========================================================= -->
+
+<section class="section">
+
+
+    <h2 class="section-title">
+
+        Software & Libraries
+
+    </h2>
+
+
+    <div class="feature-grid">
+
+
+        <div class="feature-card">
+
+            <strong>
+                Arduino IDE
+            </strong>
+
+            <p>
+                Firmware development and upload.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                ESP32 Board Package
+            </strong>
+
+            <p>
+                Adds ESP32-CAM board support.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                UniversalTelegramBot
+            </strong>
+
+            <p>
+                Telegram messaging and bot commands.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                ArduinoJson
+            </strong>
+
+            <p>
+                Processes Telegram API data.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                WiFiClientSecure
+            </strong>
+
+            <p>
+                Provides secure HTTPS communication.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <strong>
+                ESP Camera Library
+            </strong>
+
+            <p>
+                Controls the OV2640 camera.
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     CONNECTIONS
+========================================================= -->
+
+<section
+    class="section"
+    id="connections"
+>
+
+
+    <h2 class="section-title">
+
+        Hardware Connections
+
+    </h2>
+
+
+    <h3>
+        USB-to-TTL Programmer
+    </h3>
+
+
+    <div class="table-wrapper">
+
+
+        <table>
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        USB-to-TTL
+                    </th>
+
+                    <th>
+                        ESP32-CAM
+                    </th>
+
+                    <th>
+                        Function
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                <tr>
+
+                    <td>TX</td>
+
+                    <td>
+                        U0R / GPIO3
+                    </td>
+
+                    <td>
+                        Serial data to ESP32-CAM
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>RX</td>
+
+                    <td>
+                        U0T / GPIO1
+                    </td>
+
+                    <td>
+                        Serial data from ESP32-CAM
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>5V</td>
+
+                    <td>5V</td>
+
+                    <td>
+                        Power
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>GND</td>
+
+                    <td>GND</td>
+
+                    <td>
+                        Common Ground
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>GPIO0</td>
+
+                    <td>GND</td>
+
+                    <td>
+                        Programming Mode Only
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+
+    <h3>
+
+        Doorbell & Buzzer
+
+    </h3>
+
+
+    <div class="table-wrapper">
+
+
+        <table>
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Component
+                    </th>
+
+                    <th>
+                        Pin
+                    </th>
+
+                    <th>
+                        ESP32-CAM
+                    </th>
+
+                    <th>
+                        Function
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                <tr>
+
+                    <td>
+                        Push Button
+                    </td>
+
+                    <td>
+                        Terminal 1
+                    </td>
+
+                    <td>
+                        GPIO13
+                    </td>
+
+                    <td>
+                        Doorbell Input
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Push Button
+                    </td>
+
+                    <td>
+                        Terminal 2
+                    </td>
+
+                    <td>
+                        GND
+                    </td>
+
+                    <td>
+                        Ground
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Active Buzzer
+                    </td>
+
+                    <td>
+                        Positive
+                    </td>
+
+                    <td>
+                        GPIO12
+                    </td>
+
+                    <td>
+                        Buzzer Control
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Active Buzzer
+                    </td>
+
+                    <td>
+                        Negative
+                    </td>
+
+                    <td>
+                        GND
+                    </td>
+
+                    <td>
+                        Ground
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+    <div class="warning">
+
+        <strong>
+            Important:
+        </strong>
+
+        ESP32-CAM requires a stable 5V power supply.
+        An unstable or insufficient supply may cause
+        camera initialization errors,
+        brownout resets
+        or repeated restarting.
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     CIRCUIT
+========================================================= -->
+
+<section
+    class="section"
+    id="circuit"
+>
+
+
+    <h2 class="section-title">
+
+        Circuit Diagram
+
+    </h2>
+
+
+    <div class="circuit-image-card">
+
+
+        <img
+            src="ESP32 CAM Circuit Diagram 1.png"
+            alt="Smart Door Viewer ESP32 CAM Circuit Diagram"
+        >
+
+
+        <h3>
+
+            Smart Door Viewer Circuit
+
+        </h3>
+
+
+        <p>
+
+            ESP32-CAM connected to
+            the USB-to-TTL programmer,
+            push button
+            and active buzzer.
+
+        </p>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     TELEGRAM SETUP
+========================================================= -->
+
+<section
+    class="section"
+    id="telegram"
+>
+
+
+    <h2 class="section-title">
+
+        Telegram Bot Setup
+
+    </h2>
+
+
+
+    <div class="setup-step">
+
+
+        <h3>
+
+            Step 1 — Create a Telegram Bot
+
+        </h3>
+
+
+        <ol>
+
+            <li>
+                Open Telegram.
+            </li>
+
+            <li>
+                Search for
+                <strong>@BotFather</strong>.
+            </li>
+
+            <li>
+                Send
+                <strong>/newbot</strong>.
+            </li>
+
+            <li>
+                Enter a name for your bot.
+            </li>
+
+            <li>
+                Create a unique username ending in
+                <strong>bot</strong>.
+            </li>
+
+            <li>
+                Copy the Bot Token generated by BotFather.
+            </li>
+
+        </ol>
+
+
+        <div class="warning">
+
+            Never upload your actual
+            Telegram Bot Token
+            to a public GitHub repository.
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="setup-step">
+
+
+        <h3>
+
+            Step 2 — Obtain the Chat ID
+
+        </h3>
+
+
+        <ol>
+
+            <li>
+                Open your Telegram bot.
+            </li>
+
+            <li>
+                Press START.
+            </li>
+
+            <li>
+                Send a message such as
+                <strong>Hello</strong>.
+            </li>
+
+            <li>
+                Replace YOUR_TOKEN below
+                with your Telegram Bot Token.
+            </li>
+
+        </ol>
+
+
+        <div class="code-header">
+
+            <span>
+                Telegram Get Updates
+            </span>
+
+            <button
+                class="copy-button"
+                onclick="copyCode('telegramURL', this)"
+            >
+
+                Copy
+
+            </button>
+
+        </div>
+
+
+        <pre><code id="telegramURL">https://api.telegram.org/botYOUR_TOKEN/getUpdates</code></pre>
+
+
+        <p>
+
+            Locate the
+            <strong>chat</strong>
+            object in the response
+            and copy its numeric
+            <strong>id</strong>.
+
+        </p>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     ARDUINO CONFIGURATION
+========================================================= -->
+
+<section class="section">
+
+
+    <h2 class="section-title">
+
+        Arduino IDE Configuration
+
+    </h2>
+
+
+    <div class="table-wrapper">
+
+
+        <table>
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Setting
+                    </th>
+
+                    <th>
+                        Selection
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                <tr>
+
+                    <td>
+                        Board
+                    </td>
+
+                    <td>
+                        AI Thinker ESP32-CAM
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        PSRAM
+                    </td>
+
+                    <td>
+                        Enabled
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Partition Scheme
+                    </td>
+
+                    <td>
+                        Huge APP
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Upload Speed
+                    </td>
+
+                    <td>
+                        115200
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Port
+                    </td>
+
+                    <td>
+                        USB-to-TTL COM Port
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+    <div class="note">
+
+        Connect GPIO0 to GND
+        before uploading the firmware.
+
+        After uploading,
+        disconnect GPIO0 from GND
+        and reset the ESP32-CAM.
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     WORKING
+========================================================= -->
+
+<section
+    class="section"
+    id="working"
+>
+
+
+    <h2 class="section-title">
+
+        Working Principle
+
+    </h2>
+
+
+    <div class="working-grid">
+
+
+        <div class="working-card">
+
+            <div class="step-number">
+                1
             </div>
 
-            <pre><code id="arduinoCode">#include "esp_camera.h"
-//================ Required Libraries ================
-#include "<Arduino.h>" // Core Arduino functions
-#include "<WiFi.h>"
-#include "<WiFiClientSecure.h>"
+            <strong>
+                Wi-Fi Connection
+            </strong>
+
+            <p>
+
+                ESP32-CAM connects
+                to the configured
+                2.4 GHz Wi-Fi network.
+
+            </p>
+
+        </div>
+
+
+
+        <div class="working-card">
+
+            <div class="step-number">
+                2
+            </div>
+
+            <strong>
+                Camera Initialization
+            </strong>
+
+            <p>
+
+                The OV2640 camera
+                initializes and prepares
+                for image capture.
+
+            </p>
+
+        </div>
+
+
+
+        <div class="working-card">
+
+            <div class="step-number">
+                3
+            </div>
+
+            <strong>
+                Button Monitoring
+            </strong>
+
+            <p>
+
+                ESP32-CAM continuously
+                monitors GPIO13
+                for the doorbell button.
+
+            </p>
+
+        </div>
+
+
+
+        <div class="working-card">
+
+            <div class="step-number">
+                4
+            </div>
+
+            <strong>
+                Doorbell Alert
+            </strong>
+
+            <p>
+
+                When the button is pressed,
+                the buzzer connected
+                to GPIO12 sounds.
+
+            </p>
+
+        </div>
+
+
+
+        <div class="working-card">
+
+            <div class="step-number">
+                5
+            </div>
+
+            <strong>
+                Telegram Message
+            </strong>
+
+            <p>
+
+                The user receives
+                “Someone is at the door!”
+                through Telegram.
+
+            </p>
+
+        </div>
+
+
+
+        <div class="working-card">
+
+            <div class="step-number">
+                6
+            </div>
+
+            <strong>
+                Visitor Photo
+            </strong>
+
+            <p>
+
+                ESP32-CAM captures
+                the visitor's image
+                and sends it to Telegram.
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     ARDUINO CODE
+========================================================= -->
+
+<section
+    class="section"
+    id="code"
+>
+
+
+    <h2 class="section-title">
+
+        ESP32-CAM Firmware
+
+    </h2>
+
+
+    <div class="code-header">
+
+
+        <span>
+
+            smart_door_viewer.ino
+
+        </span>
+
+
+        <button
+            class="copy-button"
+            onclick="copyCode('arduinoCode', this)"
+        >
+
+            Copy Code
+
+        </button>
+
+
+    </div>
+
+
+<pre><code id="arduinoCode">#include &lt;Arduino.h&gt;
+#include &lt;WiFi.h&gt;
+#include &lt;WiFiClientSecure.h&gt;
+#include &lt;esp_camera.h&gt;
+#include &lt;UniversalTelegramBot.h&gt;
+#include &lt;ArduinoJson.h&gt;
+
 #include "soc/soc.h"
 #include "soc/rtc_cntl_reg.h"
-#include "esp_camera.h"
-#include "<UniversalTelegramBot.h>"
-#include "<ArduinoJson.h>"
 
-//================ Wi-Fi Credentials ================
-const char* ssid = "YOUR WIFI SSID";
-const char* password = "YOUR WIFI PASSWORD";
 
-// Initialize Telegram BOT
-String BOTtoken = "YOUR BOT TOKEN";  // your Bot Token (Get from Botfather)
+// =====================================================
+// Wi-Fi Credentials
+// =====================================================
 
-// Use @myidbot to find out the chat ID of an individual or a group
-// Also note that you need to click "start" on a bot before it can
-// message you
-String CHAT_ID = "1876046271";
+const char* ssid =
+    "YOUR_WIFI_NAME";
+
+const char* password =
+    "YOUR_WIFI_PASSWORD";
+
+
+// =====================================================
+// Telegram Credentials
+// =====================================================
+
+String BOTtoken =
+    "YOUR_TELEGRAM_BOT_TOKEN";
+
+String CHAT_ID =
+    "YOUR_TELEGRAM_CHAT_ID";
+
+
+WiFiClientSecure clientTCP;
+
+UniversalTelegramBot bot(
+    BOTtoken,
+    clientTCP
+);
+
 
 bool sendPhoto = false;
 
-WiFiClientSecure clientTCP;
-UniversalTelegramBot bot(BOTtoken, clientTCP);
+
+// =====================================================
+// ESP32-CAM Pins
+// =====================================================
 
 #define FLASH_LED_PIN 4
+
 #define BUTTON_PIN 13
+
 #define BUZZER_PIN 12
+
+
 bool flashState = LOW;
 
-//Checks for new messages every 1 second.
+
+// =====================================================
+// Telegram Polling
+// =====================================================
+
 int botRequestDelay = 1000;
+
 unsigned long lastTimeBotRan;
 
-//CAMERA_MODEL_AI_THINKER
+
+// =====================================================
+// AI Thinker Camera Pins
+// =====================================================
+
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
+
 #define XCLK_GPIO_NUM      0
+
 #define SIOD_GPIO_NUM     26
 #define SIOC_GPIO_NUM     27
 
@@ -1269,600 +2901,1471 @@ unsigned long lastTimeBotRan;
 #define Y4_GPIO_NUM       19
 #define Y3_GPIO_NUM       18
 #define Y2_GPIO_NUM        5
+
 #define VSYNC_GPIO_NUM    25
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
 
-void configInitCamera(){
-  camera_config_t config;
-  config.ledc_channel = LEDC_CHANNEL_0;
-  config.ledc_timer = LEDC_TIMER_0;
-  config.pin_d0 = Y2_GPIO_NUM;
-  config.pin_d1 = Y3_GPIO_NUM;
-  config.pin_d2 = Y4_GPIO_NUM;
-  config.pin_d3 = Y5_GPIO_NUM;
-  config.pin_d4 = Y6_GPIO_NUM;
-  config.pin_d5 = Y7_GPIO_NUM;
-  config.pin_d6 = Y8_GPIO_NUM;
-  config.pin_d7 = Y9_GPIO_NUM;
-  config.pin_xclk = XCLK_GPIO_NUM;
-  config.pin_pclk = PCLK_GPIO_NUM;
-  config.pin_vsync = VSYNC_GPIO_NUM;
-  config.pin_href = HREF_GPIO_NUM;
-  config.pin_sccb_sda = SIOD_GPIO_NUM;
-  config.pin_sccb_scl = SIOC_GPIO_NUM;
-  config.pin_pwdn = PWDN_GPIO_NUM;
-  config.pin_reset = RESET_GPIO_NUM;
-  config.xclk_freq_hz = 20000000;
-  config.pixel_format = PIXFORMAT_JPEG;
-  config.grab_mode = CAMERA_GRAB_LATEST;
 
-  //init with high specs to pre-allocate larger buffers
-  if(psramFound()){
-    config.frame_size = FRAMESIZE_UXGA;
-    config.jpeg_quality = 10;  //0-63 lower number means higher quality
-    config.fb_count = 2;
-  } else {
-    config.frame_size = FRAMESIZE_SVGA;
-    config.jpeg_quality = 12;  //0-63 lower number means higher quality
-    config.fb_count = 1;
-  }
-  
-  // camera init
-  esp_err_t err = esp_camera_init(&config);
-  if (err != ESP_OK) {
-    Serial.printf("Camera init failed. Error code = %d\n", err);
-    delay(1000);
-    ESP.restart();
-  }
-  // Camera orientation settings
-  sensor_t * s = esp_camera_sensor_get();
+// =====================================================
+// Camera Configuration
+// =====================================================
 
-  s->set_vflip(s, 1);      // Flip image vertically
-  s->set_hmirror(s, 1);    // Mirror image horizontally
-}
-  
+void configInitCamera()
+{
 
-void handleNewMessages(int numNewMessages) {
-  Serial.print("Handle New Messages: ");
-  Serial.println(numNewMessages);
+    camera_config_t config;
 
-  for (int i = 0; i < numNewMessages; i++) {
-    String chat_id = String(bot.messages[i].chat_id);
-    if (chat_id != CHAT_ID){
-      bot.sendMessage(chat_id, "Unauthorized user", "");
-      continue;
+
+    config.ledc_channel =
+        LEDC_CHANNEL_0;
+
+    config.ledc_timer =
+        LEDC_TIMER_0;
+
+
+    config.pin_d0 =
+        Y2_GPIO_NUM;
+
+    config.pin_d1 =
+        Y3_GPIO_NUM;
+
+    config.pin_d2 =
+        Y4_GPIO_NUM;
+
+    config.pin_d3 =
+        Y5_GPIO_NUM;
+
+    config.pin_d4 =
+        Y6_GPIO_NUM;
+
+    config.pin_d5 =
+        Y7_GPIO_NUM;
+
+    config.pin_d6 =
+        Y8_GPIO_NUM;
+
+    config.pin_d7 =
+        Y9_GPIO_NUM;
+
+
+    config.pin_xclk =
+        XCLK_GPIO_NUM;
+
+    config.pin_pclk =
+        PCLK_GPIO_NUM;
+
+    config.pin_vsync =
+        VSYNC_GPIO_NUM;
+
+    config.pin_href =
+        HREF_GPIO_NUM;
+
+
+    config.pin_sccb_sda =
+        SIOD_GPIO_NUM;
+
+    config.pin_sccb_scl =
+        SIOC_GPIO_NUM;
+
+
+    config.pin_pwdn =
+        PWDN_GPIO_NUM;
+
+    config.pin_reset =
+        RESET_GPIO_NUM;
+
+
+    config.xclk_freq_hz =
+        20000000;
+
+
+    config.pixel_format =
+        PIXFORMAT_JPEG;
+
+
+    config.grab_mode =
+        CAMERA_GRAB_LATEST;
+
+
+    if (psramFound())
+    {
+
+        config.frame_size =
+            FRAMESIZE_UXGA;
+
+        config.jpeg_quality =
+            10;
+
+        config.fb_count =
+            2;
+
     }
-    
-    // Print the received message
-    String text = bot.messages[i].text;
-    Serial.println(text);
-    
-    String from_name = bot.messages[i].from_name;
-    if (text == "/start") {
-      String welcome = "Welcome , " + from_name + "\n";
-      welcome += "Use the following commands to interact with the ESP32-CAM \n";
-      welcome += "/photo : takes a new photo\n";
-      welcome += "/flash : toggles flash LED \n";
-      bot.sendMessage(CHAT_ID, welcome, "");
+
+    else
+    {
+
+        config.frame_size =
+            FRAMESIZE_SVGA;
+
+        config.jpeg_quality =
+            12;
+
+        config.fb_count =
+            1;
+
     }
-    if (text == "/flash") {
-      flashState = !flashState;
-      digitalWrite(FLASH_LED_PIN, flashState);
-      Serial.println("Change flash LED state");
+
+
+    esp_err_t err =
+        esp_camera_init(
+            &amp;config
+        );
+
+
+    if (err != ESP_OK)
+    {
+
+        Serial.printf(
+            "Camera init failed. Error code = %d\n",
+            err
+        );
+
+        delay(1000);
+
+        ESP.restart();
+
     }
-    if (text == "/photo") {
-      sendPhoto = true;
-      Serial.println("New photo request");
-    }
-  }
-}
-
-String sendPhotoTelegram() {
-  const char* myDomain = "api.telegram.org";
-  String getAll = "";
-  String getBody = "";
-
-  //Dispose first picture because of bad quality
-  camera_fb_t * fb = NULL;
-  fb = esp_camera_fb_get();
-  esp_camera_fb_return(fb); // dispose the buffered image
-  
-  // Turn ON Flash
-  digitalWrite(FLASH_LED_PIN, HIGH);
-   delay(300);
-
-  // Take a new photo
-  fb = NULL;
-  fb = esp_camera_fb_get();
-
-   // Turn OFF Flash
-   digitalWrite(FLASH_LED_PIN, LOW); 
-  if(!fb) {
-    Serial.println("Camera capture failed");
-    delay(1000);
-    ESP.restart();
-    return "Camera capture failed";
-  }  
-  
-  Serial.println("Connect to " + String(myDomain));
 
 
-  if (clientTCP.connect(myDomain, 443)) {
-    Serial.println("Connection successful");
-    
-    String head = "--RandomNerdTutorials\r\nContent-Disposition: form-data; name=\"chat_id\"; \r\n\r\n" + CHAT_ID + "\r\n--RandomNerdTutorials\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"esp32-cam.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n";
-    String tail = "\r\n--RandomNerdTutorials--\r\n";
+    sensor_t* sensor =
+        esp_camera_sensor_get();
 
-    size_t imageLen = fb->len;
-    size_t extraLen = head.length() + tail.length();
-    size_t totalLen = imageLen + extraLen;
-  
-    clientTCP.println("POST /bot"+BOTtoken+"/sendPhoto HTTP/1.1");
-    clientTCP.println("Host: " + String(myDomain));
-    clientTCP.println("Content-Length: " + String(totalLen));
-    clientTCP.println("Content-Type: multipart/form-data; boundary=RandomNerdTutorials");
-    clientTCP.println();
-    clientTCP.print(head);
-  
-    uint8_t *fbBuf = fb->buf;
-    size_t fbLen = fb->len;
-    for (size_t n=0;n<fbLen;n=n+1024) {
-      if (n+1024<fbLen) {
-        clientTCP.write(fbBuf, 1024);
-        fbBuf += 1024;
-      }
-      else if (fbLen%1024>0) {
-        size_t remainder = fbLen%1024;
-        clientTCP.write(fbBuf, remainder);
-      }
-    }  
-    
-    clientTCP.print(tail);
-    
-    esp_camera_fb_return(fb);
-    
-    int waitTime = 10000;   // timeout 10 seconds
-    long startTimer = millis();
-    boolean state = false;
-    
-    while ((startTimer + waitTime) > millis()){
-      Serial.print(".");
-      delay(100);      
-      while (clientTCP.available()) {
-        char c = clientTCP.read();
-        if (state==true) getBody += String(c);        
-        if (c == '\n') {
-          if (getAll.length()==0) state=true; 
-          getAll = "";
-        } 
-        else if (c != '\r')
-          getAll += String(c);
-        startTimer = millis();
-      }
-      if (getBody.length()>0) break;
-    }
-    clientTCP.stop();
-    Serial.println(getBody);
-  }
-  else {
-    getBody="Connected to api.telegram.org failed.";
-    Serial.println("Connected to api.telegram.org failed.");
-  }
-  return getBody;
+
+    sensor-&gt;set_vflip(
+        sensor,
+        1
+    );
+
+
+    sensor-&gt;set_hmirror(
+        sensor,
+        1
+    );
+
 }
 
-//================ Setup Function ================
-void setup(){
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); 
-  // Init Serial Monitor
-  Serial.begin(115200);
 
-  // Set LED Flash as output
-  pinMode(FLASH_LED_PIN, OUTPUT);
-  pinMode(BUTTON_PIN, INPUT_PULLUP);
-  pinMode(BUZZER_PIN, OUTPUT);
 
-  digitalWrite(FLASH_LED_PIN, flashState);
-  digitalWrite(BUZZER_PIN, LOW);
+// =====================================================
+// Telegram Commands
+// =====================================================
 
-  delay(2000);
+void handleNewMessages(
+    int numNewMessages
+)
+{
 
-  // Config and init the camera
-  configInitCamera();
+    Serial.print(
+        "New Messages: "
+    );
 
-  // Connect to Wi-Fi
-  WiFi.mode(WIFI_STA);
-  Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
-  WiFi.begin(ssid, password);
-  clientTCP.setCACert(TELEGRAM_CERTIFICATE_ROOT); // Add root certificate for api.telegram.org
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
-    delay(500);
-  }
-  Serial.println();
-  Serial.print("ESP32-CAM IP Address: ");
-  Serial.println(WiFi.localIP()); 
-}
+    Serial.println(
+        numNewMessages
+    );
 
-//================ Main Loop ================
-void loop() {
-  if (digitalRead(BUTTON_PIN) == LOW) {
 
-  Serial.println("Doorbell Pressed!");
+    for (
+        int i = 0;
+        i &lt; numNewMessages;
+        i++
+    )
+    {
 
-  // Doorbell Sound
-  digitalWrite(BUZZER_PIN, HIGH);
-  delay(200);
-  digitalWrite(BUZZER_PIN, LOW);
-  delay(100);
+        String chat_id =
+            String(
+                bot.messages[i].chat_id
+            );
 
-  digitalWrite(BUZZER_PIN, HIGH);
-  delay(200);
-  digitalWrite(BUZZER_PIN, LOW);
 
-  bot.sendMessage(CHAT_ID,
-                  "🚪 Someone is at the door!",
-                  "");
+        if (
+            chat_id != CHAT_ID
+        )
+        {
 
-  sendPhoto = true;
+            bot.sendMessage(
+                chat_id,
+                "Unauthorized user",
+                ""
+            );
 
-  while(digitalRead(BUTTON_PIN) == LOW) {
-    delay(10);
-  }
+            continue;
 
-  delay(500);
-}
-  if (sendPhoto) {
-    Serial.println("Preparing photo");
-    sendPhotoTelegram(); 
-    sendPhoto = false; 
-  }
-  if (millis() > lastTimeBotRan + botRequestDelay)  {
-    int numNewMessages = bot.getUpdates(bot.last_message_received + 1);
-    while (numNewMessages) {
-      Serial.println("got response");
-      handleNewMessages(numNewMessages);
-      numNewMessages = bot.getUpdates(bot.last_message_received + 1);
+        }
+
+
+        String text =
+            bot.messages[i].text;
+
+
+        String from_name =
+            bot.messages[i].from_name;
+
+
+
+        if (
+            text == "/start"
+        )
+        {
+
+            String welcome =
+                "Welcome, "
+                + from_name
+                + "\n";
+
+
+            welcome +=
+                "/photo : Take a photo\n";
+
+
+            welcome +=
+                "/flash : Toggle flash LED\n";
+
+
+            bot.sendMessage(
+                CHAT_ID,
+                welcome,
+                ""
+            );
+
+        }
+
+
+
+        if (
+            text == "/flash"
+        )
+        {
+
+            flashState =
+                !flashState;
+
+
+            digitalWrite(
+                FLASH_LED_PIN,
+                flashState
+            );
+
+        }
+
+
+
+        if (
+            text == "/photo"
+        )
+        {
+
+            sendPhoto = true;
+
+        }
+
     }
-    lastTimeBotRan = millis();
-  }
+
 }
+
+
+
+// =====================================================
+// Send Photo to Telegram
+// =====================================================
+
+String sendPhotoTelegram()
+{
+
+    const char* myDomain =
+        "api.telegram.org";
+
+
+    String getAll = "";
+
+    String getBody = "";
+
+
+    camera_fb_t* fb =
+        NULL;
+
+
+    // Dispose first buffered image
+
+    fb =
+        esp_camera_fb_get();
+
+
+    if (fb)
+    {
+
+        esp_camera_fb_return(
+            fb
+        );
+
+    }
+
+
+    // Turn flash ON
+
+    digitalWrite(
+        FLASH_LED_PIN,
+        HIGH
+    );
+
+
+    delay(300);
+
+
+    // Capture new image
+
+    fb =
+        esp_camera_fb_get();
+
+
+    digitalWrite(
+        FLASH_LED_PIN,
+        LOW
+    );
+
+
+    if (!fb)
+    {
+
+        Serial.println(
+            "Camera capture failed"
+        );
+
+        return
+            "Camera capture failed";
+
+    }
+
+
+
+    if (
+        clientTCP.connect(
+            myDomain,
+            443
+        )
+    )
+    {
+
+        String head =
+
+            "--RandomNerdTutorials\r\n"
+
+            "Content-Disposition: form-data; "
+            "name=\"chat_id\"\r\n\r\n"
+
+            + CHAT_ID +
+
+            "\r\n"
+
+            "--RandomNerdTutorials\r\n"
+
+            "Content-Disposition: form-data; "
+            "name=\"photo\"; "
+            "filename=\"esp32-cam.jpg\"\r\n"
+
+            "Content-Type: image/jpeg\r\n\r\n";
+
+
+        String tail =
+
+            "\r\n"
+            "--RandomNerdTutorials--\r\n";
+
+
+        size_t imageLen =
+            fb-&gt;len;
+
+
+        size_t extraLen =
+            head.length()
+            + tail.length();
+
+
+        size_t totalLen =
+            imageLen
+            + extraLen;
+
+
+
+        clientTCP.println(
+            "POST /bot"
+            + BOTtoken
+            + "/sendPhoto HTTP/1.1"
+        );
+
+
+        clientTCP.println(
+            "Host: "
+            + String(myDomain)
+        );
+
+
+        clientTCP.println(
+            "Content-Length: "
+            + String(totalLen)
+        );
+
+
+        clientTCP.println(
+
+            "Content-Type: "
+            "multipart/form-data; "
+            "boundary=RandomNerdTutorials"
+
+        );
+
+
+        clientTCP.println();
+
+
+        clientTCP.print(
+            head
+        );
+
+
+        uint8_t* fbBuf =
+            fb-&gt;buf;
+
+
+        size_t fbLen =
+            fb-&gt;len;
+
+
+
+        for (
+            size_t n = 0;
+            n &lt; fbLen;
+            n += 1024
+        )
+        {
+
+            if (
+                n + 1024
+                &lt; fbLen
+            )
+            {
+
+                clientTCP.write(
+                    fbBuf,
+                    1024
+                );
+
+
+                fbBuf +=
+                    1024;
+
+            }
+
+            else
+            {
+
+                size_t remainder =
+                    fbLen - n;
+
+
+                clientTCP.write(
+                    fbBuf,
+                    remainder
+                );
+
+            }
+
+        }
+
+
+        clientTCP.print(
+            tail
+        );
+
+
+        esp_camera_fb_return(
+            fb
+        );
+
+
+        int waitTime =
+            10000;
+
+
+        unsigned long startTimer =
+            millis();
+
+
+        bool state =
+            false;
+
+
+
+        while (
+            millis() - startTimer
+            &lt; waitTime
+        )
+        {
+
+            while (
+                clientTCP.available()
+            )
+            {
+
+                char c =
+                    clientTCP.read();
+
+
+                if (state)
+                {
+
+                    getBody +=
+                        String(c);
+
+                }
+
+
+                if (
+                    c == '\n'
+                )
+                {
+
+                    if (
+                        getAll.length()
+                        == 0
+                    )
+                    {
+
+                        state = true;
+
+                    }
+
+
+                    getAll = "";
+
+                }
+
+                else if (
+                    c != '\r'
+                )
+                {
+
+                    getAll +=
+                        String(c);
+
+                }
+
+
+                startTimer =
+                    millis();
+
+            }
+
+
+            if (
+                getBody.length()
+                &gt; 0
+            )
+            {
+
+                break;
+
+            }
+
+
+            delay(10);
+
+        }
+
+
+        clientTCP.stop();
+
+    }
+
+    else
+    {
+
+        esp_camera_fb_return(
+            fb
+        );
+
+
+        getBody =
+            "Connection to Telegram failed.";
+
+    }
+
+
+    return getBody;
+
+}
+
+
+
+// =====================================================
+// Setup
+// =====================================================
+
+void setup()
+{
+
+    WRITE_PERI_REG(
+        RTC_CNTL_BROWN_OUT_REG,
+        0
+    );
+
+
+    Serial.begin(
+        115200
+    );
+
+
+    pinMode(
+        FLASH_LED_PIN,
+        OUTPUT
+    );
+
+
+    pinMode(
+        BUTTON_PIN,
+        INPUT_PULLUP
+    );
+
+
+    pinMode(
+        BUZZER_PIN,
+        OUTPUT
+    );
+
+
+    digitalWrite(
+        FLASH_LED_PIN,
+        LOW
+    );
+
+
+    digitalWrite(
+        BUZZER_PIN,
+        LOW
+    );
+
+
+    delay(2000);
+
+
+    configInitCamera();
+
+
+
+    WiFi.mode(
+        WIFI_STA
+    );
+
+
+    Serial.println();
+
+    Serial.print(
+        "Connecting to "
+    );
+
+    Serial.println(
+        ssid
+    );
+
+
+    WiFi.begin(
+        ssid,
+        password
+    );
+
+
+    clientTCP.setCACert(
+        TELEGRAM_CERTIFICATE_ROOT
+    );
+
+
+    while (
+        WiFi.status()
+        != WL_CONNECTED
+    )
+    {
+
+        Serial.print(".");
+
+        delay(500);
+
+    }
+
+
+    Serial.println();
+
+
+    Serial.print(
+        "ESP32-CAM IP Address: "
+    );
+
+
+    Serial.println(
+        WiFi.localIP()
+    );
+
+
+    bot.sendMessage(
+        CHAT_ID,
+        "Smart Door Viewer is online",
+        ""
+    );
+
+}
+
+
+
+// =====================================================
+// Main Loop
+// =====================================================
+
+void loop()
+{
+
+    if (
+        digitalRead(
+            BUTTON_PIN
+        ) == LOW
+    )
+    {
+
+        Serial.println(
+            "Doorbell Pressed!"
+        );
+
+
+        // Doorbell sound
+
+        digitalWrite(
+            BUZZER_PIN,
+            HIGH
+        );
+
+        delay(200);
+
+
+        digitalWrite(
+            BUZZER_PIN,
+            LOW
+        );
+
+        delay(100);
+
+
+        digitalWrite(
+            BUZZER_PIN,
+            HIGH
+        );
+
+        delay(200);
+
+
+        digitalWrite(
+            BUZZER_PIN,
+            LOW
+        );
+
+
+        bot.sendMessage(
+
+            CHAT_ID,
+
+            "Someone is at the door!",
+
+            ""
+
+        );
+
+
+        sendPhoto =
+            true;
+
+
+        while (
+            digitalRead(
+                BUTTON_PIN
+            ) == LOW
+        )
+        {
+
+            delay(10);
+
+        }
+
+
+        delay(500);
+
+    }
+
+
+
+    if (
+        sendPhoto
+    )
+    {
+
+        Serial.println(
+            "Preparing photo"
+        );
+
+
+        sendPhotoTelegram();
+
+
+        sendPhoto =
+            false;
+
+    }
+
+
+
+    if (
+        millis()
+        &gt;
+        lastTimeBotRan
+        + botRequestDelay
+    )
+    {
+
+        int numNewMessages =
+
+            bot.getUpdates(
+
+                bot.last_message_received
+                + 1
+
+            );
+
+
+        while (
+            numNewMessages
+        )
+        {
+
+            handleNewMessages(
+                numNewMessages
+            );
+
+
+            numNewMessages =
+
+                bot.getUpdates(
+
+                    bot.last_message_received
+                    + 1
+
+                );
+
+        }
+
+
+        lastTimeBotRan =
+            millis();
+
+    }
+
 }</code></pre>
 
-            <a
-                href="sketch_ESP_SDS_Commented.ino"
-                class="download-button"
-                download
-            >
-                Download ESP32 CAM Code
-            </a>
 
-            <div class="warning">
-                Replace
-                <strong>YOUR_WIFI_NAME</strong>,
-                <strong>YOUR_WIFI_PASSWORD</strong>,
-                <strong>YOUR_TELEGRAM_BOT_TOKEN</strong>
-                and
-                <strong>YOUR_TELEGRAM_CHAT_ID</strong>
-                before uploading the code.
-            </div>
+    <div class="warning">
 
-        </section>
+        <strong>
+            GitHub Security:
+        </strong>
 
-        <!-- Uploading Steps -->
+        Never place your real Wi-Fi password,
+        Telegram Bot Token
+        or Telegram Chat ID
+        inside a public repository.
 
-        <section class="section" id="upload">
+        Replace the placeholder values locally
+        before uploading the firmware.
 
-            <h2>Steps to Upload the Program</h2>
+    </div>
 
-            <ol>
 
-                <li>
-                    Connect the ESP32-CAM to the USB-to-TTL programmer.
-                </li>
+</section>
 
-                <li>
-                    Connect GPIO0 to GND.
-                </li>
 
-                <li>
-                    Connect the USB-to-TTL programmer to the computer.
-                </li>
 
-                <li>
-                    Select
-                    <strong>AI Thinker ESP32-CAM</strong>
-                    from the Arduino IDE board menu.
-                </li>
+<!-- =========================================================
+     OPERATING STEPS
+========================================================= -->
 
-                <li>
-                    Select the correct COM port.
-                </li>
+<section class="section">
 
-                <li>
-                    Set the upload speed to
-                    <strong>115200</strong>.
-                </li>
 
-                <li>
-                    Press the ESP32-CAM RESET button.
-                </li>
+    <h2 class="section-title">
 
-                <li>
-                    Click the Upload button in Arduino IDE.
-                </li>
+        How to Run the Project
 
-                <li>
-                    Wait until the upload is complete.
-                </li>
+    </h2>
 
-                <li>
-                    Disconnect GPIO0 from GND.
-                </li>
 
-                <li>
-                    Press the RESET button again.
-                </li>
+    <ol>
 
-            </ol>
+        <li>
 
-            <div class="success-note">
-                Open the Serial Monitor at 115200 baud. The ESP32-CAM
-                should connect to Wi-Fi and display its IP address.
-            </div>
+            Connect the ESP32-CAM
+            to the USB-to-TTL programmer.
 
-        </section>
+        </li>
 
-        <!-- Operating Steps -->
 
-        <section class="section" id="steps">
+        <li>
 
-            <h2>Steps to Operate the Project</h2>
+            Connect GPIO0 to GND
+            to enter programming mode.
 
-            <ol>
+        </li>
 
-                <li>
-                    Power the ESP32-CAM using a stable 5V supply.
-                </li>
 
-                <li>
-                    Wait for the ESP32-CAM to connect to Wi-Fi.
-                </li>
+        <li>
 
-                <li>
-                    Open the Telegram bot on your smartphone.
-                </li>
+            Select
+            <strong>
+                AI Thinker ESP32-CAM
+            </strong>
+            in Arduino IDE.
 
-                <li>
-                    Confirm that the message
-                    <strong>Smart Door Viewer is online</strong>
-                    is received.
-                </li>
+        </li>
 
-                <li>
-                    Press the doorbell push button.
-                </li>
 
-                <li>
-                    The active buzzer will produce a sound.
-                </li>
+        <li>
 
-                <li>
-                    Telegram will receive the message
-                    <strong>Someone is at the door!</strong>
-                </li>
+            Select the correct COM port.
 
-                <li>
-                    ESP32-CAM will capture the visitor's photograph.
-                </li>
+        </li>
 
-                <li>
-                    The photograph will be sent to Telegram.
-                </li>
 
-                <li>
-                    The system will return to standby mode.
-                </li>
-
-            </ol>
-
-            <div class="info-note">
-                The ESP32-CAM supports only 2.4 GHz Wi-Fi. It will not
-                connect to a 5 GHz-only Wi-Fi network.
-            </div>
-
-        </section>
-
-        <!-- Applications -->
-
-        <section class="section" id="applications">
-
-            <h2>Applications</h2>
-
-            <ul>
-                <li>Smart doorbell system</li>
-                <li>Home security monitoring</li>
-                <li>Office entrance monitoring</li>
-                <li>Hostel and apartment visitor monitoring</li>
-                <li>School laboratory demonstration</li>
-            </ul>
-
-        </section>
-
-        <!-- Advantages and Limitations -->
-
-        <section class="section" id="advantages">
-
-            <h2>Advantages and Limitations</h2>
-
-            <h3>Advantages</h3>
-
-            <ul>
-                <li>Low-cost security system</li>
-                <li>Wireless visitor monitoring</li>
-                <li>Real-time photo notification</li>
-                <li>Easy to build and operate</li>
-                <li>Uses the free Telegram platform</li>
-            </ul>
-
-            <h3>Limitations</h3>
-
-            <ul>
-                <li>Requires a 2.4 GHz Wi-Fi network</li>
-                <li>Requires an active internet connection</li>
-                <li>Requires a Telegram account</li>
-                <li>Photo delivery depends on network speed</li>
-            </ul>
-
-        </section>
-
-        <!-- Troubleshooting -->
-
-        <section class="section" id="troubleshooting">
-
-            <h2>Common Problems and Solutions</h2>
-
-            <div class="table-wrapper">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Problem</th>
-                            <th>Possible Cause</th>
-                            <th>Solution</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        <tr>
-                            <td>Camera initialization failed</td>
-                            <td>
-                                Camera ribbon is loose or incorrect
-                                board is selected
-                            </td>
-                            <td>
-                                Reconnect the camera and select
-                                AI Thinker ESP32-CAM.
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Program upload failed</td>
-                            <td>GPIO0 is not connected to GND</td>
-                            <td>
-                                Connect GPIO0 to GND and press RESET
-                                before uploading.
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Wi-Fi is not connecting</td>
-                            <td>
-                                Incorrect SSID, password or 5 GHz network
-                            </td>
-                            <td>
-                                Check the credentials and use a 2.4 GHz
-                                Wi-Fi network.
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Telegram message is not received</td>
-                            <td>Incorrect Bot Token or Chat ID</td>
-                            <td>
-                                Verify the Bot Token and numeric Chat ID.
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Telegram photo is not received</td>
-                            <td>
-                                Weak internet or camera capture failure
-                            </td>
-                            <td>
-                                Check the internet connection and camera
-                                initialization.
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Button is not working</td>
-                            <td>Incorrect GPIO13 connection</td>
-                            <td>
-                                Connect the button between GPIO13 and GND.
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Buzzer is not working</td>
-                            <td>
-                                Incorrect wiring or passive buzzer used
-                            </td>
-                            <td>
-                                Check GPIO12 wiring and use an active buzzer.
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>ESP32-CAM keeps restarting</td>
-                            <td>Insufficient power supply</td>
-                            <td>
-                                Use a stable regulated 5V power supply.
-                            </td>
-                        </tr>
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </section>
-
-        <a
-            href="../index.html"
-            class="back-button"
-        >
-            ← Back to Home
-        </a>
-
-    </main>
-
-    <footer>
-        Smart Door Viewer & Visitor Alert System Project
-    </footer>
-
-    <script>
-        function copyCode(codeId, button) {
-            const code =
-                document.getElementById(codeId).innerText;
-
-            navigator.clipboard
-                .writeText(code)
-                .then(function () {
+        <li>
+
+            Upload the firmware.
+
+        </li>
+
+
+        <li>
+
+            Disconnect GPIO0 from GND.
+
+        </li>
+
+
+        <li>
+
+            Reset the ESP32-CAM.
+
+        </li>
+
+
+        <li>
+
+            Open Serial Monitor
+            at
+            <strong>
+                115200 baud
+            </strong>.
+
+        </li>
+
+
+        <li>
+
+            Wait for the board
+            to connect to Wi-Fi.
+
+        </li>
+
+
+        <li>
+
+            Open your Telegram bot.
+
+        </li>
+
+
+        <li>
+
+            Press the doorbell button.
+
+        </li>
+
+
+        <li>
+
+            The buzzer sounds
+            and Telegram receives
+            the visitor alert.
+
+        </li>
+
+
+        <li>
+
+            ESP32-CAM captures
+            the visitor photograph
+            and sends it to Telegram.
+
+        </li>
+
+
+    </ol>
+
+
+    <div class="info-note">
+
+        ESP32-CAM uses
+        <strong>
+            2.4 GHz Wi-Fi
+        </strong>.
+
+        Ensure that the configured network
+        supports 2.4 GHz.
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     TROUBLESHOOTING
+========================================================= -->
+
+<section class="section">
+
+
+    <h2 class="section-title">
+
+        Troubleshooting
+
+    </h2>
+
+
+    <div class="table-wrapper">
+
+
+        <table>
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Problem
+                    </th>
+
+                    <th>
+                        Possible Cause
+                    </th>
+
+                    <th>
+                        Solution
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                <tr>
+
+                    <td>
+                        Camera initialization failed
+                    </td>
+
+                    <td>
+                        Loose camera cable
+                        or incorrect board configuration
+                    </td>
+
+                    <td>
+                        Reconnect the camera
+                        and select AI Thinker ESP32-CAM.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Upload failed
+                    </td>
+
+                    <td>
+                        GPIO0 not connected to GND
+                    </td>
+
+                    <td>
+                        Connect GPIO0 to GND
+                        and reset before uploading.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Wi-Fi not connecting
+                    </td>
+
+                    <td>
+                        Incorrect credentials
+                        or unsupported network
+                    </td>
+
+                    <td>
+                        Verify credentials
+                        and use 2.4 GHz Wi-Fi.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Telegram message not received
+                    </td>
+
+                    <td>
+                        Incorrect Bot Token
+                        or Chat ID
+                    </td>
+
+                    <td>
+                        Verify Telegram credentials.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Photo not received
+                    </td>
+
+                    <td>
+                        Camera capture failure
+                        or poor internet connection
+                    </td>
+
+                    <td>
+                        Verify camera initialization
+                        and network connection.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Button not responding
+                    </td>
+
+                    <td>
+                        Incorrect GPIO13 wiring
+                    </td>
+
+                    <td>
+                        Connect button
+                        between GPIO13 and GND.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Buzzer not working
+                    </td>
+
+                    <td>
+                        Incorrect GPIO12 wiring
+                    </td>
+
+                    <td>
+                        Check polarity
+                        and use an active buzzer.
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        ESP32-CAM repeatedly restarts
+                    </td>
+
+                    <td>
+                        Insufficient power
+                    </td>
+
+                    <td>
+                        Use a stable regulated
+                        5V supply.
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     OUTCOME
+========================================================= -->
+
+<section class="section">
+
+
+    <h2 class="section-title">
+
+        Project Outcome
+
+    </h2>
+
+
+    <div class="outcome-box">
+
+
+        <h3>
+
+            IoT-Based Smart Visitor Monitoring Prototype
+
+        </h3>
+
+
+        <p>
+
+            This project demonstrates
+            embedded camera interfacing,
+            Wi-Fi communication,
+            HTTPS communication,
+            Telegram Bot integration,
+            digital input/output control
+            and real-time remote notifications.
+
+        </p>
+
+
+        <p>
+
+            The prototype can be extended
+            with PIR-based automatic visitor detection,
+            face recognition,
+            cloud image storage,
+            electronic door-lock control,
+            two-way communication
+            and a dedicated web dashboard.
+
+        </p>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     REPOSITORY
+========================================================= -->
+
+<section class="section">
+
+
+    <h2 class="section-title">
+
+        Suggested Repository Structure
+
+    </h2>
+
+
+    <div class="code-header">
+
+        <span>
+            GitHub Repository
+        </span>
+
+    </div>
+
+
+<pre><code>Smart-Door-Viewer/
+│
+├── index.html
+├── README.md
+├── LICENSE
+│
+├── firmware/
+│   └── smart_door_viewer.ino
+│
+├── images/
+│   ├── esp32-cam.png
+│   ├── usb-ttl.png
+│   ├── push-button.png
+│   ├── buzzer.png
+│   ├── jumper-wires.png
+│   ├── breadboard.png
+│   ├── power-supply.png
+│   └── circuit-diagram.png
+│
+└── docs/
+    └── project-documentation.pdf</code></pre>
+
+
+</section>
+
+
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+
+    <p>
+
+        <strong>
+
+            Smart Door Viewer
+            & Visitor Alert System
+
+        </strong>
+
+        <br>
+
+        Personal IoT,
+        Embedded Systems
+        & Smart Security Project
+
+    </p>
+
+
+    <p>
+
+        Built using ESP32-CAM,
+        OV2640,
+        Arduino,
+        Wi-Fi
+        and Telegram Bot API.
+
+    </p>
+
+
+</footer>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+
+
+    function copyCode(
+        codeId,
+        button
+    )
+    {
+
+        const code =
+
+            document
+            .getElementById(
+                codeId
+            )
+            .innerText;
+
+
+        navigator.clipboard
+
+            .writeText(
+                code
+            )
+
+            .then(
+                function ()
+                {
+
                     const originalText =
                         button.textContent;
 
-                    button.textContent = "Copied!";
 
-                    setTimeout(function () {
-                        button.textContent =
-                            originalText;
-                    }, 2000);
-                })
-                .catch(function () {
+                    button.textContent =
+                        "Copied!";
+
+
+                    setTimeout(
+                        function ()
+                        {
+
+                            button.textContent =
+                                originalText;
+
+                        },
+                        1800
+                    );
+
+                }
+            )
+
+            .catch(
+                function ()
+                {
+
                     alert(
                         "Code could not be copied."
                     );
-                });
-        }
-    </script>
+
+                }
+            );
+
+    }
+
+
+</script>
+
 
 </body>
 
