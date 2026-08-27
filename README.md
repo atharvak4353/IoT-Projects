@@ -4,11 +4,16 @@
 
 <p align="center">
 
-![IoT](https://img.shields.io/badge/IoT-Projects-2563EB?style=for-the-badge)
+![IoT](https://img.shields.io/badge/IoT-Projects-FF6B35?style=for-the-badge)
+
 ![Arduino](https://img.shields.io/badge/Arduino-Embedded%20Systems-00979D?style=for-the-badge&logo=arduino&logoColor=white)
+
 ![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-Projects-C51A4A?style=for-the-badge&logo=raspberrypi&logoColor=white)
-![Python](https://img.shields.io/badge/Python-Computer%20Vision-3776AB?style=for-the-badge&logo=python&logoColor=white)
+
+![Python](https://img.shields.io/badge/Python-Computer%20Vision-FFD43B?style=for-the-badge&logo=python&logoColor=black)
+
 ![Robotics](https://img.shields.io/badge/Robotics-Automation-7C3AED?style=for-the-badge)
+
 ![OpenCV](https://img.shields.io/badge/OpenCV-Vision-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
 
 </p>
