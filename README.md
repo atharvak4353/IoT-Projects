@@ -1,18 +1,14 @@
-# 📷 ESP32-CAM Experiment No. 4
+# 🐾 AI Animal Detection System
 
-## Live Camera Streaming with SD Card Photo Capture
-
-A simple **ESP32-CAM IoT project** that provides live video streaming over Wi-Fi and allows the user to capture photos directly from a web browser and save them to a Micro SD card.
-
----
+## Raspberry Pi Based Real-Time Animal Detection & Alert System
 
 <p align="center">
 
-![ESP32](https://img.shields.io/badge/ESP32-CAM-E7352C?style=for-the-badge&logo=espressif&logoColor=white)
-![Arduino](https://img.shields.io/badge/Arduino-IDE-00979D?style=for-the-badge&logo=arduino&logoColor=white)
-![WiFi](https://img.shields.io/badge/WiFi-Enabled-2563EB?style=for-the-badge)
-![Camera](https://img.shields.io/badge/Camera-Live%20Streaming-16A34A?style=for-the-badge)
-![SD Card](https://img.shields.io/badge/Storage-Micro%20SD-F59E0B?style=for-the-badge)
+![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-AI%20Vision-C51A4A?style=for-the-badge&logo=raspberrypi&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
+![AI](https://img.shields.io/badge/AI-MobileNet%20SSD-16A34A?style=for-the-badge)
+![Camera](https://img.shields.io/badge/Camera-Picamera2-F59E0B?style=for-the-badge)
 
 </p>
 
@@ -20,343 +16,457 @@ A simple **ESP32-CAM IoT project** that provides live video streaming over Wi-Fi
 
 # 📌 Project Overview
 
-This experiment demonstrates how the **ESP32-CAM** can be used as a small wireless camera system.
+**AI Animal Detection** is a Raspberry Pi based computer vision project designed to detect animals in real time using a camera.
 
-The ESP32-CAM connects to a Wi-Fi network and hosts a simple webpage that allows the user to:
+The system uses:
 
-- 📹 View a live camera stream
-- 📸 Capture a photo
-- 💾 Save the captured photo to a Micro SD card
-- 🌐 Access the camera through a browser
-- 📱 Use either a smartphone or laptop
+- 🍓 Raspberry Pi
+- 📷 Raspberry Pi Camera
+- 🐍 Python
+- 👁️ OpenCV
+- 🧠 MobileNet SSD
+- 🔊 GPIO-controlled buzzer
 
-The complete system works locally over Wi-Fi without requiring an external cloud service.
+The camera continuously captures live video.
+
+Each frame is processed by the **MobileNet SSD deep-learning model** using OpenCV's DNN module.
+
+When a supported animal is detected with more than **50% confidence**, the system:
+
+- Identifies the animal
+- Draws a bounding box
+- Displays the animal class
+- Prints the detected animal in the terminal
+- Activates a buzzer connected to GPIO 18
 
 ---
 
 # 🎯 Aim
 
-To create an ESP32-CAM based system that provides:
-
-- Live camera streaming
-- Browser-based image capture
-- Micro SD card image storage
-- Wireless access over Wi-Fi
+To develop an **AI-based real-time animal detection system** using Raspberry Pi, OpenCV and MobileNet SSD that can detect selected animals from a live camera feed and automatically generate an audible alert.
 
 ---
 
-# ⚙️ Main Features
+# ✨ Key Features
 
 | Feature | Description |
 |---|---|
-| 📹 Live Streaming | Displays the camera feed in a web browser |
-| 📸 Photo Capture | Captures the current camera frame |
-| 💾 SD Card Storage | Saves captured images as JPEG files |
-| 🌐 Web Interface | Provides browser-based camera control |
-| 📡 Wi-Fi Access | Allows wireless access to the ESP32-CAM |
-| 🖥 Serial Monitor | Displays connection and storage information |
+| 📹 Real-Time Detection | Continuously processes the live camera feed |
+| 🧠 AI Recognition | Uses pretrained MobileNet SSD |
+| 🐾 Multiple Animals | Detects six supported animal classes |
+| 🎯 Confidence Filtering | Accepts detections above 50% confidence |
+| 🟩 Bounding Boxes | Marks detected animals visually |
+| 🏷️ Class Labels | Displays the detected animal name |
+| 🔊 Buzzer Alert | Activates GPIO buzzer after detection |
+| 💻 Terminal Output | Prints detected animals in the terminal |
+| 🍓 Edge AI | Detection runs directly on Raspberry Pi |
 
 ---
 
-# 🧰 Components Required
+# 🧰 Hardware Components
 
 | Component | Quantity | Purpose |
 |---|---:|---|
-| ESP32-CAM AI Thinker | 1 | Main controller and camera |
-| Micro SD Card | 1 | Stores captured photographs |
-| USB-to-TTL Programmer | 1 | Uploads program to ESP32-CAM |
-| Jumper Wires | As required | Programming connections |
-| Wi-Fi Network | 1 | Wireless communication |
-| Laptop / Smartphone | 1 | Opens the camera webpage |
+| Raspberry Pi | 1 | Main processing unit |
+| Raspberry Pi Camera | 1 | Captures live video |
+| Buzzer | 1 | Generates animal detection alert |
+| Jumper Wires | As required | GPIO connections |
+| Raspberry Pi Power Supply | 1 | Powers the Raspberry Pi |
 
 ---
 
-# 🔄 Working Principle
+# 🔌 Hardware Connections
+
+| Component | Pin | Raspberry Pi Connection | Function |
+|---|---|---|---|
+| Buzzer | Positive (+) | GPIO 18 | Detection alert |
+| Buzzer | Negative (-) | GND | Ground |
+| Pi Camera | Ribbon Cable | Camera Connector | Live image capture |
+
+> ⚠️ **Important:** Switch OFF the Raspberry Pi before connecting or disconnecting the camera ribbon cable.
+
+The Python program uses **BCM GPIO numbering**, so:
 
 ```text
-ESP32-CAM Starts
+Buzzer Pin = BCM GPIO 18
+```
+
+---
+
+# 🧠 AI Model
+
+The project uses the pretrained:
+
+## MobileNet SSD
+
+MobileNet SSD provides a lightweight object detection model suitable for embedded computer vision applications.
+
+The project requires two model files:
+
+```text
+deploy.prototxt
+mobilenet_iter_73000.caffemodel
+```
+
+They are loaded using:
+
+```python
+net = cv2.dnn.readNetFromCaffe(
+    "deploy.prototxt",
+    "mobilenet_iter_73000.caffemodel"
+)
+```
+
+---
+
+# 🐕 Supported Animal Classes
+
+The application filters MobileNet SSD detections and responds to these animals:
+
+| Animal | MobileNet Class |
+|---|---|
+| 🐕 Dog | `dog` |
+| 🐈 Cat | `cat` |
+| 🐎 Horse | `horse` |
+| 🐑 Sheep | `sheep` |
+| 🐄 Cow | `cow` |
+| 🐦 Bird | `bird` |
+
+The detection threshold is:
+
+```python
+confidence > 0.5
+```
+
+Therefore, only detections with more than **50% confidence** are accepted.
+
+---
+
+# 🔄 How the System Works
+
+```text
+Raspberry Pi Starts
         ↓
 Camera Initializes
         ↓
-Micro SD Card Mounts
+MobileNet SSD Model Loads
         ↓
-ESP32-CAM Connects to Wi-Fi
+Camera Captures Live Frame
         ↓
-HTTP Web Server Starts
+OpenCV Processes Frame
         ↓
-IP Address is Displayed
+Frame Converted to 300 × 300 Blob
         ↓
-User Opens IP Address
+MobileNet SSD Performs AI Inference
         ↓
-Live Camera Stream Appears
+Objects are Detected
         ↓
-User Clicks Capture Photo
+Animal Classes are Filtered
         ↓
-Current Camera Frame is Captured
+Confidence > 50% ?
         ↓
-JPEG Image is Saved to SD Card
+      YES
+        ↓
+Bounding Box is Drawn
+        ↓
+Animal Name is Displayed
+        ↓
+Detection Printed in Terminal
+        ↓
+Buzzer Activated
+        ↓
+System Continues Monitoring
 ```
 
 ---
 
-# 🎥 Camera Configuration
+# ⚙️ Detection Process
 
-| Setting | Value |
+### 1️⃣ Camera Capture
+
+Picamera2 continuously captures frames at:
+
+```text
+640 × 480
+```
+
+### 2️⃣ Frame Processing
+
+OpenCV receives the camera image and prepares it for object detection.
+
+### 3️⃣ DNN Input
+
+The image is converted into a:
+
+```text
+300 × 300
+```
+
+blob using:
+
+```python
+cv2.dnn.blobFromImage()
+```
+
+### 4️⃣ AI Inference
+
+MobileNet SSD analyzes the image:
+
+```python
+detections = net.forward()
+```
+
+### 5️⃣ Confidence Check
+
+Only detections above:
+
+```text
+50%
+```
+
+are processed.
+
+### 6️⃣ Animal Filtering
+
+The detected object must belong to:
+
+```python
+animal_classes = [
+    "dog",
+    "cat",
+    "horse",
+    "sheep",
+    "cow",
+    "bird"
+]
+```
+
+### 7️⃣ Visual Output
+
+The system draws a bounding box around the animal and displays its class name.
+
+### 8️⃣ Buzzer Alert
+
+The buzzer connected to GPIO 18 activates for approximately:
+
+```text
+0.3 seconds
+```
+
+### 9️⃣ Continuous Monitoring
+
+The process continues until the user presses:
+
+```text
+Q
+```
+
+---
+
+# 💻 Software Requirements
+
+The project uses:
+
+| Software / Library | Purpose |
 |---|---|
-| Pixel Format | JPEG |
-| Frame Size | QVGA |
-| Resolution | 320 × 240 |
-| JPEG Quality | 10 |
-| Frame Buffer | 1 |
-| Camera Clock | 13 MHz |
-| Grab Mode | `CAMERA_GRAB_LATEST` |
-| Vertical Flip | Enabled |
+| Python 3 | Main programming language |
+| OpenCV | Image processing and AI inference |
+| Picamera2 | Raspberry Pi camera interface |
+| GPIO Zero | Buzzer GPIO control |
+| MobileNet SSD | Object detection model |
+| FFmpeg | Multimedia support |
 
 ---
 
-# 📚 Libraries Used
+# 🛠 Raspberry Pi Setup
 
-The experiment uses the following libraries:
+## Step 1 — Update Raspberry Pi
 
-```cpp
-#include "esp_camera.h"
-#include <WiFi.h>
-#include <WebServer.h>
-#include "FS.h"
-#include "SD_MMC.h"
-```
-
-### Library Purpose
-
-| Library | Purpose |
-|---|---|
-| `esp_camera.h` | Controls the ESP32-CAM camera |
-| `WiFi.h` | Connects ESP32-CAM to Wi-Fi |
-| `WebServer.h` | Creates the web server |
-| `FS.h` | Provides file-system support |
-| `SD_MMC.h` | Provides Micro SD card access |
-
----
-
-# 📡 Wi-Fi Configuration
-
-Before uploading the program, replace the Wi-Fi placeholders:
-
-```cpp
-const char *ssid = "YOUR_WIFI_NAME";
-const char *password = "YOUR_WIFI_PASSWORD";
-```
-
-> ⚠️ **Important:** Never upload your real Wi-Fi password to a public GitHub repository.
-
----
-
-# 🛠 Setup Procedure
-
-### 1. Insert the SD Card
-
-Insert the Micro SD card into the ESP32-CAM SD card slot.
-
-### 2. Connect ESP32-CAM to USB-to-TTL
-
-Connect the ESP32-CAM to the USB-to-TTL programmer.
-
-### 3. Open Arduino IDE
-
-Launch Arduino IDE on your computer.
-
-### 4. Select Board
-
-Select the ESP32-CAM AI Thinker board.
-
-### 5. Select COM Port
-
-Select the correct COM port.
-
-### 6. Enter Wi-Fi Details
-
-Update:
-
-```cpp
-YOUR_WIFI_NAME
-YOUR_WIFI_PASSWORD
-```
-
-with your local Wi-Fi details.
-
-### 7. Upload the Program
-
-Verify and upload the program to the ESP32-CAM.
-
-### 8. Open Serial Monitor
-
-Set the baud rate to:
-
-```text
-115200
-```
-
-### 9. Check Initialization
-
-You should see messages confirming:
-
-- Camera initialization
-- SD card mounting
-- Wi-Fi connection
-- HTTP server start
-
-### 10. Open the Camera Page
-
-Copy the IP address shown in Serial Monitor and open it in your browser.
-
-Example:
-
-```text
-http://192.168.x.x
-```
-
-### 11. Capture an Image
-
-Click:
-
-```text
-Capture Photo
-```
-
-The image will be saved to the Micro SD card.
-
----
-
-# 🌐 Web Interface
-
-The ESP32-CAM hosts a simple webpage containing:
-
-```text
-ESP32-CAM Live Stream
-
-[ Live Camera Feed ]
-
-[ Capture Photo ]
-```
-
-The live stream is available through:
-
-```text
-/stream
-```
-
-The image capture request is handled through:
-
-```text
-/capture
+```bash
+sudo apt update
 ```
 
 ---
 
-# 💾 SD Card Storage
+## Step 2 — Install OpenCV
 
-The SD card is initialized using:
-
-```cpp
-SD_MMC.begin("/sdcard", true);
+```bash
+sudo apt install python3-opencv
 ```
 
-When initialization is successful:
+---
+
+## Step 3 — Download MobileNet SSD Configuration
+
+```bash
+wget https://raw.githubusercontent.com/chuanqi305/MobileNet-SSD/master/deploy.prototxt
+```
+
+---
+
+## Step 4 — Download MobileNet SSD Model
+
+```bash
+wget https://raw.githubusercontent.com/chuanqi305/MobileNet-SSD/master/mobilenet_iter_73000.caffemodel
+```
+
+---
+
+## Step 5 — Install Camera Libraries
+
+```bash
+sudo apt update
+```
+
+```bash
+sudo apt install -y libcamera-apps python3-libcamera python3-picamera2
+```
+
+---
+
+## Step 6 — Install FFmpeg
+
+```bash
+sudo apt install ffmpeg
+```
+
+---
+
+## Step 7 — Install GPIO Zero
+
+```bash
+sudo apt install python3-gpiozero
+```
+
+---
+
+## Step 8 — Reboot Raspberry Pi
+
+```bash
+reboot
+```
+
+---
+
+# 📂 Required Project Files
+
+Before running the program, make sure these three files are in the same project directory:
 
 ```text
-SD Card Mounted
+animal_detection.py
+deploy.prototxt
+mobilenet_iter_73000.caffemodel
 ```
-
-is displayed in the Serial Monitor.
 
 ---
 
-# 🖼 Image File Naming
+# ▶️ Running the Project
 
-Each captured image receives a unique filename.
+Open the terminal inside your project directory.
 
-Example:
+Run:
+
+```bash
+python3 animal_detection.py
+```
+
+The terminal should display:
 
 ```text
-/photo_12345.jpg
+Starting Animal Detection... Press 'q' to quit
 ```
 
-The filename is generated using:
-
-```cpp
-String filename =
-    "/photo_" +
-    String(millis()) +
-    ".jpg";
-```
-
-This helps prevent images from overwriting each other.
+The camera window will open and the system will begin detecting animals.
 
 ---
 
-# 🖥 Expected Serial Monitor Output
+# 🖥️ Detection Output
 
-After successful startup:
+For example, if a dog enters the camera view, the application can display:
 
 ```text
-Camera initialized successfully!
-SD Card Mounted
-Connecting to WiFi....
-WiFi Connected!
-Camera URL: http://192.168.x.x
-HTTP server started
+DOG
 ```
 
-After capturing a photo:
+on the camera window and print:
 
 ```text
-Photo saved: /photo_12345.jpg
+Animal Detected: dog
+```
+
+in the terminal.
+
+The buzzer will also activate.
+
+---
+
+# 🚨 Alert System
+
+The buzzer is initialized using:
+
+```python
+from gpiozero import Buzzer
+
+buzzer = Buzzer(18)
+```
+
+When an animal is detected:
+
+```python
+buzzer.on()
+
+time.sleep(0.3)
+
+buzzer.off()
+```
+
+This generates a short audible warning.
+
+---
+
+# 🟩 Bounding Box Detection
+
+When a supported animal is detected, OpenCV draws a bounding box:
+
+```python
+cv2.rectangle(
+    frame,
+    (x1, y1),
+    (x2, y2),
+    (0, 255, 0),
+    2
+)
+```
+
+The animal class is also displayed:
+
+```python
+cv2.putText(
+    frame,
+    label.upper(),
+    (x1, y1 - 10),
+    cv2.FONT_HERSHEY_SIMPLEX,
+    1,
+    (0, 0, 255),
+    3
+)
 ```
 
 ---
 
-# ✅ Expected Output
+# 🧪 Expected Result
 
-After successful implementation:
+When the project runs successfully:
 
-- Camera initializes successfully
-- SD card mounts correctly
-- ESP32-CAM connects to Wi-Fi
-- IP address is shown in Serial Monitor
-- Browser displays the live stream
-- Capture button captures the current camera frame
-- Captured image is saved to the SD card
-- Browser displays confirmation after saving the photo
-
----
-
-# 🧪 Result
-
-The **ESP32-CAM Live Streaming with SD Card Photo Capture** experiment was successfully implemented.
-
-The system can:
-
-- Stream live camera video
-- Capture images from a browser
-- Store captured images on a Micro SD card
-- Provide wireless camera access using Wi-Fi
-
----
-
-# 🧠 What You Learn
-
-This experiment provides practical experience with:
-
-- ESP32-CAM programming
-- Camera initialization
-- Wi-Fi communication
-- HTTP web servers
-- Embedded web interfaces
-- Live image streaming
-- Micro SD card interfacing
-- File handling
-- JPEG image capture
-- Browser-based controls
+- ✅ Raspberry Pi camera starts
+- ✅ Live camera feed is displayed
+- ✅ MobileNet SSD analyzes each frame
+- ✅ Supported animals are identified
+- ✅ Bounding boxes appear around detected animals
+- ✅ Animal names appear on screen
+- ✅ Detection information appears in the terminal
+- ✅ Buzzer generates an alert
+- ✅ Detection continues in real time
 
 ---
 
@@ -364,115 +474,148 @@ This experiment provides practical experience with:
 
 | Problem | Possible Cause | Solution |
 |---|---|---|
-| Camera initialization failed | Incorrect camera settings | Check AI Thinker configuration |
-| Wi-Fi not connecting | Incorrect credentials | Verify SSID and password |
-| SD Card Failed | Card not inserted correctly | Reinsert the SD card |
-| SD card write failed | Card/file-system issue | Format or replace SD card |
-| Webpage not opening | Different Wi-Fi network | Connect both devices to same network |
-| No camera stream | Camera/server issue | Restart ESP32-CAM |
-| Capture failed | Camera frame unavailable | Restart camera system |
-| No IP address | Wi-Fi connection failed | Check Serial Monitor |
+| Camera not opening | Camera connection issue | Power OFF Pi and check ribbon cable |
+| `No module named picamera2` | Picamera2 missing | Install `python3-picamera2` |
+| OpenCV not found | OpenCV missing | Install `python3-opencv` |
+| `deploy.prototxt` not found | Model configuration missing | Place file in project directory |
+| Caffe model not found | Model file missing | Place `.caffemodel` in project directory |
+| Animal not detected | Poor lighting / low confidence | Improve lighting and camera position |
+| Buzzer not working | Incorrect GPIO wiring | Check GPIO 18 and GND |
+| Q key not working | Camera window not active | Click camera window and press Q |
 
 ---
 
-# 📂 Suggested Repository Structure
+# 🧠 What You Learn
 
-```text
-ESP32-CAM-Experiment-No4/
-│
-├── index.html
-├── README.md
-├── LICENSE
-│
-├── src/
-│   └── ESP32_CAM_SD_Capture.ino
-│
-├── images/
-│   ├── esp32-cam.png
-│   ├── micro-sd-card.png
-│   ├── usb-ttl.png
-│   └── hardware-setup.png
-│
-└── docs/
-    └── experiment-documentation.pdf
-```
+By completing this project, you gain practical experience with:
+
+- 🍓 Raspberry Pi
+- 🐍 Python programming
+- 📷 Raspberry Pi camera interfacing
+- 👁️ Computer vision
+- 🧠 Artificial intelligence
+- 🤖 Deep neural networks
+- 🎯 Object detection
+- 📊 Confidence-based detection
+- 🟩 Bounding boxes
+- 🔌 GPIO programming
+- 🔊 Buzzer control
+- ⚡ Edge AI
+
+---
+
+# 🌍 Applications
+
+This project can serve as the foundation for:
+
+- 🌾 Smart farm monitoring
+- 🐄 Livestock monitoring
+- 🌲 Wildlife detection
+- 🚨 Animal intrusion alerts
+- 🏡 Property monitoring
+- 🌱 Crop protection systems
+- 📷 Intelligent surveillance
+- 🌳 Forest monitoring
+- 🤖 Autonomous monitoring systems
 
 ---
 
 # 🚀 Future Improvements
 
-The project can be extended with:
+The system can be extended with:
 
-- 📅 Date and time based image filenames
-- 🚶 Motion detection
-- 🔔 PIR sensor triggering
-- 📲 Telegram alerts
-- ☁️ Cloud image upload
-- 🖼 Browser-based SD card gallery
-- 🗑 Delete image option
-- ⬇ Download captured images
-- 🔦 Flash LED control
-- 🎥 Resolution control
-- 🔐 Password-protected web interface
-- 📡 Remote monitoring over the internet
+- 📱 Telegram / WhatsApp alerts
+- 📧 Email notifications
+- 📸 Automatic image capture
+- 🎥 Detection video recording
+- ☁️ Cloud storage
+- 🌐 Web dashboard
+- 📊 Detection history
+- 🕒 Date and time logging
+- 🔔 Different alerts for different animals
+- 📍 GPS location tracking
+- 🌙 Night vision camera
+- 🎯 Custom YOLO animal detection model
+- 📲 Mobile monitoring
+- 💾 Detection database
 
 ---
 
-# 💡 Applications
+# 📁 Suggested Repository Structure
 
-This project can be used as a base for:
-
-- Home surveillance
-- Smart door cameras
-- Wildlife monitoring
-- Farm monitoring
-- Industrial inspection
-- Remote equipment monitoring
-- Security cameras
-- Image logging systems
-- IoT monitoring devices
+```text
+AI-Animal-Detection/
+│
+├── README.md
+├── index.html
+├── LICENSE
+│
+├── src/
+│   └── animal_detection.py
+│
+├── model/
+│   ├── deploy.prototxt
+│   └── mobilenet_iter_73000.caffemodel
+│
+├── images/
+│   ├── raspberry-pi.png
+│   ├── camera.png
+│   ├── buzzer.png
+│   ├── jumper-wires.png
+│   ├── power-supply.png
+│   └── circuit-diagram.png
+│
+└── docs/
+    └── project-documentation.pdf
+```
 
 ---
 
 # ⚠️ Safety Notes
 
-- Check all connections before powering the ESP32-CAM.
-- Use the correct voltage supply.
-- Do not short GPIO pins.
-- Insert the Micro SD card correctly.
-- Avoid removing the SD card while a file is being written.
-- Never expose Wi-Fi passwords in a public GitHub repository.
+- Switch OFF the Raspberry Pi before connecting the camera ribbon cable.
+- Verify GPIO connections before powering the system.
+- Use a suitable Raspberry Pi power supply.
+- Avoid short circuits between GPIO pins.
+- Ensure the buzzer is connected to the correct GPIO and ground.
+- Handle the camera ribbon cable carefully.
 
 ---
 
 # 🏁 Project Summary
 
-This experiment combines:
-
 ```text
-ESP32-CAM
-    +
-Wi-Fi
-    +
-Live Camera Streaming
-    +
-HTTP Web Server
-    +
-Photo Capture
-    +
-Micro SD Card Storage
+Camera
+   ↓
+Raspberry Pi
+   ↓
+OpenCV
+   ↓
+MobileNet SSD
+   ↓
+AI Object Detection
+   ↓
+Animal Classification
+   ↓
+Bounding Box + Label
+   ↓
+GPIO 18
+   ↓
+Buzzer Alert
 ```
 
-into a complete embedded camera application.
+The project demonstrates how **Artificial Intelligence, Computer Vision and Embedded Systems** can be combined to build a practical real-time animal monitoring system.
 
 ---
 
 ## 👨‍💻 Developed As
 
-Part of an **ESP32-CAM and IoT Experiment Series**.
+Part of a collection of projects exploring:
+
+**Artificial Intelligence • IoT • Computer Vision • Raspberry Pi • Embedded Systems**
 
 ---
 
 ## 📜 License
 
-This project is intended for **educational and learning purposes**.
+This project is intended for **educational, experimentation and learning purposes**.
