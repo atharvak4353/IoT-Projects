@@ -8,7 +8,7 @@
 ![Python](https://img.shields.io/badge/Python-3-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
 ![AI](https://img.shields.io/badge/AI-MobileNet%20SSD-16A34A?style=for-the-badge)
-![Camera](https://img.shields.io/badge/Camera-Picamera2-F59E0B?style=for-the-badge)
+![Camera](https://img.shields.io/badge/Camera-USBCamera-F59E0B?style=for-the-badge)
 
 </p>
 
