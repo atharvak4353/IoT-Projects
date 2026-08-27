@@ -538,9 +538,9 @@
     .circuit-wrap img {
         display: block;
 
-        width: 70%;
+        width: 60%;
 
-        max-width: 650px;
+        max-width: 600px;
 
         height: auto;
 
@@ -563,13 +563,19 @@
         margin:
             14px auto 0;
 
-        max-width: 850px;
+        max-width: 700px;
 
         color: var(--muted);
 
         font-size: 14px;
     }
 
+   @media (max-width: 550px) {
+
+    .circuit-wrap img {
+        width: 100%;
+        max-width: 100%;
+    }
 
     /* =========================
        FOOTER
@@ -1049,9 +1055,9 @@
     <p>
      The Hardware Setup below shows the overall hardware arrangement of the AI Based Color Sorting System, including the Raspberry Pi, USB camera, conveyor control, proxy sensing and Robot Magician integration.
     </p>
-    <div class="Hardware Setup-wrap">
+    <div class="circuit-wrap">
      <img alt="AI Based Color Sorting System Hardware Setup" src="Colour sorting system.jpg"/>
-     <p class="Hardware Setup-caption">
+     <p class="circuit-caption">
       <strong>
       Hardware Setup:
       </strong>
