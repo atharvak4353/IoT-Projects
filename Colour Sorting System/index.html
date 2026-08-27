@@ -23,6 +23,9 @@ h2{margin-top:0;color:var(--primary);font-size:28px;border-bottom:2px solid #dbe
 .code-head{display:flex;justify-content:space-between;align-items:center;padding:11px 15px;background:#1e293b;color:#fff;border-radius:9px 9px 0 0}.copy{border:0;border-radius:6px;background:#2563eb;color:#fff;padding:7px 12px;font-weight:bold;cursor:pointer}
 pre{margin:0 0 15px;padding:20px;overflow:auto;background:#020617;color:#e2e8f0;border-radius:0 0 9px 9px;font:13px/1.55 Consolas,monospace;max-height:700px}
 ol,ul{padding-left:24px}li{margin-bottom:8px}.outcome{padding:25px;color:#fff;background:linear-gradient(135deg,#0f172a,#1e3a8a);border-radius:14px}.outcome h3{color:#fff;margin-top:0}.outcome p{color:#dbeafe}
+.circuit-wrap{margin-top:20px;padding:18px;background:#f8fafc;border:1px solid var(--border);border-radius:14px;text-align:center}
+.circuit-wrap img{display:block;width:100%;max-width:900px;max-height:650px;margin:0 auto;object-fit:contain;border-radius:10px;border:1px solid #cbd5e1;background:#fff}
+.circuit-caption{margin:14px auto 0;max-width:850px;color:var(--muted);font-size:14px}
 footer{text-align:center;padding:30px;background:#020617;color:#94a3b8}footer strong{color:#fff}
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.flow{grid-template-columns:repeat(2,1fr)}}@media(max-width:550px){.grid,.flow{grid-template-columns:1fr}.section{padding:20px}.hero{padding:60px 18px}}
 </style>
@@ -36,7 +39,7 @@ footer{text-align:center;padding:30px;background:#020617;color:#94a3b8}footer st
 </header>
 
 <nav>
-<a href="#about">About</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#software">Software</a><a href="#calibration">Calibration</a><a href="#working">Working</a><a href="#code">Code</a><a href="#troubleshooting">Notes</a>
+<a href="#about">About</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#software">Software</a><a href="#calibration">Calibration</a><a href="#working">Working</a><a href="#code">Code</a><a href="#troubleshooting">Notes</a>
 </nav>
 
 <main class="container">
@@ -93,6 +96,16 @@ footer{text-align:center;padding:30px;background:#020617;color:#94a3b8}footer st
 <div class="warning"><strong>Important:</strong> Complete all wiring before powering ON the system. Connect all grounds together, secure USB connections, and check 12 V supply polarity.</div>
 </section>
 
+<section class="section" id="circuit">
+<h2>Circuit Diagram</h2>
+<p>The circuit diagram below shows the overall hardware arrangement of the AI Based Color Sorting System, including the Raspberry Pi, USB camera, conveyor control, proxy sensing and Robot Magician integration.</p>
+<div class="circuit-wrap">
+<img src="Colour sorting system.jpg" alt="AI Based Color Sorting System Circuit Diagram">
+<p class="circuit-caption"><strong>System Circuit:</strong> Use this diagram together with the Hardware Connections table above while assembling the project.</p>
+</div>
+<div class="info" style="margin-top:18px;"><strong>Note:</strong> Keep <strong>Colour sorting system.jpg</strong> in the same folder as this <strong>index.html</strong>.</div>
+</section>
+
 <section class="section" id="software">
 <h2>Software Requirements</h2>
 <div class="grid">
@@ -147,21 +160,747 @@ pip install opencv-python numpy pydobot pyserial RPi.GPIO</code></pre>
 </section>
 
 <section class="section" id="code">
-<h2>Main Python Program</h2>
-<p>The SOP identifies the main program as <strong>color_sor.py</strong>. The complete source code is long, so the portfolio page can link directly to the Python file while keeping the page readable.</p>
-<div class="code-head"><span>Run Project</span><button class="copy" onclick="copyCode('run',this)">Copy</button></div>
+<h2>Complete Python Program</h2>
+<p>The complete <strong>color_sor.py</strong> program is included below. It handles color detection, conveyor control, E18-D80NK proxy sensing, Robot Magician connection, calibration, block counting and robotic pick-and-place.</p>
+
+<div class="code-head">
+<span>color_sor.py</span>
+<button class="copy" onclick="copyCode('fullcode',this)">Copy Full Code</button>
+</div>
+
+<pre><code id="fullcode">import argparse
+import os
+import json
+import time
+import threading
+import glob
+import cv2
+import numpy as np
+import RPi.GPIO as GPIO
+from pydobot import Dobot
+
+RELAY_PIN = 17
+PROXY_PIN = 23  # Change using --proxy-pin if you wire the sensor to another GPIO
+PROXY_ACTIVE_LOW = True  # E18-D80NK NPN is usually LOW when object is detected
+CONFIG_FILE = &quot;dobot_coords.json&quot;
+
+PICK_SAFE_Z_OFFSET = 100
+PLACE_Z = None
+
+CONVEYOR_MAX = 10.0  # Safety cutoff if proxy sensor does not detect the block
+PROXY_STABLE_READS = 3
+PROXY_STABLE_DELAY = 0.02
+
+DETECTION_THRESHOLD = 1500
+MIN_CONTOUR_AREA = 1200
+STABLE_FRAMES_REQUIRED = 5
+GONE_FRAMES_REQUIRED = 8
+
+LOWER_RED1 = np.array([0, 120, 80])
+UPPER_RED1 = np.array([10, 255, 255])
+LOWER_RED2 = np.array([170, 120, 80])
+UPPER_RED2 = np.array([180, 255, 255])
+
+LOWER_BLUE = np.array([90, 90, 70])
+UPPER_BLUE = np.array([135, 255, 255])
+
+# Tightened yellow range to avoid hand and light reflection
+LOWER_YELLOW = np.array([22, 110, 100])
+UPPER_YELLOW = np.array([40, 255, 255])
+
+red_count = 0
+blue_count = 0
+yellow_count = 0
+last_counted_color = None
+
+_relay_timer = None
+_relay_lock = threading.Lock()
+
+
+def find_dobot_port():
+    ports = glob.glob(&quot;/dev/ttyUSB*&quot;) + glob.glob(&quot;/dev/ttyACM*&quot;)
+    return ports[0] if ports else None
+
+
+def _hard_cutoff():
+    with _relay_lock:
+        GPIO.output(RELAY_PIN, GPIO.LOW)
+    print(&quot;[CONVEYOR] OFF - safety cutoff&quot;)
+
+
+def conveyor_on():
+    global _relay_timer
+
+    with _relay_lock:
+        if _relay_timer:
+            _relay_timer.cancel()
+
+        GPIO.output(RELAY_PIN, GPIO.HIGH)
+
+        _relay_timer = threading.Timer(CONVEYOR_MAX, _hard_cutoff)
+        _relay_timer.daemon = True
+        _relay_timer.start()
+
+    print(&quot;[CONVEYOR] ON&quot;)
+
+
+def conveyor_off():
+    global _relay_timer
+
+    with _relay_lock:
+        if _relay_timer:
+            _relay_timer.cancel()
+            _relay_timer = None
+
+        GPIO.output(RELAY_PIN, GPIO.LOW)
+
+    print(&quot;[CONVEYOR] OFF&quot;)
+
+
+def setup_gpio(proxy_pin):
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(RELAY_PIN, GPIO.OUT)
+    GPIO.output(RELAY_PIN, GPIO.LOW)
+
+    # E18-D80NK NPN sensor wiring usually needs pull-up on the Pi input.
+    # Brown: sensor VCC, Blue: sensor GND, Black: signal to this GPIO.
+    GPIO.setup(proxy_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+
+def is_proxy_detected(proxy_pin, active_low=True):
+    value = GPIO.input(proxy_pin)
+    detected = (value == GPIO.LOW) if active_low else (value == GPIO.HIGH)
+    return detected
+
+
+def is_proxy_detected_stable(proxy_pin, active_low=True):
+    for _ in range(PROXY_STABLE_READS):
+        if not is_proxy_detected(proxy_pin, active_low):
+            return False
+        time.sleep(PROXY_STABLE_DELAY)
+    return True
+
+
+def cleanup_gpio():
+    conveyor_off()
+    GPIO.cleanup()
+
+
+def init_camera(index=-1):
+    camera_indexes = [index] if index &gt;= 0 else [0, 1, 2, 3, 4, 5]
+
+    for i in camera_indexes:
+        cam = cv2.VideoCapture(i)
+        cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        cam.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+
+        if not cam.isOpened():
+            cam.release()
+            continue
+
+        ok, frame = cam.read()
+        if ok and frame is not None:
+            print(&quot;[CAMERA] Using camera index&quot;, i)
+            return cam
+
+        cam.release()
+
+    raise RuntimeError(&quot;No working camera found&quot;)
+
+
+def get_frame(cam):
+    ok, frame = cam.read()
+    return frame if ok else None
+
+
+def draw_dashboard(frame, state, color, scores):
+    global red_count, blue_count, yellow_count
+
+    x, y = 35, 35
+    w, h = 270, 205
+
+    cv2.rectangle(frame, (x, y), (x + w, y + h), (245, 245, 245), -1)
+    cv2.rectangle(frame, (x, y), (x + w, y + h), (220, 220, 220), 2)
+
+    cv2.rectangle(frame, (x + 12, y + 12), (x + 44, y + 44), (210, 90, 20), -1)
+    cv2.putText(
+        frame,
+        &quot;III&quot;,
+        (x + 17, y + 36),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.55,
+        (255, 255, 255),
+        2,
+    )
+
+    cv2.putText(
+        frame,
+        &quot;No. of Blocks&quot;,
+        (x + 58, y + 36),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.72,
+        (0, 0, 0),
+        2,
+    )
+
+    start_y = y + 60
+    row_h = 38
+    col_icon = x + 35
+    col_name = x + 65
+    col_count = x + 200
+    table_right = x + w - 12
+
+    cv2.rectangle(
+        frame,
+        (x + 12, start_y),
+        (table_right, start_y + row_h * 3),
+        (210, 210, 210),
+        1,
+    )
+
+    cv2.line(
+        frame,
+        (col_count - 20, start_y),
+        (col_count - 20, start_y + row_h * 3),
+        (210, 210, 210),
+        1,
+    )
+
+    for i in range(1, 3):
+        yy = start_y + i * row_h
+        cv2.line(frame, (x + 12, yy), (table_right, yy), (210, 210, 210), 1)
+
+    cv2.circle(frame, (col_icon, start_y + 24), 12, (0, 0, 255), -1)
+    cv2.putText(
+        frame,
+        &quot;Red&quot;,
+        (col_name, start_y + 30),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.62,
+        (0, 0, 0),
+        2,
+    )
+    cv2.putText(
+        frame,
+        str(red_count),
+        (col_count, start_y + 30),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.68,
+        (0, 0, 0),
+        2,
+    )
+
+    cv2.circle(frame, (col_icon, start_y + row_h + 24), 12, (255, 0, 0), -1)
+    cv2.putText(
+        frame,
+        &quot;Blue&quot;,
+        (col_name, start_y + row_h + 30),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.62,
+        (0, 0, 0),
+        2,
+    )
+    cv2.putText(
+        frame,
+        str(blue_count),
+        (col_count, start_y + row_h + 30),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.68,
+        (0, 0, 0),
+        2,
+    )
+
+    cv2.circle(frame, (col_icon, start_y + row_h * 2 + 24), 12, (0, 255, 255), -1)
+    cv2.putText(
+        frame,
+        &quot;Yellow&quot;,
+        (col_name, start_y + row_h * 2 + 30),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.62,
+        (0, 0, 0),
+        2,
+    )
+    cv2.putText(
+        frame,
+        str(yellow_count),
+        (col_count, start_y + row_h * 2 + 30),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.68,
+        (0, 0, 0),
+        2,
+    )
+
+    cv2.putText(
+        frame,
+        f&quot;State: {state}  Color: {color}&quot;,
+        (15, frame.shape[0] - 42),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.55,
+        (255, 255, 255),
+        2,
+    )
+
+    cv2.putText(
+        frame,
+        f&quot;R:{scores[&#x27;Red&#x27;]} B:{scores[&#x27;Blue&#x27;]} Y:{scores[&#x27;Yellow&#x27;]}&quot;,
+        (15, frame.shape[0] - 18),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.55,
+        (255, 255, 255),
+        2,
+    )
+
+    return frame
+
+
+def update_count(color):
+    global red_count, blue_count, yellow_count, last_counted_color
+
+    if color is None or color == last_counted_color:
+        return
+
+    if color == &quot;Red&quot;:
+        red_count += 1
+    elif color == &quot;Blue&quot;:
+        blue_count += 1
+    elif color == &quot;Yellow&quot;:
+        yellow_count += 1
+
+    last_counted_color = color
+
+
+def clean_mask(mask):
+    kernel = np.ones((5, 5), np.uint8)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+    return mask
+
+
+def valid_mask_score(mask):
+    mask = clean_mask(mask)
+    score = cv2.countNonZero(mask)
+
+    contours, _ = cv2.findContours(
+        mask,
+        cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE,
+    )
+
+    if not contours:
+        return 0, 0
+
+    largest = max(contours, key=cv2.contourArea)
+    area = cv2.contourArea(largest)
+
+    if score &lt; DETECTION_THRESHOLD:
+        return score, area
+
+    if area &lt; MIN_CONTOUR_AREA:
+        return score, area
+
+    return score, area
+
+
+def detect_color(roi):
+    hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+
+    # Reject bright white glare/reflection
+    saturation = hsv[:, :, 1]
+    value = hsv[:, :, 2]
+    glare_mask = cv2.inRange(saturation, 0, 80)
+    bright_mask = cv2.inRange(value, 210, 255)
+    glare = cv2.bitwise_and(glare_mask, bright_mask)
+
+    mask_r = cv2.bitwise_or(
+        cv2.inRange(hsv, LOWER_RED1, UPPER_RED1),
+        cv2.inRange(hsv, LOWER_RED2, UPPER_RED2),
+    )
+
+    mask_b = cv2.inRange(hsv, LOWER_BLUE, UPPER_BLUE)
+    mask_y = cv2.inRange(hsv, LOWER_YELLOW, UPPER_YELLOW)
+
+    # Remove reflection pixels from yellow
+    mask_y = cv2.bitwise_and(mask_y, cv2.bitwise_not(glare))
+
+    r_score, r_area = valid_mask_score(mask_r)
+    b_score, b_area = valid_mask_score(mask_b)
+    y_score, y_area = valid_mask_score(mask_y)
+
+    scores = {
+        &quot;Red&quot;: r_score,
+        &quot;Blue&quot;: b_score,
+        &quot;Yellow&quot;: y_score,
+    }
+
+    areas = {
+        &quot;Red&quot;: r_area,
+        &quot;Blue&quot;: b_area,
+        &quot;Yellow&quot;: y_area,
+    }
+
+    best = max(scores, key=scores.get)
+
+    if scores[best] &gt;= DETECTION_THRESHOLD and areas[best] &gt;= MIN_CONTOUR_AREA:
+        return best, scores
+
+    return None, scores
+
+
+def move_to(device, x, y, z, r=0):
+    device.move_to(x, y, z, r, wait=True)
+    time.sleep(0.3)
+
+
+def pick_and_place(device, coords, color):
+    bin_map = {
+        &quot;Red&quot;: &quot;BIN_RED&quot;,
+        &quot;Blue&quot;: &quot;BIN_BLUE&quot;,
+        &quot;Yellow&quot;: &quot;BIN_YELLOW&quot;,
+    }
+
+    bin_key = bin_map[color]
+
+    print(f&quot;[ROBOT] {color} block -&gt; {bin_key}&quot;)
+
+    if bin_key not in coords:
+        print(&quot;[ERROR] Missing calibration for&quot;, bin_key)
+        return
+
+    pick = coords[&quot;PICK&quot;]
+    safe_z = pick[&quot;z&quot;] + PICK_SAFE_Z_OFFSET
+
+    move_to(device, pick[&quot;x&quot;], pick[&quot;y&quot;], safe_z)
+    move_to(device, pick[&quot;x&quot;], pick[&quot;y&quot;], pick[&quot;z&quot;])
+
+    device.suck(True)
+    time.sleep(0.5)
+
+    move_to(device, pick[&quot;x&quot;], pick[&quot;y&quot;], safe_z)
+
+    b = coords[bin_key]
+    target_z = PLACE_Z if PLACE_Z else b[&quot;z&quot;]
+
+    move_to(device, b[&quot;x&quot;], b[&quot;y&quot;], safe_z)
+    move_to(device, b[&quot;x&quot;], b[&quot;y&quot;], target_z)
+
+    device.suck(False)
+    time.sleep(0.5)
+
+    move_to(device, pick[&quot;x&quot;], pick[&quot;y&quot;], safe_z)
+
+    print(f&quot;[ROBOT] Placed {color} block in {bin_key}&quot;)
+
+
+def calibrate(device):
+    print(&quot;\n[CALIBRATION MODE]&quot;)
+    coords = {}
+
+    for key in [&quot;PICK&quot;, &quot;BIN_RED&quot;, &quot;BIN_BLUE&quot;, &quot;BIN_YELLOW&quot;]:
+        input(f&quot;Move robot to {key}, then press ENTER...&quot;)
+
+        pose = device.pose()
+
+        coords[key] = {
+            &quot;x&quot;: round(pose[0], 2),
+            &quot;y&quot;: round(pose[1], 2),
+            &quot;z&quot;: round(pose[2], 2),
+            &quot;r&quot;: round(pose[3], 2),
+        }
+
+        print(&quot;[SAVED]&quot;, key, coords[key])
+
+    with open(CONFIG_FILE, &quot;w&quot;) as f:
+        json.dump(coords, f, indent=4)
+
+    print(&quot;[CALIBRATION] Saved&quot;)
+    return coords
+
+
+def main():
+    global last_counted_color
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        &quot;--camera-index&quot;,
+        type=int,
+        default=-1,
+    )
+
+    parser.add_argument(
+        &quot;--proxy-pin&quot;,
+        type=int,
+        default=PROXY_PIN,
+        help=&quot;BCM GPIO pin connected to E18-D80NK black signal wire&quot;,
+    )
+
+    parser.add_argument(
+        &quot;--proxy-active-high&quot;,
+        action=&quot;store_true&quot;,
+        help=&quot;Use this only if your proxy sensor gives HIGH when object is detected&quot;,
+    )
+
+    parser.add_argument(
+        &quot;--calibrate&quot;,
+        action=&quot;store_true&quot;,
+    )
+
+    args = parser.parse_args()
+
+    print(&quot;[INIT] Starting&quot;)
+
+    device = None
+
+    for _ in range(10):
+        port = find_dobot_port()
+
+        if port:
+            try:
+                device = Dobot(
+                    port=port,
+                    verbose=False,
+                )
+
+                print(&quot;[DOBOT] Connected on&quot;, port)
+                break
+
+            except Exception:
+                pass
+
+        time.sleep(2)
+
+    if device is None:
+        raise RuntimeError(&quot;Dobot not found&quot;)
+
+    if args.calibrate or not os.path.exists(CONFIG_FILE):
+        coords = calibrate(device)
+
+    else:
+        with open(CONFIG_FILE, &quot;r&quot;) as f:
+            coords = json.load(f)
+
+        print(&quot;[CALIBRATION] Loaded&quot;)
+
+    required_keys = [
+        &quot;PICK&quot;,
+        &quot;BIN_RED&quot;,
+        &quot;BIN_BLUE&quot;,
+        &quot;BIN_YELLOW&quot;,
+    ]
+
+    missing = [
+        key
+        for key in required_keys
+        if key not in coords
+    ]
+
+    if missing:
+        print(&quot;[ERROR] Missing calibration:&quot;, missing)
+        print(&quot;Run: python3 color_sor.py --calibrate&quot;)
+        device.close()
+        return
+
+    proxy_active_low = not args.proxy_active_high
+
+    setup_gpio(args.proxy_pin)
+
+    print(
+        &quot;[PROXY] GPIO&quot;,
+        args.proxy_pin,
+        &quot;active&quot;,
+        &quot;LOW&quot; if proxy_active_low else &quot;HIGH&quot;,
+    )
+
+    cam = init_camera(args.camera_index)
+
+    state = &quot;IDLE&quot;
+    detected = None
+    start_time = None
+
+    stable_color = None
+    stable_count = 0
+    gone_count = 0
+
+    last_printed_detection = None
+
+    cv2.namedWindow(
+        &quot;Fruit Detection&quot;,
+        cv2.WINDOW_NORMAL,
+    )
+
+    try:
+        while True:
+            frame = get_frame(cam)
+
+            if frame is None:
+                continue
+
+            h, w, _ = frame.shape
+
+            roi_x1 = w // 5
+            roi_y1 = h // 4
+            roi_x2 = 4 * w // 5
+            roi_y2 = 4 * h // 5
+
+            roi = frame[
+                roi_y1:roi_y2,
+                roi_x1:roi_x2,
+            ]
+
+            color, scores = detect_color(roi)
+
+            if color == stable_color and color is not None:
+                stable_count += 1
+
+            elif color is not None:
+                stable_color = color
+                stable_count = 1
+
+            else:
+                stable_color = None
+                stable_count = 0
+
+            cv2.rectangle(
+                frame,
+                (roi_x1, roi_y1),
+                (roi_x2, roi_y2),
+                (0, 255, 0),
+                2,
+            )
+
+            cv2.putText(
+                frame,
+                f&quot;Detected: {color}&quot;,
+                (roi_x1, roi_y1 - 10),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.7,
+                (0, 255, 0),
+                2,
+            )
+
+            frame = draw_dashboard(
+                frame,
+                state,
+                color,
+                scores,
+            )
+
+            cv2.imshow(
+                &quot;Fruit Detection&quot;,
+                frame,
+            )
+
+            key = cv2.waitKey(1) &amp; 0xFF
+
+            if key == ord(&quot;q&quot;):
+                print(&quot;[STOP] Q pressed&quot;)
+                break
+
+            if state == &quot;IDLE&quot;:
+                if stable_color and stable_count &gt;= STABLE_FRAMES_REQUIRED:
+                    detected = stable_color
+
+                    if detected != last_printed_detection:
+                        print(f&quot;[DETECTED] {detected} block&quot;)
+                        last_printed_detection = detected
+
+                    update_count(detected)
+
+                    conveyor_on()
+                    start_time = time.time()
+                    state = &quot;RUN&quot;
+
+                    stable_color = None
+                    stable_count = 0
+
+            elif state == &quot;RUN&quot;:
+                # Conveyor keeps moving until the proxy sensor confirms
+                # the block has reached the pickup position.
+                if is_proxy_detected_stable(
+                    args.proxy_pin,
+                    proxy_active_low,
+                ):
+                    print(
+                        &quot;[PROXY] Block detected at pickup position&quot;
+                    )
+
+                    conveyor_off()
+
+                    if detected:
+                        pick_and_place(
+                            device,
+                            coords,
+                            detected,
+                        )
+
+                    detected = None
+                    gone_count = 0
+                    state = &quot;WAIT&quot;
+
+                # Safety fallback: stop conveyor if sensor/cable fails.
+                elif time.time() - start_time &gt;= CONVEYOR_MAX:
+                    conveyor_off()
+
+                    print(
+                        &quot;[ERROR] Proxy not detected before safety timeout&quot;
+                    )
+
+                    detected = None
+                    gone_count = 0
+                    state = &quot;WAIT&quot;
+
+            elif state == &quot;WAIT&quot;:
+                if color is None:
+                    gone_count += 1
+
+                else:
+                    gone_count = 0
+
+                if gone_count &gt;= GONE_FRAMES_REQUIRED:
+                    last_counted_color = None
+                    last_printed_detection = None
+                    gone_count = 0
+                    state = &quot;IDLE&quot;
+
+            time.sleep(0.05)
+
+    except KeyboardInterrupt:
+        print(&quot;[STOP] User stopped&quot;)
+
+    finally:
+        cam.release()
+        device.close()
+        cleanup_gpio()
+        cv2.destroyAllWindows()
+
+        print(&quot;[EXIT] Clean shutdown&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+
+<h3>Run Project</h3>
+<div class="code-head"><span>Terminal</span><button class="copy" onclick="copyCode('run',this)">Copy</button></div>
 <pre><code id="run">source myenv/bin/activate
 python3 color_sor.py</code></pre>
-<h3>Add/Edit Code Using Nano</h3>
-<div class="code-head"><span>Terminal</span><button class="copy" onclick="copyCode('nano',this)">Copy</button></div>
-<pre><code id="nano">cd ~/Desktop
-nano color_sor.py
 
-# Save: Ctrl + O, then Enter
-# Exit: Ctrl + X
+<h3>Force Robot Recalibration</h3>
+<div class="code-head"><span>Terminal</span><button class="copy" onclick="copyCode('calrun',this)">Copy</button></div>
+<pre><code id="calrun">source myenv/bin/activate
+python3 color_sor.py --calibrate</code></pre>
 
-python3 color_sor.py</code></pre>
-<div class="info"><strong>Core program settings from the project:</strong><br>Relay GPIO: 17<br>Proxy GPIO: 23<br>Proxy logic: Active LOW<br>Conveyor safety cutoff: 10 seconds<br>Detected colors: Red, Blue, Yellow<br>Calibration file: dobot_coords.json</div>
+<div class="info">
+<strong>Core program settings:</strong><br>
+Relay GPIO: 17<br>
+Proxy GPIO: 23<br>
+Proxy logic: Active LOW by default<br>
+Conveyor safety cutoff: 10 seconds<br>
+Detected colors: Red, Blue, Yellow<br>
+Calibration file: dobot_coords.json
+</div>
 </section>
 
 <section class="section" id="troubleshooting">
