@@ -14,7 +14,7 @@
 
 ![Robotics](https://img.shields.io/badge/Robotics-Automation-7C3AED?style=for-the-badge)
 
-![OpenCV](https://img.shields.io/badge/OpenCV-Vision-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
+![OpenCV](https://img.shields.io/badge/OpenCV-Vision-16A34A?style=for-the-badge&logo=opencv&logoColor=white)
 
 </p>
 
