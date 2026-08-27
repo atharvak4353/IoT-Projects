@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="AI Based Color Sorting System using Raspberry Pi 4, OpenCV, USB camera, proxy sensor, conveyor and Robot Magician.">
-<title>AI Based Color Sorting System</title>
-<style>
-:root{--primary:#0f172a;--secondary:#1e3a8a;--accent:#2563eb;--surface:#fff;--bg:#f8fafc;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--green:#16a34a}
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="AI Based Color Sorting System using Raspberry Pi 4, OpenCV, USB camera, proxy sensor, conveyor and Robot Magician." name="description"/>
+  <title>
+   AI Based Color Sorting System
+  </title>
+  <style>
+   :root{--primary:#0f172a;--secondary:#1e3a8a;--accent:#2563eb;--surface:#fff;--bg:#f8fafc;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--green:#16a34a}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
 .hero{padding:80px 20px;text-align:center;color:#fff;background:linear-gradient(135deg,#020617,#0f172a 55%,#1e3a8a)}
 .hero .tag{display:inline-block;padding:7px 14px;border:1px solid #ffffff33;border-radius:999px;background:#ffffff12;font-size:13px;font-weight:bold;letter-spacing:.7px}
@@ -28,147 +30,696 @@ ol,ul{padding-left:24px}li{margin-bottom:8px}.outcome{padding:25px;color:#fff;ba
 .circuit-caption{margin:14px auto 0;max-width:850px;color:var(--muted);font-size:14px}
 footer{text-align:center;padding:30px;background:#020617;color:#94a3b8}footer strong{color:#fff}
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.flow{grid-template-columns:repeat(2,1fr)}}@media(max-width:550px){.grid,.flow{grid-template-columns:1fr}.section{padding:20px}.hero{padding:60px 18px}}
-</style>
-</head>
-<body>
-<header class="hero">
-<span class="tag">COMPUTER VISION • ROBOTICS • INDUSTRIAL AUTOMATION</span>
-<h1>AI Based Color Sorting System</h1>
-<p>Automated red, blue and yellow object sorting using Raspberry Pi 4, USB Camera, OpenCV, E18-D80NK proxy sensor, conveyor control and a Robot Magician pick-and-place robot.</p>
-<div class="badges"><span class="badge">Raspberry Pi 4</span><span class="badge">Python</span><span class="badge">OpenCV</span><span class="badge">Robot Magician</span><span class="badge">Machine Vision</span><span class="badge">GPIO</span></div>
-</header>
-
-<nav>
-<a href="#about">About</a><a href="#components">Components</a><a href="#connections">Connections</a><a href="#circuit">Circuit</a><a href="#software">Software</a><a href="#calibration">Calibration</a><a href="#working">Working</a><a href="#code">Code</a><a href="#troubleshooting">Notes</a>
-</nav>
-
-<main class="container">
-<section class="section" id="about">
-<h2>Project Overview</h2>
-<div class="info"><strong>Purpose:</strong> Automatically detect colored objects, move them to a pickup point, and sort them into the correct bin using machine vision and robotic pick-and-place.</div>
-<h3>Objectives</h3>
-<div class="grid">
-<div class="card"><strong>Color Detection</strong><p>Detect red, blue and yellow objects using OpenCV.</p></div>
-<div class="card"><strong>Conveyor Control</strong><p>Automatically start and stop the conveyor through a relay.</p></div>
-<div class="card"><strong>Accurate Pickup</strong><p>Use a proxy sensor to confirm that the object reached the pickup position.</p></div>
-<div class="card"><strong>Robot Sorting</strong><p>Robot Magician picks the object using vacuum suction and places it in the correct bin.</p></div>
-<div class="card"><strong>Live Dashboard</strong><p>Display object counts, detected color and system state.</p></div>
-<div class="card"><strong>Industrial Automation</strong><p>Demonstrates integration of computer vision, sensors, conveyor and robotics.</p></div>
-</div>
-<h3>Applications</h3>
-<p>Manufacturing • Packaging • Warehouse Automation • Educational Robotics Labs • Industrial Automation</p>
-</section>
-
-<section class="section" id="components">
-<h2>Components Required</h2>
-<div class="table-wrap"><table>
-<thead><tr><th>Component</th><th>Qty</th><th>Purpose</th><th>Specification</th></tr></thead>
-<tbody>
-<tr><td>Raspberry Pi 4</td><td>1</td><td>Main controller</td><td>4 GB RAM</td></tr>
-<tr><td>Robot Magician</td><td>1</td><td>Pick and place robot</td><td>Vacuum suction</td></tr>
-<tr><td>USB Camera</td><td>1</td><td>Capture object images</td><td>640×480 or higher</td></tr>
-<tr><td>E18-D80NK Proxy Sensor</td><td>1</td><td>Detect object at pickup position</td><td>NPN, 5–24 V</td></tr>
-<tr><td>Relay Module</td><td>1</td><td>Start/Stop conveyor</td><td>1 Channel</td></tr>
-<tr><td>PWM DC Motor Controller</td><td>1</td><td>Control conveyor speed</td><td>12 V DC</td></tr>
-<tr><td>DC Conveyor Motor</td><td>1</td><td>Move object</td><td>12 V</td></tr>
-<tr><td>12 V Power Supply</td><td>1</td><td>Power conveyor</td><td>12 V DC</td></tr>
-<tr><td>Sorting Bins</td><td>3</td><td>Collect objects</td><td>Red, Blue, Yellow</td></tr>
-</tbody></table></div>
-</section>
-
-<section class="section" id="connections">
-<h2>Hardware Connections</h2>
-<div class="table-wrap"><table>
-<thead><tr><th>Connection</th><th>Details</th></tr></thead>
-<tbody>
-<tr><td>Relay VCC</td><td>Raspberry Pi 3.3 V</td></tr>
-<tr><td>Relay GND</td><td>Raspberry Pi GND</td></tr>
-<tr><td>Relay Signal</td><td>Raspberry Pi GPIO17</td></tr>
-<tr><td>Proxy Sensor Signal</td><td>Raspberry Pi GPIO23</td></tr>
-<tr><td>Proxy Sensor VCC</td><td>Raspberry Pi 5 V</td></tr>
-<tr><td>Proxy Sensor GND</td><td>Raspberry Pi GND</td></tr>
-<tr><td>USB Camera</td><td>Raspberry Pi USB Port</td></tr>
-<tr><td>Robot Magician USB-A</td><td>Raspberry Pi USB Port</td></tr>
-<tr><td>Relay COM</td><td>PWM Controller Power (+)</td></tr>
-<tr><td>Relay NC</td><td>12 V Positive Supply</td></tr>
-<tr><td>PWM Output</td><td>DC Conveyor Motor</td></tr>
-</tbody></table></div>
-<div class="warning"><strong>Important:</strong> Complete all wiring before powering ON the system. Connect all grounds together, secure USB connections, and check 12 V supply polarity.</div>
-</section>
-
-<section class="section" id="circuit">
-<h2>Circuit Diagram</h2>
-<p>The circuit diagram below shows the overall hardware arrangement of the AI Based Color Sorting System, including the Raspberry Pi, USB camera, conveyor control, proxy sensing and Robot Magician integration.</p>
-<div class="circuit-wrap">
-<img src="Colour sorting system.jpg" alt="AI Based Color Sorting System Circuit Diagram">
-<p class="circuit-caption"><strong>System Circuit:</strong> Use this diagram together with the Hardware Connections table above while assembling the project.</p>
-</div>
-<div class="info" style="margin-top:18px;"><strong>Note:</strong> Keep <strong>Colour sorting system.jpg</strong> in the same folder as this <strong>index.html</strong>.</div>
-</section>
-
-<section class="section" id="software">
-<h2>Software Requirements</h2>
-<div class="grid">
-<div class="card"><strong>Raspberry Pi OS</strong><p>Operating system</p></div>
-<div class="card"><strong>Python 3</strong><p>Programming language</p></div>
-<div class="card"><strong>OpenCV</strong><p>Image processing and color detection</p></div>
-<div class="card"><strong>NumPy</strong><p>Array processing</p></div>
-<div class="card"><strong>RPi.GPIO</strong><p>GPIO control</p></div>
-<div class="card"><strong>pydobot + pyserial</strong><p>Robot and USB communication</p></div>
-</div>
-<h3>Virtual Environment</h3>
-<div class="code-head"><span>Terminal</span><button class="copy" onclick="copyCode('install',this)">Copy</button></div>
-<pre><code id="install">cd ~/project_folder
+  </style>
+ </head>
+ <body>
+  <header class="hero">
+   <span class="tag">
+    COMPUTER VISION &bull; ROBOTICS &bull; INDUSTRIAL AUTOMATION
+   </span>
+   <h1>
+    AI Based Color Sorting System
+   </h1>
+   <p>
+    Automated red, blue and yellow object sorting using Raspberry Pi 4, USB Camera, OpenCV, E18-D80NK proxy sensor, conveyor control and a Robot Magician pick-and-place robot.
+   </p>
+   <div class="badges">
+    <span class="badge">
+     Raspberry Pi 4
+    </span>
+    <span class="badge">
+     Python
+    </span>
+    <span class="badge">
+     OpenCV
+    </span>
+    <span class="badge">
+     Robot Magician
+    </span>
+    <span class="badge">
+     Machine Vision
+    </span>
+    <span class="badge">
+     GPIO
+    </span>
+   </div>
+  </header>
+  <nav>
+   <a href="#about">
+    About
+   </a>
+   <a href="#components">
+    Components
+   </a>
+   <a href="#connections">
+    Connections
+   </a>
+   <a href="#circuit">
+    Circuit
+   </a>
+   <a href="#software">
+    Software
+   </a>
+   <a href="#calibration">
+    Calibration
+   </a>
+   <a href="#working">
+    Working
+   </a>
+   <a href="#code">
+    Code
+   </a>
+   <a href="#troubleshooting">
+    Notes
+   </a>
+  </nav>
+  <main class="container">
+   <section class="section" id="about">
+    <h2>
+     Project Overview
+    </h2>
+    <div class="info">
+     <strong>
+      Purpose:
+     </strong>
+     Automatically detect colored objects, move them to a pickup point, and sort them into the correct bin using machine vision and robotic pick-and-place.
+    </div>
+    <h3>
+     Objectives
+    </h3>
+    <div class="grid">
+     <div class="card">
+      <strong>
+       Color Detection
+      </strong>
+      <p>
+       Detect red, blue and yellow objects using OpenCV.
+      </p>
+     </div>
+     <div class="card">
+      <strong>
+       Conveyor Control
+      </strong>
+      <p>
+       Automatically start and stop the conveyor through a relay.
+      </p>
+     </div>
+     <div class="card">
+      <strong>
+       Accurate Pickup
+      </strong>
+      <p>
+       Use a proxy sensor to confirm that the object reached the pickup position.
+      </p>
+     </div>
+     <div class="card">
+      <strong>
+       Robot Sorting
+      </strong>
+      <p>
+       Robot Magician picks the object using vacuum suction and places it in the correct bin.
+      </p>
+     </div>
+     <div class="card">
+      <strong>
+       Live Dashboard
+      </strong>
+      <p>
+       Display object counts, detected color and system state.
+      </p>
+     </div>
+     <div class="card">
+      <strong>
+       Industrial Automation
+      </strong>
+      <p>
+       Demonstrates integration of computer vision, sensors, conveyor and robotics.
+      </p>
+     </div>
+    </div>
+    <h3>
+     Applications
+    </h3>
+    <p>
+     Manufacturing &bull; Packaging &bull; Warehouse Automation &bull; Educational Robotics Labs &bull; Industrial Automation
+    </p>
+   </section>
+   <section class="section" id="components">
+    <h2>
+     Components Required
+    </h2>
+    <div class="table-wrap">
+     <table>
+      <thead>
+       <tr>
+        <th>
+         Component
+        </th>
+        <th>
+         Qty
+        </th>
+        <th>
+         Purpose
+        </th>
+        <th>
+         Specification
+        </th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td>
+         Raspberry Pi 4
+        </td>
+        <td>
+         1
+        </td>
+        <td>
+         Main controller
+        </td>
+        <td>
+         4 GB RAM
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Robot Magician
+        </td>
+        <td>
+         1
+        </td>
+        <td>
+         Pick and place robot
+        </td>
+        <td>
+         Vacuum suction
+        </td>
+       </tr>
+       <tr>
+        <td>
+         USB Camera
+        </td>
+        <td>
+         1
+        </td>
+        <td>
+         Capture object images
+        </td>
+        <td>
+         640&times;480 or higher
+        </td>
+       </tr>
+       <tr>
+        <td>
+         E18-D80NK Proxy Sensor
+        </td>
+        <td>
+         1
+        </td>
+        <td>
+         Detect object at pickup position
+        </td>
+        <td>
+         NPN, 5&ndash;24 V
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Relay Module
+        </td>
+        <td>
+         1
+        </td>
+        <td>
+         Start/Stop conveyor
+        </td>
+        <td>
+         1 Channel
+        </td>
+       </tr>
+       <tr>
+        <td>
+         PWM DC Motor Controller
+        </td>
+        <td>
+         1
+        </td>
+        <td>
+         Control conveyor speed
+        </td>
+        <td>
+         12 V DC
+        </td>
+       </tr>
+       <tr>
+        <td>
+         DC Conveyor Motor
+        </td>
+        <td>
+         1
+        </td>
+        <td>
+         Move object
+        </td>
+        <td>
+         12 V
+        </td>
+       </tr>
+       <tr>
+        <td>
+         12 V Power Supply
+        </td>
+        <td>
+         1
+        </td>
+        <td>
+         Power conveyor
+        </td>
+        <td>
+         12 V DC
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Sorting Bins
+        </td>
+        <td>
+         3
+        </td>
+        <td>
+         Collect objects
+        </td>
+        <td>
+         Red, Blue, Yellow
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </section>
+   <section class="section" id="connections">
+    <h2>
+     Hardware Connections
+    </h2>
+    <div class="table-wrap">
+     <table>
+      <thead>
+       <tr>
+        <th>
+         Connection
+        </th>
+        <th>
+         Details
+        </th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td>
+         Relay VCC
+        </td>
+        <td>
+         Raspberry Pi 3.3 V
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Relay GND
+        </td>
+        <td>
+         Raspberry Pi GND
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Relay Signal
+        </td>
+        <td>
+         Raspberry Pi GPIO17
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Proxy Sensor Signal
+        </td>
+        <td>
+         Raspberry Pi GPIO23
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Proxy Sensor VCC
+        </td>
+        <td>
+         Raspberry Pi 5 V
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Proxy Sensor GND
+        </td>
+        <td>
+         Raspberry Pi GND
+        </td>
+       </tr>
+       <tr>
+        <td>
+         USB Camera
+        </td>
+        <td>
+         Raspberry Pi USB Port
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Robot Magician USB-A
+        </td>
+        <td>
+         Raspberry Pi USB Port
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Relay COM
+        </td>
+        <td>
+         PWM Controller Power (+)
+        </td>
+       </tr>
+       <tr>
+        <td>
+         Relay NC
+        </td>
+        <td>
+         12 V Positive Supply
+        </td>
+       </tr>
+       <tr>
+        <td>
+         PWM Output
+        </td>
+        <td>
+         DC Conveyor Motor
+        </td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="warning">
+     <strong>
+      Important:
+     </strong>
+     Complete all wiring before powering ON the system. Connect all grounds together, secure USB connections, and check 12 V supply polarity.
+    </div>
+   </section>
+   <section class="section" id="circuit">
+    <h2>
+     Circuit Diagram
+    </h2>
+    <p>
+     The circuit diagram below shows the overall hardware arrangement of the AI Based Color Sorting System, including the Raspberry Pi, USB camera, conveyor control, proxy sensing and Robot Magician integration.
+    </p>
+    <div class="circuit-wrap">
+     <img alt="AI Based Color Sorting System Circuit Diagram" src="Colour sorting system.jpg"/>
+     <p class="circuit-caption">
+      <strong>
+       System Circuit:
+      </strong>
+      Use this diagram together with the Hardware Connections table above while assembling the project.
+     </p>
+    </div>
+    <div class="info" style="margin-top:18px;">
+     <strong>
+      Note:
+     </strong>
+     Keep
+     <strong>
+      Colour sorting system.jpg
+     </strong>
+     in the same folder as this
+     <strong>
+      index.html
+     </strong>
+     .
+    </div>
+   </section>
+   <section class="section" id="software">
+    <h2>
+     Software Requirements
+    </h2>
+    <div class="grid">
+     <div class="card">
+      <strong>
+       Raspberry Pi OS
+      </strong>
+      <p>
+       Operating system
+      </p>
+     </div>
+     <div class="card">
+      <strong>
+       Python 3
+      </strong>
+      <p>
+       Programming language
+      </p>
+     </div>
+     <div class="card">
+      <strong>
+       OpenCV
+      </strong>
+      <p>
+       Image processing and color detection
+      </p>
+     </div>
+     <div class="card">
+      <strong>
+       NumPy
+      </strong>
+      <p>
+       Array processing
+      </p>
+     </div>
+     <div class="card">
+      <strong>
+       RPi.GPIO
+      </strong>
+      <p>
+       GPIO control
+      </p>
+     </div>
+     <div class="card">
+      <strong>
+       pydobot + pyserial
+      </strong>
+      <p>
+       Robot and USB communication
+      </p>
+     </div>
+    </div>
+    <h3>
+     Virtual Environment
+    </h3>
+    <div class="code-head">
+     <span>
+      Terminal
+     </span>
+     <button class="copy" onclick="copyCode('install',this)">
+      Copy
+     </button>
+    </div>
+    <pre><code id="install">cd ~/project_folder
 source myenv/bin/activate
 pip install opencv-python numpy pydobot pyserial RPi.GPIO</code></pre>
-</section>
-
-<section class="section" id="calibration">
-<h2>Robot Calibration & Coordinate Teaching</h2>
-<p>The robot must be taught four positions. They are stored in <strong>dobot_coords.json</strong> and loaded on later runs.</p>
-<ol>
-<li>Open the project folder in Terminal.</li>
-<li>Activate the environment: <strong>source myenv/bin/activate</strong>.</li>
-<li>Run <strong>python3 color_sor.py</strong>.</li>
-<li>When asked for <strong>PICK</strong>, hold the robot Unlock/Lock Symbol button, manually move the robot to the pickup position, release it, then press Enter.</li>
-<li>Repeat the same teaching process for <strong>BIN_RED</strong>.</li>
-<li>Repeat for <strong>BIN_BLUE</strong>.</li>
-<li>Repeat for <strong>BIN_YELLOW</strong>.</li>
-<li>The program automatically creates <strong>dobot_coords.json</strong>.</li>
-</ol>
-<div class="success"><strong>Saved positions:</strong> PICK, BIN_RED, BIN_BLUE and BIN_YELLOW. You do not need to recalibrate every time if the physical setup remains unchanged.</div>
-<h3>When to Calibrate Again</h3>
-<ul><li>Robot Magician has been moved.</li><li>Conveyor position changed.</li><li>Color bins were repositioned.</li><li>Pickup point changed.</li><li>Robot is not picking or placing accurately.</li></ul>
-<h3>Recalibration</h3>
-<p>Delete the old <strong>dobot_coords.json</strong>, activate the virtual environment and run the program again. Teach all four positions to generate a new coordinate file.</p>
-</section>
-
-<section class="section" id="working">
-<h2>Complete Working Sequence</h2>
-<div class="flow">
-<div>1. Camera detects color</div><div>2. Conveyor starts</div><div>3. Object moves</div><div>4. Proxy detects object</div>
-<div>5. Conveyor stops</div><div>6. Robot picks object</div><div>7. Correct bin selected</div><div>8. System returns to IDLE</div>
-</div>
-<h3>Color Detection</h3>
-<p>The USB camera captures the object image. OpenCV converts the Region of Interest (ROI) into HSV color space. Predefined HSV ranges identify red, blue and yellow. Morphological opening and closing reduce noise, the largest contour is evaluated, and stable-frame detection confirms the color.</p>
-<h3>System States</h3>
-<div class="grid">
-<div class="card"><strong>IDLE</strong><p>Waiting for a stable red, blue or yellow object detection.</p></div>
-<div class="card"><strong>RUN</strong><p>Conveyor is moving the detected object toward the proxy sensor.</p></div>
-<div class="card"><strong>WAIT</strong><p>Robot operation has completed and the system waits for the previous object to leave the camera area.</p></div>
-</div>
-</section>
-
-<section class="section" id="code">
-<h2>Complete Python Program</h2>
-<p>The complete <strong>color_sor.py</strong> program is included below. It handles color detection, conveyor control, E18-D80NK proxy sensing, Robot Magician connection, calibration, block counting and robotic pick-and-place.</p>
-
-<div class="code-head">
-<span>color_sor.py</span>
-<button class="copy" onclick="copyCode('fullcode',this)">Copy Full Code</button>
-</div>
-
-<pre><code id="fullcode">import argparse
+   </section>
+   <section class="section" id="calibration">
+    <h2>
+     Robot Calibration &amp; Coordinate Teaching
+    </h2>
+    <p>
+     The robot must be taught four positions. They are stored in
+     <strong>
+      dobot_coords.json
+     </strong>
+     and loaded on later runs.
+    </p>
+    <ol>
+     <li>
+      Open the project folder in Terminal.
+     </li>
+     <li>
+      Activate the environment:
+      <strong>
+       source myenv/bin/activate
+      </strong>
+      .
+     </li>
+     <li>
+      Run
+      <strong>
+       python3 color_sor.py
+      </strong>
+      .
+     </li>
+     <li>
+      When asked for
+      <strong>
+       PICK
+      </strong>
+      , hold the robot Unlock/Lock Symbol button, manually move the robot to the pickup position, release it, then press Enter.
+     </li>
+     <li>
+      Repeat the same teaching process for
+      <strong>
+       BIN_RED
+      </strong>
+      .
+     </li>
+     <li>
+      Repeat for
+      <strong>
+       BIN_BLUE
+      </strong>
+      .
+     </li>
+     <li>
+      Repeat for
+      <strong>
+       BIN_YELLOW
+      </strong>
+      .
+     </li>
+     <li>
+      The program automatically creates
+      <strong>
+       dobot_coords.json
+      </strong>
+      .
+     </li>
+    </ol>
+    <div class="success">
+     <strong>
+      Saved positions:
+     </strong>
+     PICK, BIN_RED, BIN_BLUE and BIN_YELLOW. You do not need to recalibrate every time if the physical setup remains unchanged.
+    </div>
+    <h3>
+     When to Calibrate Again
+    </h3>
+    <ul>
+     <li>
+      Robot Magician has been moved.
+     </li>
+     <li>
+      Conveyor position changed.
+     </li>
+     <li>
+      Color bins were repositioned.
+     </li>
+     <li>
+      Pickup point changed.
+     </li>
+     <li>
+      Robot is not picking or placing accurately.
+     </li>
+    </ul>
+    <h3>
+     Recalibration
+    </h3>
+    <p>
+     Delete the old
+     <strong>
+      dobot_coords.json
+     </strong>
+     , activate the virtual environment and run the program again. Teach all four positions to generate a new coordinate file.
+    </p>
+   </section>
+   <section class="section" id="working">
+    <h2>
+     Complete Working Sequence
+    </h2>
+    <div class="flow">
+     <div>
+      1. Camera detects color
+     </div>
+     <div>
+      2. Conveyor starts
+     </div>
+     <div>
+      3. Object moves
+     </div>
+     <div>
+      4. Proxy detects object
+     </div>
+     <div>
+      5. Conveyor stops
+     </div>
+     <div>
+      6. Robot picks object
+     </div>
+     <div>
+      7. Correct bin selected
+     </div>
+     <div>
+      8. System returns to IDLE
+     </div>
+    </div>
+    <h3>
+     Color Detection
+    </h3>
+    <p>
+     The USB camera captures the object image. OpenCV converts the Region of Interest (ROI) into HSV color space. Predefined HSV ranges identify red, blue and yellow. Morphological opening and closing reduce noise, the largest contour is evaluated, and stable-frame detection confirms the color.
+    </p>
+    <h3>
+     System States
+    </h3>
+    <div class="grid">
+     <div class="card">
+      <strong>
+       IDLE
+      </strong>
+      <p>
+       Waiting for a stable red, blue or yellow object detection.
+      </p>
+     </div>
+     <div class="card">
+      <strong>
+       RUN
+      </strong>
+      <p>
+       Conveyor is moving the detected object toward the proxy sensor.
+      </p>
+     </div>
+     <div class="card">
+      <strong>
+       WAIT
+      </strong>
+      <p>
+       Robot operation has completed and the system waits for the previous object to leave the camera area.
+      </p>
+     </div>
+    </div>
+   </section>
+   <section class="section" id="code">
+    <h2>
+     Complete Python Program
+    </h2>
+    <p>
+     The complete
+     <strong>
+      color_sor.py
+     </strong>
+     program is included below. It handles color detection, conveyor control, E18-D80NK proxy sensing, Robot Magician connection, calibration, block counting and robotic pick-and-place.
+    </p>
+    <div class="code-head">
+     <span>
+      color_sor.py
+     </span>
+     <button class="copy" onclick="copyCode('fullcode',this)">
+      Copy Full Code
+     </button>
+    </div>
+    <pre><code id="fullcode">import argparse
 import os
 import json
 import time
@@ -182,7 +733,7 @@ from pydobot import Dobot
 RELAY_PIN = 17
 PROXY_PIN = 23  # Change using --proxy-pin if you wire the sensor to another GPIO
 PROXY_ACTIVE_LOW = True  # E18-D80NK NPN is usually LOW when object is detected
-CONFIG_FILE = &quot;dobot_coords.json&quot;
+CONFIG_FILE = "dobot_coords.json"
 
 PICK_SAFE_Z_OFFSET = 100
 PLACE_Z = None
@@ -218,14 +769,14 @@ _relay_lock = threading.Lock()
 
 
 def find_dobot_port():
-    ports = glob.glob(&quot;/dev/ttyUSB*&quot;) + glob.glob(&quot;/dev/ttyACM*&quot;)
+    ports = glob.glob("/dev/ttyUSB*") + glob.glob("/dev/ttyACM*")
     return ports[0] if ports else None
 
 
 def _hard_cutoff():
     with _relay_lock:
         GPIO.output(RELAY_PIN, GPIO.LOW)
-    print(&quot;[CONVEYOR] OFF - safety cutoff&quot;)
+    print("[CONVEYOR] OFF - safety cutoff")
 
 
 def conveyor_on():
@@ -241,7 +792,7 @@ def conveyor_on():
         _relay_timer.daemon = True
         _relay_timer.start()
 
-    print(&quot;[CONVEYOR] ON&quot;)
+    print("[CONVEYOR] ON")
 
 
 def conveyor_off():
@@ -254,7 +805,7 @@ def conveyor_off():
 
         GPIO.output(RELAY_PIN, GPIO.LOW)
 
-    print(&quot;[CONVEYOR] OFF&quot;)
+    print("[CONVEYOR] OFF")
 
 
 def setup_gpio(proxy_pin):
@@ -302,12 +853,12 @@ def init_camera(index=-1):
 
         ok, frame = cam.read()
         if ok and frame is not None:
-            print(&quot;[CAMERA] Using camera index&quot;, i)
+            print("[CAMERA] Using camera index", i)
             return cam
 
         cam.release()
 
-    raise RuntimeError(&quot;No working camera found&quot;)
+    raise RuntimeError("No working camera found")
 
 
 def get_frame(cam):
@@ -327,7 +878,7 @@ def draw_dashboard(frame, state, color, scores):
     cv2.rectangle(frame, (x + 12, y + 12), (x + 44, y + 44), (210, 90, 20), -1)
     cv2.putText(
         frame,
-        &quot;III&quot;,
+        "III",
         (x + 17, y + 36),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.55,
@@ -337,7 +888,7 @@ def draw_dashboard(frame, state, color, scores):
 
     cv2.putText(
         frame,
-        &quot;No. of Blocks&quot;,
+        "No. of Blocks",
         (x + 58, y + 36),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.72,
@@ -375,7 +926,7 @@ def draw_dashboard(frame, state, color, scores):
     cv2.circle(frame, (col_icon, start_y + 24), 12, (0, 0, 255), -1)
     cv2.putText(
         frame,
-        &quot;Red&quot;,
+        "Red",
         (col_name, start_y + 30),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.62,
@@ -395,7 +946,7 @@ def draw_dashboard(frame, state, color, scores):
     cv2.circle(frame, (col_icon, start_y + row_h + 24), 12, (255, 0, 0), -1)
     cv2.putText(
         frame,
-        &quot;Blue&quot;,
+        "Blue",
         (col_name, start_y + row_h + 30),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.62,
@@ -415,7 +966,7 @@ def draw_dashboard(frame, state, color, scores):
     cv2.circle(frame, (col_icon, start_y + row_h * 2 + 24), 12, (0, 255, 255), -1)
     cv2.putText(
         frame,
-        &quot;Yellow&quot;,
+        "Yellow",
         (col_name, start_y + row_h * 2 + 30),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.62,
@@ -434,7 +985,7 @@ def draw_dashboard(frame, state, color, scores):
 
     cv2.putText(
         frame,
-        f&quot;State: {state}  Color: {color}&quot;,
+        f"State: {state}  Color: {color}",
         (15, frame.shape[0] - 42),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.55,
@@ -444,7 +995,7 @@ def draw_dashboard(frame, state, color, scores):
 
     cv2.putText(
         frame,
-        f&quot;R:{scores[&#x27;Red&#x27;]} B:{scores[&#x27;Blue&#x27;]} Y:{scores[&#x27;Yellow&#x27;]}&quot;,
+        f"R:{scores['Red']} B:{scores['Blue']} Y:{scores['Yellow']}",
         (15, frame.shape[0] - 18),
         cv2.FONT_HERSHEY_SIMPLEX,
         0.55,
@@ -461,11 +1012,11 @@ def update_count(color):
     if color is None or color == last_counted_color:
         return
 
-    if color == &quot;Red&quot;:
+    if color == "Red":
         red_count += 1
-    elif color == &quot;Blue&quot;:
+    elif color == "Blue":
         blue_count += 1
-    elif color == &quot;Yellow&quot;:
+    elif color == "Yellow":
         yellow_count += 1
 
     last_counted_color = color
@@ -529,15 +1080,15 @@ def detect_color(roi):
     y_score, y_area = valid_mask_score(mask_y)
 
     scores = {
-        &quot;Red&quot;: r_score,
-        &quot;Blue&quot;: b_score,
-        &quot;Yellow&quot;: y_score,
+        "Red": r_score,
+        "Blue": b_score,
+        "Yellow": y_score,
     }
 
     areas = {
-        &quot;Red&quot;: r_area,
-        &quot;Blue&quot;: b_area,
-        &quot;Yellow&quot;: y_area,
+        "Red": r_area,
+        "Blue": b_area,
+        "Yellow": y_area,
     }
 
     best = max(scores, key=scores.get)
@@ -555,66 +1106,66 @@ def move_to(device, x, y, z, r=0):
 
 def pick_and_place(device, coords, color):
     bin_map = {
-        &quot;Red&quot;: &quot;BIN_RED&quot;,
-        &quot;Blue&quot;: &quot;BIN_BLUE&quot;,
-        &quot;Yellow&quot;: &quot;BIN_YELLOW&quot;,
+        "Red": "BIN_RED",
+        "Blue": "BIN_BLUE",
+        "Yellow": "BIN_YELLOW",
     }
 
     bin_key = bin_map[color]
 
-    print(f&quot;[ROBOT] {color} block -&gt; {bin_key}&quot;)
+    print(f"[ROBOT] {color} block -&gt; {bin_key}")
 
     if bin_key not in coords:
-        print(&quot;[ERROR] Missing calibration for&quot;, bin_key)
+        print("[ERROR] Missing calibration for", bin_key)
         return
 
-    pick = coords[&quot;PICK&quot;]
-    safe_z = pick[&quot;z&quot;] + PICK_SAFE_Z_OFFSET
+    pick = coords["PICK"]
+    safe_z = pick["z"] + PICK_SAFE_Z_OFFSET
 
-    move_to(device, pick[&quot;x&quot;], pick[&quot;y&quot;], safe_z)
-    move_to(device, pick[&quot;x&quot;], pick[&quot;y&quot;], pick[&quot;z&quot;])
+    move_to(device, pick["x"], pick["y"], safe_z)
+    move_to(device, pick["x"], pick["y"], pick["z"])
 
     device.suck(True)
     time.sleep(0.5)
 
-    move_to(device, pick[&quot;x&quot;], pick[&quot;y&quot;], safe_z)
+    move_to(device, pick["x"], pick["y"], safe_z)
 
     b = coords[bin_key]
-    target_z = PLACE_Z if PLACE_Z else b[&quot;z&quot;]
+    target_z = PLACE_Z if PLACE_Z else b["z"]
 
-    move_to(device, b[&quot;x&quot;], b[&quot;y&quot;], safe_z)
-    move_to(device, b[&quot;x&quot;], b[&quot;y&quot;], target_z)
+    move_to(device, b["x"], b["y"], safe_z)
+    move_to(device, b["x"], b["y"], target_z)
 
     device.suck(False)
     time.sleep(0.5)
 
-    move_to(device, pick[&quot;x&quot;], pick[&quot;y&quot;], safe_z)
+    move_to(device, pick["x"], pick["y"], safe_z)
 
-    print(f&quot;[ROBOT] Placed {color} block in {bin_key}&quot;)
+    print(f"[ROBOT] Placed {color} block in {bin_key}")
 
 
 def calibrate(device):
-    print(&quot;\n[CALIBRATION MODE]&quot;)
+    print("\n[CALIBRATION MODE]")
     coords = {}
 
-    for key in [&quot;PICK&quot;, &quot;BIN_RED&quot;, &quot;BIN_BLUE&quot;, &quot;BIN_YELLOW&quot;]:
-        input(f&quot;Move robot to {key}, then press ENTER...&quot;)
+    for key in ["PICK", "BIN_RED", "BIN_BLUE", "BIN_YELLOW"]:
+        input(f"Move robot to {key}, then press ENTER...")
 
         pose = device.pose()
 
         coords[key] = {
-            &quot;x&quot;: round(pose[0], 2),
-            &quot;y&quot;: round(pose[1], 2),
-            &quot;z&quot;: round(pose[2], 2),
-            &quot;r&quot;: round(pose[3], 2),
+            "x": round(pose[0], 2),
+            "y": round(pose[1], 2),
+            "z": round(pose[2], 2),
+            "r": round(pose[3], 2),
         }
 
-        print(&quot;[SAVED]&quot;, key, coords[key])
+        print("[SAVED]", key, coords[key])
 
-    with open(CONFIG_FILE, &quot;w&quot;) as f:
+    with open(CONFIG_FILE, "w") as f:
         json.dump(coords, f, indent=4)
 
-    print(&quot;[CALIBRATION] Saved&quot;)
+    print("[CALIBRATION] Saved")
     return coords
 
 
@@ -624,32 +1175,32 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        &quot;--camera-index&quot;,
+        "--camera-index",
         type=int,
         default=-1,
     )
 
     parser.add_argument(
-        &quot;--proxy-pin&quot;,
+        "--proxy-pin",
         type=int,
         default=PROXY_PIN,
-        help=&quot;BCM GPIO pin connected to E18-D80NK black signal wire&quot;,
+        help="BCM GPIO pin connected to E18-D80NK black signal wire",
     )
 
     parser.add_argument(
-        &quot;--proxy-active-high&quot;,
-        action=&quot;store_true&quot;,
-        help=&quot;Use this only if your proxy sensor gives HIGH when object is detected&quot;,
+        "--proxy-active-high",
+        action="store_true",
+        help="Use this only if your proxy sensor gives HIGH when object is detected",
     )
 
     parser.add_argument(
-        &quot;--calibrate&quot;,
-        action=&quot;store_true&quot;,
+        "--calibrate",
+        action="store_true",
     )
 
     args = parser.parse_args()
 
-    print(&quot;[INIT] Starting&quot;)
+    print("[INIT] Starting")
 
     device = None
 
@@ -663,7 +1214,7 @@ def main():
                     verbose=False,
                 )
 
-                print(&quot;[DOBOT] Connected on&quot;, port)
+                print("[DOBOT] Connected on", port)
                 break
 
             except Exception:
@@ -672,22 +1223,22 @@ def main():
         time.sleep(2)
 
     if device is None:
-        raise RuntimeError(&quot;Dobot not found&quot;)
+        raise RuntimeError("Dobot not found")
 
     if args.calibrate or not os.path.exists(CONFIG_FILE):
         coords = calibrate(device)
 
     else:
-        with open(CONFIG_FILE, &quot;r&quot;) as f:
+        with open(CONFIG_FILE, "r") as f:
             coords = json.load(f)
 
-        print(&quot;[CALIBRATION] Loaded&quot;)
+        print("[CALIBRATION] Loaded")
 
     required_keys = [
-        &quot;PICK&quot;,
-        &quot;BIN_RED&quot;,
-        &quot;BIN_BLUE&quot;,
-        &quot;BIN_YELLOW&quot;,
+        "PICK",
+        "BIN_RED",
+        "BIN_BLUE",
+        "BIN_YELLOW",
     ]
 
     missing = [
@@ -697,8 +1248,8 @@ def main():
     ]
 
     if missing:
-        print(&quot;[ERROR] Missing calibration:&quot;, missing)
-        print(&quot;Run: python3 color_sor.py --calibrate&quot;)
+        print("[ERROR] Missing calibration:", missing)
+        print("Run: python3 color_sor.py --calibrate")
         device.close()
         return
 
@@ -707,15 +1258,15 @@ def main():
     setup_gpio(args.proxy_pin)
 
     print(
-        &quot;[PROXY] GPIO&quot;,
+        "[PROXY] GPIO",
         args.proxy_pin,
-        &quot;active&quot;,
-        &quot;LOW&quot; if proxy_active_low else &quot;HIGH&quot;,
+        "active",
+        "LOW" if proxy_active_low else "HIGH",
     )
 
     cam = init_camera(args.camera_index)
 
-    state = &quot;IDLE&quot;
+    state = "IDLE"
     detected = None
     start_time = None
 
@@ -726,7 +1277,7 @@ def main():
     last_printed_detection = None
 
     cv2.namedWindow(
-        &quot;Fruit Detection&quot;,
+        "Fruit Detection",
         cv2.WINDOW_NORMAL,
     )
 
@@ -772,7 +1323,7 @@ def main():
 
             cv2.putText(
                 frame,
-                f&quot;Detected: {color}&quot;,
+                f"Detected: {color}",
                 (roi_x1, roi_y1 - 10),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.7,
@@ -788,34 +1339,34 @@ def main():
             )
 
             cv2.imshow(
-                &quot;Fruit Detection&quot;,
+                "Fruit Detection",
                 frame,
             )
 
             key = cv2.waitKey(1) &amp; 0xFF
 
-            if key == ord(&quot;q&quot;):
-                print(&quot;[STOP] Q pressed&quot;)
+            if key == ord("q"):
+                print("[STOP] Q pressed")
                 break
 
-            if state == &quot;IDLE&quot;:
+            if state == "IDLE":
                 if stable_color and stable_count &gt;= STABLE_FRAMES_REQUIRED:
                     detected = stable_color
 
                     if detected != last_printed_detection:
-                        print(f&quot;[DETECTED] {detected} block&quot;)
+                        print(f"[DETECTED] {detected} block")
                         last_printed_detection = detected
 
                     update_count(detected)
 
                     conveyor_on()
                     start_time = time.time()
-                    state = &quot;RUN&quot;
+                    state = "RUN"
 
                     stable_color = None
                     stable_count = 0
 
-            elif state == &quot;RUN&quot;:
+            elif state == "RUN":
                 # Conveyor keeps moving until the proxy sensor confirms
                 # the block has reached the pickup position.
                 if is_proxy_detected_stable(
@@ -823,7 +1374,7 @@ def main():
                     proxy_active_low,
                 ):
                     print(
-                        &quot;[PROXY] Block detected at pickup position&quot;
+                        "[PROXY] Block detected at pickup position"
                     )
 
                     conveyor_off()
@@ -837,21 +1388,21 @@ def main():
 
                     detected = None
                     gone_count = 0
-                    state = &quot;WAIT&quot;
+                    state = "WAIT"
 
                 # Safety fallback: stop conveyor if sensor/cable fails.
                 elif time.time() - start_time &gt;= CONVEYOR_MAX:
                     conveyor_off()
 
                     print(
-                        &quot;[ERROR] Proxy not detected before safety timeout&quot;
+                        "[ERROR] Proxy not detected before safety timeout"
                     )
 
                     detected = None
                     gone_count = 0
-                    state = &quot;WAIT&quot;
+                    state = "WAIT"
 
-            elif state == &quot;WAIT&quot;:
+            elif state == "WAIT":
                 if color is None:
                     gone_count += 1
 
@@ -862,12 +1413,12 @@ def main():
                     last_counted_color = None
                     last_printed_detection = None
                     gone_count = 0
-                    state = &quot;IDLE&quot;
+                    state = "IDLE"
 
             time.sleep(0.05)
 
     except KeyboardInterrupt:
-        print(&quot;[STOP] User stopped&quot;)
+        print("[STOP] User stopped")
 
     finally:
         cam.release()
@@ -875,81 +1426,139 @@ def main():
         cleanup_gpio()
         cv2.destroyAllWindows()
 
-        print(&quot;[EXIT] Clean shutdown&quot;)
+        print("[EXIT] Clean shutdown")
 
 
-if __name__ == &quot;__main__&quot;:
+if __name__ == "__main__":
     main()
 </code></pre>
-
-<h3>Run Project</h3>
-<div class="code-head"><span>Terminal</span><button class="copy" onclick="copyCode('run',this)">Copy</button></div>
-<pre><code id="run">source myenv/bin/activate
+    <h3>
+     Run Project
+    </h3>
+    <div class="code-head">
+     <span>
+      Terminal
+     </span>
+     <button class="copy" onclick="copyCode('run',this)">
+      Copy
+     </button>
+    </div>
+    <pre><code id="run">source myenv/bin/activate
 python3 color_sor.py</code></pre>
-
-<h3>Force Robot Recalibration</h3>
-<div class="code-head"><span>Terminal</span><button class="copy" onclick="copyCode('calrun',this)">Copy</button></div>
-<pre><code id="calrun">source myenv/bin/activate
+    <h3>
+     Force Robot Recalibration
+    </h3>
+    <div class="code-head">
+     <span>
+      Terminal
+     </span>
+     <button class="copy" onclick="copyCode('calrun',this)">
+      Copy
+     </button>
+    </div>
+    <pre><code id="calrun">source myenv/bin/activate
 python3 color_sor.py --calibrate</code></pre>
-
-<div class="info">
-<strong>Core program settings:</strong><br>
-Relay GPIO: 17<br>
-Proxy GPIO: 23<br>
-Proxy logic: Active LOW by default<br>
-Conveyor safety cutoff: 10 seconds<br>
-Detected colors: Red, Blue, Yellow<br>
-Calibration file: dobot_coords.json
-</div>
-</section>
-
-<section class="section" id="troubleshooting">
-<h2>Important Operating Notes</h2>
-<ul>
-<li>The E18-D80NK NPN proxy sensor is treated as active LOW by the program.</li>
-<li>The conveyor has a safety timeout if the proxy sensor does not detect the object.</li>
-<li>Keep the camera view and lighting consistent for reliable HSV detection.</li>
-<li>Recalibrate whenever the physical robot, conveyor, pickup point or bins move.</li>
-<li>Press <strong>Q</strong> while the camera window is active, or <strong>Ctrl + C</strong> in Terminal, to stop the program.</li>
-</ul>
-</section>
-
-<section class="section">
-<h2>Project Outcome</h2>
-<div class="outcome">
-<h3>Integrated Machine Vision & Robotic Sorting</h3>
-<p>The system combines Raspberry Pi image processing, HSV color detection, conveyor automation, proxy sensing and robotic pick-and-place. It automatically identifies colored objects, moves them to the pickup location and sorts them into the corresponding red, blue or yellow bin.</p>
-<p>The project demonstrates how Artificial Intelligence, Computer Vision, Robotics and Industrial Automation can work together in an automated sorting application.</p>
-</div>
-</section>
-
-<section class="section">
-<h2>Suggested GitHub Repository Structure</h2>
-<div class="code-head"><span>Repository</span></div>
-<pre><code>AI-Color-Sorting-System/
-├── index.html
-├── README.md
-├── color_sor.py
-├── dobot_coords.json
-├── images/
-│   ├── system-overview.jpg
-│   ├── calibration.jpg
-│   └── dashboard.jpg
-└── docs/
-    └── color_sorting_sop.pdf</code></pre>
-</section>
-</main>
-
-<footer><strong>AI Based Color Sorting System</strong><br>Raspberry Pi • OpenCV • Machine Vision • Robot Magician • Industrial Automation</footer>
-
-<script>
-function copyCode(id,button){
+    <div class="info">
+     <strong>
+      Core program settings:
+     </strong>
+     <br/>
+     Relay GPIO: 17
+     <br/>
+     Proxy GPIO: 23
+     <br/>
+     Proxy logic: Active LOW by default
+     <br/>
+     Conveyor safety cutoff: 10 seconds
+     <br/>
+     Detected colors: Red, Blue, Yellow
+     <br/>
+     Calibration file: dobot_coords.json
+    </div>
+   </section>
+   <section class="section" id="troubleshooting">
+    <h2>
+     Important Operating Notes
+    </h2>
+    <ul>
+     <li>
+      The E18-D80NK NPN proxy sensor is treated as active LOW by the program.
+     </li>
+     <li>
+      The conveyor has a safety timeout if the proxy sensor does not detect the object.
+     </li>
+     <li>
+      Keep the camera view and lighting consistent for reliable HSV detection.
+     </li>
+     <li>
+      Recalibrate whenever the physical robot, conveyor, pickup point or bins move.
+     </li>
+     <li>
+      Press
+      <strong>
+       Q
+      </strong>
+      while the camera window is active, or
+      <strong>
+       Ctrl + C
+      </strong>
+      in Terminal, to stop the program.
+     </li>
+    </ul>
+   </section>
+   <section class="section">
+    <h2>
+     Project Outcome
+    </h2>
+    <div class="outcome">
+     <h3>
+      Integrated Machine Vision &amp; Robotic Sorting
+     </h3>
+     <p>
+      The system combines Raspberry Pi image processing, HSV color detection, conveyor automation, proxy sensing and robotic pick-and-place. It automatically identifies colored objects, moves them to the pickup location and sorts them into the corresponding red, blue or yellow bin.
+     </p>
+     <p>
+      The project demonstrates how Artificial Intelligence, Computer Vision, Robotics and Industrial Automation can work together in an automated sorting application.
+     </p>
+    </div>
+   </section>
+   <section class="section">
+    <h2>
+     Suggested GitHub Repository Structure
+    </h2>
+    <div class="code-head">
+     <span>
+      Repository
+     </span>
+    </div>
+    <pre><code>AI-Color-Sorting-System/
+&boxvr;&boxh;&boxh; index.html
+&boxvr;&boxh;&boxh; README.md
+&boxvr;&boxh;&boxh; color_sor.py
+&boxvr;&boxh;&boxh; dobot_coords.json
+&boxvr;&boxh;&boxh; images/
+&boxv;   &boxvr;&boxh;&boxh; system-overview.jpg
+&boxv;   &boxvr;&boxh;&boxh; calibration.jpg
+&boxv;   &boxur;&boxh;&boxh; dashboard.jpg
+&boxur;&boxh;&boxh; docs/
+    &boxur;&boxh;&boxh; color_sorting_sop.pdf</code></pre>
+   </section>
+  </main>
+  <footer>
+   <strong>
+    AI Based Color Sorting System
+   </strong>
+   <br/>
+   Raspberry Pi &bull; OpenCV &bull; Machine Vision &bull; Robot Magician &bull; Industrial Automation
+  </footer>
+  <script>
+   function copyCode(id,button){
  const text=document.getElementById(id).innerText;
  navigator.clipboard.writeText(text).then(()=>{
   const old=button.textContent;button.textContent="Copied!";
   setTimeout(()=>button.textContent=old,1800);
  }).catch(()=>alert("Code could not be copied."));
 }
-</script>
-</body>
+  </script>
+ </body>
 </html>
